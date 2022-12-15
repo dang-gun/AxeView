@@ -40,6 +40,7 @@ export class Overwatch implements OverwatchInterface
 				else
 				{
 					(item.Dom as HTMLElement).innerHTML = data;
+					
 				}	
 			}
 			

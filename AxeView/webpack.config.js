@@ -33,9 +33,6 @@ module.exports = (env, argv) =>
         OutputPath_relative = path.resolve("/", OutputFolder);
     }
 
-    console.log("  afdasdf  : " + OutputPath);
-    console.log("  afdasdf  : " + path.resolve("./", "build/development/"));
-
     return {
         /** 서비스 모드 */
         mode: EnvPrductionIs ? "production" : "development",

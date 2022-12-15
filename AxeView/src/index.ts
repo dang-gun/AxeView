@@ -37,7 +37,7 @@ export default class StartUp
 			//모니터링 문자열 검색
 			new Overwatch({
 				Name: "MonitoringString"
-				, Action: "모니터링중 - 문자열"
+				, Action: "모니터링중(문자열)"
 				, OverwatchingType: OverwatchingType.Monitoring_String
 				, OverwatchingOneIs: false
 			}));
@@ -46,12 +46,12 @@ export default class StartUp
 			//모니터링 문자열 검색
 			new Overwatch({
 				Name: "MonitoringHtml"
-				, Action: "<h1>모니터링중Html</h1>"
+				, Action: "<h1>모니터링중(Html)</h1>"
 				, OverwatchingType: OverwatchingType.Monitoring_Html
 				, OverwatchingOneIs: false
 			}));
 
-		this.AxeView.HtmlToOverwatch(
+		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
 			, this.arrTarget);
 
@@ -63,6 +63,7 @@ export default class StartUp
 	{
 		this.arrTarget[2].data = "클릭했다!!!";
 		this.arrTarget[3].data = "<h2>클릭했다!!HTML</h2>";
+		console.log("클릭함");
 	}
 }
 

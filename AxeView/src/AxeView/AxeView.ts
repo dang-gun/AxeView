@@ -14,235 +14,93 @@ export * from "./Overwatch";
 export default class AxeView
 {
 	/**
-	 * 이를 생성에 사용하는 엘리먼트 이름
-	 */
-	private _ElementName: string = "axeview";
-
-	/** 
-	 *  이름 생성에 사용하는 카운터
-	 *  이 이름 생성문제때문에 가능하면 이 개체의 인스턴스는 재활용하는 것이 좋다.
+	 * html의 주석을 제거할지 여부
+	 * 능동적으로 찾아서 지우는게 아니라 노드 검색시 주석이 발견되면 지우게 된다.
 	 * */
-	private _nNameCount: number = 0;
+	public CommentDelete: boolean = false;
 
 	constructor()
 	{
 	}
 
 	/**
-	 * 지정된 HTMLElement에서 타겟을 찾아 연결한다.
-	 * @param domHtml 검색할 dom
-	 * @param arrTarget
+	 * 지정된 HTMLElement의 내용물을 다시 그리고, 타겟 감사자를 찾아 연결한다.
+	 * ☆ 주의 ☆ 기존 내용물은 모두 제거되고 새로 그려진다.
+	 * 새로 그리면서 감시자를 연결한다.
+	 * 
+	 * 기존 내용물을 남기고 부분교체하는 방법을 찾아보았지만 정답이 없어서
+	 * 그냥 새로그리는 방법을 사용하기로 결정하였다.
+	 * @param domParent 검색할 부모 dom
+	 * @param arrTarget 감시자 리스트
 	 */
-	HtmlToOverwatch(
-		domHtml: HTMLElement
+	BindOverwatch(
+		domParent: HTMLElement
 		, arrTarget: Overwatch[])
 	{
+		//html 특성상 내용물의 부분 교체가 불가능하다.(무조건 대상을 싹 새로 고친다.)
+		//이 문제 때문에 모니터링이 재대로 안될 수 있다.
+		//
+		//복잡한 조건을 지킨다면 엘리먼트들을 그대로 두더라도 모니터링이 가능하다.
+		//1) 모니터링 할 대상의 앞뒤로 textnode를 분리할 수 있는 엘리먼트(html 태그같은 것들) 들어가고
+		//2) 단순 문자열일 때 (html은 안됨)
+		//즉, .childNodes 로 봤을때 분리되는 단순 문자열이면 가능하다.
+		//
+		//처음에는 이런 예외적인 사항을 따로 관리하도록 구현했지만
+		//다양한 기능을 추가하면서 이런 예외를 따로 분리해주는 코드가 복잡해지는 문제가 발생하여
+		//그냥 모든 개체를 다시 생성하는 방향으로 재구현 하였다.
 
-		if (!(domHtml))
+
+		if (!(domParent))
 		{
 			throw "검색할 dom 을 전달해야 합니다.";
 		}
 
 		let objThis = this;
 
-		//domHtml에서 대상을 찾는다.
+		//모든 자식 노드 검색
+		let arrChildNode: ChildNode[] = Array.from(domParent.childNodes);
 
-		
+		//console.log("***** All Node *****");
+		//console.log(arrChildNode);
+		//console.log("***** ******** *****");
 
-		//모든 태그 검색
-		let arrElemAll: Element[] = Array.from(domHtml.getElementsByTagName("*"));
 
-		//html 특성상 내용물의 부분 교체가 불가능하다.(무조건 대상을 싹 새로 고친다.)
-		//이 문제 때문에 모니터링이 재대로 안될 수 있다.
-		//그래서 domHtml의 textnode는 관리하지 안는다.
-		//
-		//하위 노드들도 이 문제로 인해 textnode에 감시대상과 태그가 뒤섞여있으면
-		//동작하지 않을 가능성이 있다.
-		//예> <div>{{TestText}}<h1>Title</h1></div>
-		// => <div>TestText</div>
-		//이 경우 {{TestText}}도 감싸주지 않으면 동작을 보장하지 못한다.
-		//
-		//그러니 한 태그의 내용물에 감시대상이 있으면 다른 내용은 같이 넣으면 안된다.
-		//(단순 택스트는 가능)
-		//단, 감시대상을 여러개 넣는건 가능하다.
-		//예> <div>{{TestText}} {{TestHtml}}</div>
-		//이 경우 textnode는 초기화 되고 노드의 내용물이 재생성 된다.
-		//이 로인해서 연결되있던 포인터가 깨질 수 있으니 주의가 필요하다.
+		//새로운 로드를 생성해서 가지고 있을 노드 리스트
+		let newParent: ChildNode[] = [];
 
-		//arrElemAll.unshift(domHtml);
-		//읽기전용인 .childNodes를 이용하여 노드를 복원할 수 있다.
-		//싹다 날리고 백업해둔 .childNodes를 그대로 하나하나 생성하면 가능
-
-		//console.log(arrElemAll);
-		console.log(domHtml.childNodes);
-
-		
-		for (let nDomElemIdx: number = 0; nDomElemIdx < arrElemAll.length; ++nDomElemIdx)
-		{//엘리먼트 하나하나 검색
-
-			//검사할 엘리먼트
-			let itemElem: Element = arrElemAll[nDomElemIdx];
-			
-			//노드와 오버워치(감시자)가 일치하는 매치 리스트
-			let arrMatch: MatchInterface[] = [];
-			//매치 리스트를 만들고
-			//매치 리스트에서 문자열만 있는지 여부를 판단한다.
-			let bStringTargetIs
-				= this.TextTargetIs(Array.from(itemElem.childNodes)
-					, arrTarget, arrMatch);
-
-			if (true === bStringTargetIs)
-			{//문자열만 처리
-				this.OverwatchText_TextOnly(arrMatch);
-			}
-			else
-			{
-				//한개라도 html옵션이 있다면
-				this.OverwatchText_NewElement(itemElem, arrMatch);
-			}
-
-		}//end for nDomElemIdx
-	}
-
-	/**
-	 *  엘리 먼트 내용물 처리 - 감시 대상이 텍스트만 있는 경우 
-	 *  순수 텍스트는 Node로만 관리하는게 효율적이다.
-	 * @param arrMatch
-	 */
-	private OverwatchText_TextOnly(arrMatch: MatchInterface[])
-	{
-		for (let nMatchIdx = 0
-			; nMatchIdx < arrMatch.length
-			; ++nMatchIdx)
+		for (let nChildNodeIdx: number = 0
+			; nChildNodeIdx < arrChildNode.length
+			; ++nChildNodeIdx)
 		{
-			let itemMatch: MatchInterface = arrMatch[nMatchIdx];
+			//검사할 노드
+			let itemNode: ChildNode = arrChildNode[nChildNodeIdx];
 
-			if (null === itemMatch.Overwatch)
-			{//감시자가 없으면 별도의 처리를 하지 않는다.
-				continue;
+			
+			if (Node.TEXT_NODE === itemNode.nodeType)
+			{//텍스트 노드다
+
+				//텍스트 노드를 추가
+				newParent.push(...this.NodeMatch_Text(itemNode as Text, arrTarget));
 			}
-
-			if (true === itemMatch.Overwatch.OverwatchingOneIs
-				&& true === itemMatch.Overwatch.OneDataIs)
-			{//한개만 감시하는 옵션인데
-				//이미 데이터가 한개이상 감시중이다.
-
-				//추가작업은 패스 한다.
-			}
-			else
+			else if (Node.COMMENT_NODE === itemNode.nodeType)
 			{
-				//텍스트는 node로만 처리된다.
-				switch (itemMatch.Overwatch.OverwatchingType)
+				if (false === this.CommentDelete)
 				{
-					case OverwatchingType.Output_String:
-						{
-							itemMatch.Overwatch.OneDataIs = true;
-							itemMatch.Node.nodeValue
-								= itemMatch.Overwatch.data;
-						}
-						break;
-					case OverwatchingType.Monitoring_String:
-						{
-							//한번이상 매칭됨
-							itemMatch.Overwatch.OneDataIs = true;
-
-							//대상 돔 추가
-							itemMatch.Overwatch.Dom_Push_Node(itemMatch.Node);
-							//첫 바딩딩 데이터 출력
-							//elemTemp.innerHTML = itemOverwatch.data;
-							//debugger;
-							//elemTemp.insertAdjacentHTML("beforebegin", itemOverwatch.data);
-							itemMatch.Overwatch.DataRefresh();
-						}
-						break;
+					//주석은 그대로 추가한다.(바인딩 안함)
+					newParent.push(itemNode);
 				}
 			}
-		}
-	}
-
-	/**
-	 * 엘리 먼트 내용물 처리 - 새로운 앨리먼트 생성
-	 * 한개라도 html옵션이 있다면
-	 * 1) 대상 노드의 내용물을 싹 백업하고
-	 * 2) 대상 노드의 내용물을 싹 비운후
-	 * 3) 하나하나 엘리먼트로 생성하여
-	 * 4) 해당노드에 삽입한다.
-	 * 기존에 찾아둔 dom개체는 동작하지 않을 수 있다.
-	 * @param elemParents 처리할 노드를 가지고 있는 부모 개체
-	 * @param arrMatch 매치된 정보가 들어있는 배열
-	 */
-	private OverwatchText_NewElement(
-		elemParents: Element
-		, arrMatch: MatchInterface[])
-	{
-		//내용물 비우기
-		while (elemParents.firstChild)
-		{
-			elemParents.removeChild(elemParents.firstChild);
-		}
-		
-
-		for (let nMatchIdx = 0
-			; nMatchIdx < arrMatch.length
-			; ++nMatchIdx)
-		{
-			let itemMatch: MatchInterface = arrMatch[nMatchIdx];
-
-			//전체를 새로그려야한다
-			
-
-			if (null === itemMatch.Overwatch)
-			{//감시자가 없다.
-
-				//매칭정보가 없다면 일반 텍스트로 처리한다.
-				//기본 데이터는 엘리먼트에있는걸 사용한다.
-
-				elemParents.insertAdjacentText("beforeend", itemMatch.Node.textContent);
-				//elemParents.insertAdjacentText("beforeend", arrTemp);
-			}
 			else
-			{//대상 감시자가 있다.
-
-
-				switch (itemMatch.Overwatch.OverwatchingType)
-				{
-					case OverwatchingType.Output_String://단순 출력
-						elemParents.insertAdjacentText("beforeend", itemMatch.Overwatch.data);
-						break;
-					case OverwatchingType.Output_Html://단순 출력
-						elemParents.insertAdjacentHTML("beforeend", itemMatch.Overwatch.data);
-						break;
-
-					case OverwatchingType.Monitoring_String://모니터링 텍스트
-						//텍스트 개체를 만들고
-						let newMString: Text = document.createTextNode(itemMatch.Overwatch.data);
-						elemParents.appendChild(newMString);
-						//elemParents.insertAdjacentText("beforeend", newMString);
-						//추가한 노드를 찾고
-						let findNode: Node = elemParents.childNodes
-												.item(elemParents.childNodes.length - 1);
-						//감시 돔리스트에 넣는다.
-						itemMatch.Overwatch.Dom_Push_Node(findNode);
-						break;
-
-					case OverwatchingType.Monitoring_Html://모니터링 html
-						//html 개체를 만들고
-						let newMElem = document.createElement(this._ElementName);
-						//내용물을 html 처리를 한 후
-						newMElem.insertAdjacentHTML("beforeend", itemMatch.Overwatch.data);
-						//개체에 추가
-						elemParents.insertAdjacentElement("beforeend", newMElem);
-						//감시 돔리스트에 넣는다.
-						itemMatch.Overwatch.Dom_Push_Element(newMElem);
-						break;
-				}
-				
+			{//일반 노드
+				newParent.push(this.NodeMatch_Normal(itemNode, arrTarget));
 			}
 
-		}//end for nMatchIdx
+		}//end for nChildNodeIdx
+
+		//console.log("***** newParent *****");
+		//console.log(newParent);
+		//domParent.replaceChildren(...newParent);
 	}
-
-
 
 
 
@@ -258,105 +116,363 @@ export default class AxeView
 		return sOriData.replace(new RegExp(sSearch, 'g'), sReplacement);
 	}
 
-
 	/**
-	 * 지정된 전체 node리스트에서 연결된 오버워치를 묶어서 매칭시키고
-	 * text노드의 경우 문자열만 감시하고 있는지 여부를 리턴한다.
-	 * 매칭되는 정보가 없으면 Overwatch는 null이 된다.
-	 * @param nodeAll 검사할 노드
-	 * @param owTarget 매칭시킬 감시자 대상
-	 * @param refMatch 결과 리스트 리턴
-	 * @returns 문자열만 감시하고 있는지 여부. text노드가 아닌경우 true만 나오므로 주의해야 한다.
+	 * 지정된 텍스트 노드에서 감시자와의 매칭 정보를 찾고
+	 * 새로운 노드를 생성하여 리턴한다.
+	 * @param nodeText
+	 * @param owTarget
+	 * @param refMatch
+	 * @returns 새로 생성된 ChildNode
 	 */
-	private TextTargetIs(
-		nodeAll: ChildNode[]
-		, owTarget: Overwatch[]
-		, refMatch: MatchInterface[])
-		: boolean
+	private NodeMatch_Text(
+		nodeText: Text
+		, owTarget: Overwatch[])
+		: ChildNode[]
 	{
-		//문자열만 있는지 여부
-		let bOnlyString: boolean = true;
+		let newParent: ChildNode[] = [];
 
-		for (let nNodeIdx = 0
-			; nNodeIdx < nodeAll.length
-			; ++nNodeIdx)
-		{//노드 검색
-			let itemNode: ChildNode = nodeAll[nNodeIdx];
+		//이 텍스트를 잘라서 사용하고 완성된 텍스트 노드
+		//이 한 노드에서 여러개의 매칭 데이터가 있을 수 있으므로
+		//각자 쪼게서 쓴다음 해당 위치에 쪼겐 데이터를 넣어 완성시켜야 한다.
+		//이렇게 안하면 원본 텍스트를 여러번 쓰게 되므로 같은 줄이 여러번 나오는 문제가 있다.
+		let arrStrText: MatchStringInterface[] = [];
+		//초기값으로 전달받은 텍스트를 그대로 넣어 준다.
+		arrStrText.push({ Text: nodeText.textContent, Overwatch: null, Match: false });
 
-			//이 노드에서 매칭된 정보가 하나라도 있는지 여부
-			let bMatch: boolean = false;
 
-			for (let nOverwatchIdx = 0
-				; nOverwatchIdx < owTarget.length
-				; ++nOverwatchIdx)
-			{//감시자 검색
-				let itemOW: Overwatch = owTarget[nOverwatchIdx];
 
-				if (0 <= itemNode.textContent.indexOf(itemOW.NameFindString))
-				{//있다.
+		
+		for (let nOverwatchIdx = 0
+			; nOverwatchIdx < owTarget.length
+			; ++nOverwatchIdx)
+		{//감시자 검색
+			let itemOW: Overwatch = owTarget[nOverwatchIdx];
 
-					if (true == bOnlyString)
-					{//아직 문자열만 나왔다.
+			//console.log("arrStrText : " + itemOW.NameFindString);
+			//console.log(arrStrText);
 
-						if (Node.TEXT_NODE === itemNode.nodeType)
-						{//텍스트 노드이다.
+			if (true === itemOW.OverwatchingOneIs
+				&& true === itemOW.OneDataIs)
+			{//하나만 모니터링 하는 옵션
+				//이미 적중한 대상이 있다.
 
-							//엘리먼트의 내용물 중 Text만 추출
-							//https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-							if (itemOW.OverwatchingType === OverwatchingType.Output_String
-								|| itemOW.OverwatchingType === OverwatchingType.Monitoring_String)
-							{//문자열 처리만 있다.
-								bOnlyString = true;
-							}
-							else
-							{//문자열 처리외에 다른게 있다.
-								bOnlyString = false;
-							}
+				//다음 검색을 할 필요가 없다.
+				continue;
+			}
+			else
+			{
+				//arrStrText에 바로 반영한다.
+				//비교에 사용된 문자열은 
+				this.NodeMatch_String(arrStrText, itemOW);
+				//arrStrText = arrStrTextTemp;
+				
+				//debugger;
+			}
+			
+		}//end for nOverwatchIdx
 
-						}
-						else
-						{//텍스트 노드가 아니다.
-							bOnlyString = false;
-						}
-					}
 
-					//매치 리스트에 추가
-					refMatch.push({
-						Node: itemNode
-						, Overwatch: itemOW
-					});
 
-					bMatch = true;
+		//잘라진 데이터를 노드로 변환한다.
+		for (let i = 0; i < arrStrText.length; ++i)
+		{
+			let itemStrText: MatchStringInterface = arrStrText[i];
+
+			if (null === itemStrText.Overwatch)
+			{//내용물은 있는데 감시자가 없다.
+
+				//일반 택스트라는 소리다.
+				//textnode를 생성해서 추가한다.
+				newParent.push(document.createTextNode(itemStrText.Text));
+			}
+			else if (OverwatchingType.Output_String === itemStrText.Overwatch.OverwatchingType)
+			{//감시자가 없거나
+				//감시 타입이 단순 문자열 출력이다.
+
+				//일반 택스트라는 소리다.
+				//textnode를 생성해서 추가한다.
+				newParent.push(
+					document.createTextNode(
+						itemStrText.Overwatch.data));
+			}
+			else if (OverwatchingType.Monitoring_String
+					=== itemStrText.Overwatch.OverwatchingType)
+			{//문자열 모니터링이다.
+				if ("" === itemStrText.Text)
+				{//내용물이 없다.
+					continue;
+				}
+				else if (null !== itemStrText.Overwatch)
+				{//매칭된 감시자가 있다.
+
+					//dom을 만들고
+					let newTextDom: Text = document.createTextNode(itemStrText.Overwatch.data);
+					//부모에 전달
+					newParent.push(newTextDom);
+					//감시자에 추가
+					itemStrText.Overwatch.Dom_Push_Node(newTextDom);
 				}
 				else
+				{//내용물은 있는데 감시자가 없다.
+
+					//일반 택스트라는 소리다.
+					//textnode를 생성해서 추가한다.
+					newParent.push(document.createTextNode(itemStrText.Text));
+				}
+			}
+			else if (OverwatchingType.Output_Html === itemStrText.Overwatch.OverwatchingType
+				|| OverwatchingType.Monitoring_Html === itemStrText.Overwatch.OverwatchingType)
+			{//감시 타입이 단순 html 출력이다.
+				//감시 타입이 html모니터링이다.
+
+				if ("" === itemStrText.Text)
+				{//내용물이 없다.
+					continue;
+				}
+				else if (null !== itemStrText.Overwatch)
+				{//매칭된 감시자가 있다.
+
+					//html 개체를 만들고
+					let newMElem: HTMLElement
+						= document.createElement("template");
+					//내용물을 html 처리를 한 후
+					newMElem.insertAdjacentHTML(
+						"beforeend"
+						, itemStrText.Overwatch.data);
+
+					//리턴 리스트에 추가
+					newParent.push(newMElem.firstChild);
+
+					//
+					if (OverwatchingType.Monitoring_Html
+							=== itemStrText.Overwatch.OverwatchingType)
+					{//모니터링이다.
+
+						//감시자  dom리스트에 추가
+						itemStrText.Overwatch.Dom_Push_HTMLElement(
+							<HTMLElement>newMElem.firstChild);
+					}
+				}
+				else
+				{//아무조건도 맞지 않는다.
+
+					//임시로 텍스트 노드로 생성한다.
+					//원칙적으로는 여기에 오면 안된다.
+					newParent.push(document.createTextNode(itemStrText.Text));
+					debugger;
+				}
+			}
+		}
+
+
+		//console.log("▷▷▷ newParent End : " + nodeText.textContent);
+		//console.log(newParent);
+		//console.log("◁◁ ◁ ");
+
+		return newParent;
+	}
+
+	/**
+	 * 일반 노드(재귀를 한다)
+	 * 내용물을 분석하여 감시자가 연결된 부모노드(HTMLElement)를 새로 생성한다.
+	 * 텍스트 노드만 있을때까지 재귀하게 된다.
+	 * 텍스트 노드는 감시자와 비교하여 잘라내고, 
+	 * 감시자를 연결하고 새로 생성된 HTMLElement을 리턴한다.
+	 * @param nodeParent
+	 * @param owTarget
+	 */
+	private NodeMatch_Normal(
+		nodeParent: ChildNode
+		, owTarget: Overwatch[])
+		: HTMLElement
+	{
+		//부모노드로 새 엘리먼트를 생성한다.
+		let newElemParent: HTMLElement = document.createElement(nodeParent.nodeName);
+
+		//이 노드의 자식 노드를 저장
+		let arrChildNode: ChildNode[] = Array.from(nodeParent.childNodes);
+
+		for (let nChildNodeIdx: number = 0
+			; nChildNodeIdx < arrChildNode.length
+			; ++nChildNodeIdx)
+		{
+
+			//검사할 노드
+			let itemNode: ChildNode = arrChildNode[nChildNodeIdx];
+
+			if (Node.TEXT_NODE === itemNode.nodeType)
+			{//텍스트 노드다
+
+				//텍스트 노드를 생성하고
+				let newText: ChildNode[]
+					= this.NodeMatch_Text(itemNode as Text, owTarget);
+				//노드에 추가
+				for (let nNewTextIdx = 0; nNewTextIdx < newText.length; ++nNewTextIdx)
 				{
-					
+					let itemText: ChildNode = newText[nNewTextIdx];
+					newElemParent.appendChild(itemText);
 				}
 
-			}//end for nOverwatchIdx
-
-
-			if (false === bMatch)
+			}
+			else if (Node.COMMENT_NODE === itemNode.nodeType)
 			{
-				//매치 리스트에 추가
-				refMatch.push({
-					Node: itemNode
+				if (false === this.CommentDelete)
+				{
+					//주석은 그대로 추가한다.(바인딩 안함)
+					newElemParent.appendChild(itemNode);
+				}
+			}
+			else
+			{//일반 노드
+				newElemParent.appendChild(this.NodeMatch_Normal(itemNode, owTarget));
+			}
+
+		}//end for nChildNodeIdx
+
+
+		return newElemParent;
+	}
+
+	/**
+	 * 지정된 문자열을 감시자와 비교하여 자르고,
+	 * 지정된 감시자가 감시할게 있는지 확인하여 
+	 * 잘라진 리스트를 리턴한다.
+	 * @param sText
+	 * @param owTarget
+	 */
+	private NodeMatch_TextCut(
+		sText: string
+		, owTarget: Overwatch)
+		: MatchStringInterface[]
+	{
+		let arrStrText: MatchStringInterface[] = [];
+
+		//검사할 값 임시 저장
+		let sTemp: string = sText;
+
+		let nFindIdx: number = -1;
+
+		while(true)
+		{
+			if (true === owTarget.OverwatchingOneIs
+				&& true === owTarget.OneDataIs)
+			{
+				//이미 하나가 일치했으니 더 검사할 필요가 없다.
+				break;
+			}
+
+			//뒤에 남은게 있나 검사
+			nFindIdx = sTemp.indexOf(owTarget.NameFindString);
+
+			if (0 > nFindIdx)
+			{//일치하는게 하나도 없다.
+				break;
+			}
+
+			//if (owTarget.NameFindString === "{{HtmlTest}}") debugger;
+			owTarget.OneDataIs = true;
+
+			if (0 !== nFindIdx)
+			{//검색값이 0이다.
+
+				//검색된값이 맨앞에 있다는 의미이므로 빈값은 추가할 필요가 없다.
+				
+				//앞에 값 추가
+				arrStrText.push({
+					Text: sTemp.substring(0, nFindIdx)
 					, Overwatch: null
+					, Match: false
 				});
 			}
-		}//end for nNodeIdx
 
+			//일치값 추가
+			arrStrText.push({
+				Text: owTarget.NameFindString
+				, Overwatch: owTarget
+				, Match: true
+			});
 
-		return bOnlyString;
+			//뒤에값은 한번 더 검사해야하니 임시저장
+			sTemp = sTemp.substring(nFindIdx + owTarget.NameFindString.length);
+
+			if ("" === sTemp)
+			{//뒤에 값이 없다.
+
+				//뒤에 값이 없으면 더 검사할 필요가 없다.
+				break;
+			}
+			//console.log("NodeMatch_TextCut(" + owTarget.NameFindString + ") : " + sTemp);
+
+		}//end while(true)
+		
+
+		//남은것 추가
+		arrStrText.push({
+			Text: sTemp
+			, Overwatch: null
+			, Match: false
+		});
+
+		return arrStrText;
 	}
+
+	/**
+	 * 문자열 리스트를 한개의 감시자와 매칭 시키면서 자른다.
+	 * 한개의 감시자 기준이므로 결과물이 앞에서 뒤로 쌓인다.
+	 * @param arrStrText 검사 및 변형할 텍스트 배열
+	 * @param itemOW
+	 */
+	private NodeMatch_String(
+		arrStrText: MatchStringInterface[]
+		, itemOW: Overwatch)
+	{
+
+		//잘려진 문자열중 일치하는 문자열이 있는지 확인한다.
+		for (let nFindTextIdx = 0
+			; nFindTextIdx < arrStrText.length
+			; ++nFindTextIdx)
+		{
+			let itemFindText: MatchStringInterface = arrStrText[nFindTextIdx];
+
+			//일치하는 문자열 찾기
+			let nFindIdx = itemFindText.Text.indexOf(itemOW.NameFindString);
+
+			if (0 <= nFindIdx
+				&& itemFindText.Match === false)
+			{//있다.
+				//이미 매칭된 텍스트는 수정할 필요가 없다.
+
+				//if (itemOW.NameFindString === "{{HtmlTest}}") debugger;
+				//적중한 대상이 있다.
+				//여기서 itemOW.OneDataIs = true;를 넣어버리면
+				//텍스트를 쪼겔때 이미 매칭된 결과로 표시되서 쪼게지지 않는다.
+				//예> this.NodeMatch_TextCut
+				//각 if문 안에서 필요에 따라 변경하자
+
+
+				let arrStrTextCut: MatchStringInterface[]
+					= this.NodeMatch_TextCut(itemFindText.Text, itemOW);
+
+				//잘린 대상의 뒤에 추가하고 잘린대상은 지운다.
+				arrStrText.splice(nFindTextIdx, 1, ...arrStrTextCut);
+
+			}//end if (0 <= nFindIdx)
+		}//end for nFindTextIdx
+	}
+
+
 }
 
 
 
-
-/** 노드와 오버워치가 일치하는 매치 리스트 */
-interface MatchInterface
+/** 문자열과 매칭된 감시자 */
+interface MatchStringInterface
 {
-	Node: HTMLElement | ChildNode
+	/** 매칭된 문자열. 혹은 남은 문자열 */
+	Text: string 
+	/** 매칭된 감시자. 매칭이 없는경우 null */
 	, Overwatch: Overwatch | null
+	/** 명시적으로 매칭됐는지 여부. 
+	 * 감시자가 없어도 매칭에 사용되지 않을 문자열은 이것을 true로 해둔다.*/
+	, Match: boolean
 }
