@@ -99,7 +99,7 @@ export default class AxeView
 
 		//console.log("***** newParent *****");
 		//console.log(newParent);
-		//domParent.replaceChildren(...newParent);
+		domParent.replaceChildren(...newParent);
 	}
 
 
@@ -139,8 +139,6 @@ export default class AxeView
 		//초기값으로 전달받은 텍스트를 그대로 넣어 준다.
 		arrStrText.push({ Text: nodeText.textContent, Overwatch: null, Match: false });
 
-
-
 		
 		for (let nOverwatchIdx = 0
 			; nOverwatchIdx < owTarget.length
@@ -162,11 +160,7 @@ export default class AxeView
 			else
 			{
 				//arrStrText에 바로 반영한다.
-				//비교에 사용된 문자열은 
 				this.NodeMatch_String(arrStrText, itemOW);
-				//arrStrText = arrStrTextTemp;
-				
-				//debugger;
 			}
 			
 		}//end for nOverwatchIdx
@@ -243,7 +237,6 @@ export default class AxeView
 					//리턴 리스트에 추가
 					newParent.push(newMElem.firstChild);
 
-					//
 					if (OverwatchingType.Monitoring_Html
 							=== itemStrText.Overwatch.OverwatchingType)
 					{//모니터링이다.
