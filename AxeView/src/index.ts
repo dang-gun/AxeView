@@ -14,6 +14,9 @@ export default class StartUp
 
 	constructor()
 	{
+		//주석 제거
+		this.AxeView.CommentDelete = true;
+
 		//엑스뷰 테스트****
 		this.arrTarget.push(
 			//단순 문자열 검색
@@ -51,6 +54,23 @@ export default class StartUp
 				, OverwatchingOneIs: false
 			}));
 
+		this.arrTarget.push(
+			new Overwatch({
+				Name: "MonitoringAttr1"
+				, Action: "attrTest1"
+				, OverwatchingType: OverwatchingType.Monitoring_String
+				, OverwatchingOneIs: false
+			}));
+
+		this.arrTarget.push(
+			//모니터링 문자열 검색
+			new Overwatch({
+				Name: "MonitoringAttr2"
+				, Action: "attrTest2"
+				, OverwatchingType: OverwatchingType.Monitoring_String
+				, OverwatchingOneIs: false
+			}));
+
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
 			, this.arrTarget);
@@ -63,6 +83,9 @@ export default class StartUp
 	{
 		this.arrTarget[2].data = "클릭했다!!!";
 		this.arrTarget[3].data = "<h2>클릭했다!!HTML</h2>";
+
+		this.arrTarget[4].data = "Click1";
+		this.arrTarget[5].data = "Check2";
 		console.log("클릭함");
 	}
 }

@@ -30,6 +30,9 @@ export default class AxeView
 	 * 
 	 * 기존 내용물을 남기고 부분교체하는 방법을 찾아보았지만 정답이 없어서
 	 * 그냥 새로그리는 방법을 사용하기로 결정하였다.
+	 * 단, 텍스트 노드가 없
+	 * 
+	 * 텍스트 노드가 아닌 대상을 감시할때는 
 	 * @param domParent 검색할 부모 dom
 	 * @param arrTarget 감시자 리스트
 	 */
@@ -48,6 +51,8 @@ export default class AxeView
 		//처음에는 이런 예외적인 사항을 따로 관리하도록 구현했지만
 		//다양한 기능을 추가하면서 이런 예외를 따로 분리해주는 코드가 복잡해지는 문제가 발생하여
 		//그냥 모든 개체를 다시 생성하는 방향으로 재구현 하였다.
+		//
+		//모든 구현이 끝나고 최적화할때 다시 도전해볼 예정이다.
 
 
 		if (!(domParent))
@@ -55,66 +60,23 @@ export default class AxeView
 			throw "검색할 dom 을 전달해야 합니다.";
 		}
 
-		let objThis = this;
-
-		//모든 자식 노드 검색
-		let arrChildNode: ChildNode[] = Array.from(domParent.childNodes);
-
-		//console.log("***** All Node *****");
-		//console.log(arrChildNode);
-		//console.log("***** ******** *****");
-
 
 		//새로운 로드를 생성해서 가지고 있을 노드 리스트
 		let newParent: ChildNode[] = [];
-
-		for (let nChildNodeIdx: number = 0
-			; nChildNodeIdx < arrChildNode.length
-			; ++nChildNodeIdx)
-		{
-			//검사할 노드
-			let itemNode: ChildNode = arrChildNode[nChildNodeIdx];
-
-			
-			if (Node.TEXT_NODE === itemNode.nodeType)
-			{//텍스트 노드다
-
-				//텍스트 노드를 추가
-				newParent.push(...this.NodeMatch_Text(itemNode as Text, arrTarget));
-			}
-			else if (Node.COMMENT_NODE === itemNode.nodeType)
-			{
-				if (false === this.CommentDelete)
-				{
-					//주석은 그대로 추가한다.(바인딩 안함)
-					newParent.push(itemNode);
-				}
-			}
-			else
-			{//일반 노드
-				newParent.push(this.NodeMatch_Normal(itemNode, arrTarget));
-			}
-
-		}//end for nChildNodeIdx
+		//자식만 추가한다.
+		newParent.push(
+			...Array.from(
+				this.NodeMatch_Normal(domParent, arrTarget)
+					.childNodes));
 
 		//console.log("***** newParent *****");
 		//console.log(newParent);
+		//새로 만든 노드를 넣어준다.
 		domParent.replaceChildren(...newParent);
 	}
 
 
 
-	/**
-	 * 지정한 문자열을 모두 찾아 
-	 * @param sOriData 원본
-	 * @param sSearch 찾을 문자열
-	 * @param sReplacement 바꿀 문자열
-	 * @returns 완성된 결과
-	 */
-	private ReplaceAll(sOriData: string, sSearch: string, sReplacement: string): string
-	{
-		return sOriData.replace(new RegExp(sSearch, 'g'), sReplacement);
-	}
 
 	/**
 	 * 지정된 텍스트 노드에서 감시자와의 매칭 정보를 찾고
@@ -279,12 +241,20 @@ export default class AxeView
 		, owTarget: Overwatch[])
 		: HTMLElement
 	{
+
 		//부모노드로 새 엘리먼트를 생성한다.
-		let newElemParent: HTMLElement = document.createElement(nodeParent.nodeName);
+		//자신의 노드만 생성한다.
+		//let newElemParent: HTMLElement = document.createElement(nodeParent.nodeName);
+		let newElemParent: HTMLElement = nodeParent.cloneNode(false) as HTMLElement;
 
-		//이 노드의 자식 노드를 저장
+		//엘리먼트를 유지하기위해 새로 생성한 부모노드에 엘리먼트를 복사한다.
+		//Array.from((nodeParent as HTMLElement).attributes)
+		//	.forEach(attr => { newElemParent.setAttribute(attr.nodeName, attr.nodeValue) });
+		
+		//이 노드의 자식 노드 추출
 		let arrChildNode: ChildNode[] = Array.from(nodeParent.childNodes);
-
+		
+		//자식 노드 만큼 검사
 		for (let nChildNodeIdx: number = 0
 			; nChildNodeIdx < arrChildNode.length
 			; ++nChildNodeIdx)
@@ -317,7 +287,24 @@ export default class AxeView
 			}
 			else
 			{//일반 노드
-				newElemParent.appendChild(this.NodeMatch_Normal(itemNode, owTarget));
+
+				//엘리먼트 검사
+
+				//새 엘리먼트를 매칭 시키고
+				let newNodeMatch: HTMLElement
+					= this.NodeMatch_Normal(itemNode, owTarget);
+
+				//Array.from((itemNode as HTMLElement).attributes)
+
+
+				//어트리뷰트 판단.
+				this.NodeMatch_Attr(	
+					newNodeMatch
+					, owTarget);
+				debugger;
+
+				//새 부모에 추가
+				newElemParent.appendChild(newNodeMatch);
 			}
 
 		}//end for nChildNodeIdx
@@ -453,6 +440,174 @@ export default class AxeView
 		}//end for nFindTextIdx
 	}
 
+	/**
+	 * 어트리뷰트의 내용을 매칭시킨다.
+	 * 어트리뷰트는 새로 생성하지 안으므로 'nodeParent'를 직접 수정한다.
+	 * @param nodeParent
+	 * @param owTarget
+	 */
+	private NodeMatch_Attr(
+		nodeParent: ChildNode
+		, owTarget: Overwatch[])
+	{
+
+		//어트리뷰트를 추출한다.
+		let arrAttr: Attr[] = Array.from((nodeParent as HTMLElement).attributes);
+
+		//
+		for (let nAttrIdx: number = 0
+			; nAttrIdx < arrAttr.length
+			; ++nAttrIdx)
+		{
+			//검사할 어트리뷰트
+			let itemAttr: Attr = arrAttr[nAttrIdx];
+
+			this.NodeMatch_AttrOne(itemAttr, owTarget, nodeParent);
+
+		}
+	}
+
+	private NodeMatch_AttrOne(
+		attrItem: Attr
+		, owTarget: Overwatch[]
+		, nodeParent: ChildNode)
+	{
+		debugger;
+		for (let nOverwatchIdx = 0
+			; nOverwatchIdx < owTarget.length
+			; ++nOverwatchIdx)
+		{
+			let itemOW: Overwatch = owTarget[nOverwatchIdx];
+
+			if (true === itemOW.OverwatchingOneIs
+				&& true === itemOW.OneDataIs)
+			{//하나만 모니터링 하는 옵션
+				//이미 적중한 대상이 있다.
+
+				//다음 검색을 할 필요가 없다.
+				continue;
+			}
+			else if (OverwatchingType.Output_Html === itemOW.OverwatchingType
+				|| OverwatchingType.Monitoring_Html === itemOW.OverwatchingType)
+			{//html 옵션이면 무시한다.
+				continue;
+			}
+			else
+			{
+				console.log("attrItem : " + attrItem.name + ", " + attrItem.value);
+				//debugger;
+				if ("" === attrItem.value)
+				{//벨류가 없으면 이름만 있는 속성이다.
+
+					if (itemOW.NameFindString.toLowerCase() === attrItem.name)
+					{//이름이 감시자와 일치한다.
+
+						//감시자의 값으로 변경
+						let elemTemp: HTMLElement = nodeParent as HTMLElement;
+						//기존 이름 제거
+						elemTemp.removeAttribute(attrItem.name);
+						//새 이름 추가(값없음)
+						elemTemp.setAttribute(itemOW.data, "");
+
+						//감시자에 추가
+						itemOW.OneDataIs = true;
+
+						debugger;
+
+						if (itemOW.OverwatchingType === OverwatchingType.Monitoring_String)
+						{
+							itemOW.Dom_Push_Valueless(nodeParent);
+						}
+					}
+				}
+				else if (attrItem.value === itemOW.NameFindString)
+				{//벨류가 하나만 있고, 이것이 일치 한다.
+
+					//초기값 입력
+					attrItem.value = itemOW.data;
+
+					//감시자에 추가
+					itemOW.OneDataIs = true;
+					if (itemOW.OverwatchingType === OverwatchingType.Monitoring_String)
+					{
+						itemOW.Dom_Push_OneValue(attrItem);
+					}
+				}
+				else if (true === attrItem.value.includes(itemOW.NameFindString))
+				{//값에 부분 일치가 있다.
+
+					if (true === itemOW.OverwatchingOneIs)
+					{//하나만 교체
+						attrItem.value
+							= attrItem.value.replace(
+								itemOW.NameFindString
+								, itemOW.data);
+					}
+					else
+					{//전체 교체
+						attrItem.value = this.ReplaceAll(
+							attrItem.value
+							, itemOW.NameFindString
+							, itemOW.data);
+					}
+					
+
+					//감시자에 추가
+					itemOW.OneDataIs = true;
+					if (itemOW.OverwatchingType === OverwatchingType.Monitoring_String)
+					{
+						itemOW.Dom_Push_ReplaceValue(attrItem);
+					}
+				}
+			}//end if (true === itemOW.OverwatchingOneIs
+
+		}//end for nOverwatchIdx
+	}
+
+	/**
+	 * 지정된 엘리먼트에 비어있지 않은 textnode가 한개라도 있는지 확인한다.
+	 * 한개라도 있으면 true
+	 * @param el
+	 */
+	private TextNodesIs(el: Element): boolean
+	{
+		// https://stackoverflow.com/a/44516001/6725889
+
+		let bReturn: boolean = false;
+
+		const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+		
+		while (walker.nextNode())
+		{
+			let sTemp: string = walker.currentNode.textContent;
+
+			//직접 정규식을 써야 제거가 되서 'ReplaceAll'를 쓰지 않음
+			sTemp = sTemp.replace(/\n/g, "");
+			sTemp = sTemp.replace(/\t/g, "");
+
+			if ("" !== sTemp)
+			{//하나라도 텍스트 노드 데이터가 있으면
+
+				bReturn = true;
+				break;
+			};
+		}
+		return bReturn;
+	}
+
+
+
+	/**
+	 * 지정한 문자열을 모두 찾아 
+	 * @param sOriData 원본
+	 * @param sSearch 찾을 문자열
+	 * @param sReplacement 바꿀 문자열
+	 * @returns 완성된 결과
+	 */
+	private ReplaceAll(sOriData: string, sSearch: string, sReplacement: string): string
+	{
+		return sOriData.replace(new RegExp(sSearch, 'g'), sReplacement);
+	}
 
 }
 

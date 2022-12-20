@@ -22,6 +22,9 @@ export class Overwatch implements OverwatchInterface
 	 */
 	private ActionSet: Function = function (data: any)
 	{
+		//기존값 백업
+		let OldData: any = this.Action;
+		//새값 저장
 		this.Action = data;
 
 		if (null !== this._Dom
@@ -32,16 +35,49 @@ export class Overwatch implements OverwatchInterface
 			for (let nDomIdx: number = 0; nDomIdx < this._Dom.length; ++nDomIdx)
 			{
 				let item: AxeViewDomInterface = this.Dom[nDomIdx];
-				//item.innerHTML = data;
+				//item.innerHTML = this.Action;
 				if (AxeViewDomType.Node === item.AxeViewDomType)
 				{
-					(item.Dom as Node).nodeValue = data;
+					(item.Dom as Node).nodeValue = this.Action;
+				}
+				else if (AxeViewDomType.Attr_OneValue === item.AxeViewDomType)
+				{
+					(item.Dom as Attr).value = this.Action;
+				}
+				else if (AxeViewDomType.Attr_ReplaceValue === item.AxeViewDomType)
+				{
+					let attrTemp: Attr = item.Dom as Attr;
+
+					if (true === this.OverwatchingOneIs)
+					{//한개만 교체
+						attrTemp.value
+							= attrTemp.value.replace(
+								OldData.toLowerCase()
+								, this.Action);
+					}
+					else
+					{//전체 교체
+						attrTemp.value
+							= this.ReplaceAll(
+								attrTemp.value
+								, OldData.toLowerCase()
+								, this.Action);
+					}
+				}
+				else if (AxeViewDomType.Attr_Valueless === item.AxeViewDomType)
+				{
+					//값이 없는 값은 속성자체를 바꿔야 한다.
+					let elemTemp: HTMLElement = (item.Dom as HTMLElement);
+					//기존 이름 제거
+					elemTemp.removeAttribute(OldData.toLowerCase());
+					//새 이름 추가(값없음)
+					elemTemp.setAttribute(this.Action, "");
 				}
 				else
 				{
 					(item.Dom as HTMLElement).innerHTML = data;
 					
-				}	
+				}
 			}
 			
 		}
@@ -96,7 +132,36 @@ export class Overwatch implements OverwatchInterface
 			, Dom: domPushData
 		});
 	}
-	
+
+	/**
+	 * 연결된 돔 추가 - 값없는 속성
+	 * 이 함수를 호출하기전에 속성의 이름을 이 감시자가 가지고 있는 값으로 변경해야 한다.
+	 * @param domPushData
+	 */
+	public Dom_Push_Valueless(domPushData: ChildNode)
+	{
+		this._Dom.push({
+			AxeViewDomType: AxeViewDomType.Attr_Valueless
+			, Dom: domPushData
+		});
+	}
+
+	public Dom_Push_OneValue(domPushData: Attr)
+	{
+		this._Dom.push({
+			AxeViewDomType: AxeViewDomType.Attr_OneValue
+			, Dom: domPushData
+		});
+	}
+
+	public Dom_Push_ReplaceValue(domPushData: Attr)
+	{
+		this._Dom.push({
+			AxeViewDomType: AxeViewDomType.Attr_ReplaceValue
+			, Dom: domPushData
+		});
+	}
+
 	/** 연결된 돔 비우기 */
 	public Dom_Clear()
 	{
@@ -141,6 +206,18 @@ export class Overwatch implements OverwatchInterface
 		this.Action = target.Action;
 		this.OverwatchingType = target.OverwatchingType;
 		this.OverwatchingOneIs = target.OverwatchingOneIs;
+	}
+
+	/**
+	 * 지정한 문자열을 모두 찾아 
+	 * @param sOriData 원본
+	 * @param sSearch 찾을 문자열
+	 * @param sReplacement 바꿀 문자열
+	 * @returns 완성된 결과
+	 */
+	private ReplaceAll(sOriData: string, sSearch: string, sReplacement: string): string
+	{
+		return sOriData.replace(new RegExp(sSearch, 'g'), sReplacement);
 	}
 
 }
