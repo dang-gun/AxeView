@@ -199,6 +199,22 @@ export class Overwatch
 	{
 		let objThis: Overwatch = this;
 
+		//이름 처리
+		if (OverwatchingOutputType.Function_NameRemoveOn === this.OverwatchingOutputType)
+		{//이름 앞에 'on'을 뺀다.
+
+			if (2 <= sEventName.length)
+			{//이름 길이가 충분하다
+
+				if ("on" === sEventName.substring(0, 2).toLowerCase())
+				{//앞에 두글자가 'on'이다.
+
+					//2뒤에 글자만 추출
+					sEventName = sEventName.substring(2);
+				}
+			}
+		}
+
 		//돔에 추가할 액스뷰 돔형식 생성
 		let avdTemp: AxeViewDomInterface = {
 			AxeViewDomType: AxeViewDomType.Attr_Event
@@ -216,21 +232,6 @@ export class Overwatch
 
 
 		this._Dom.push(avdTemp);
-
-		if (OverwatchingOutputType.Function_NameRemoveOn === this.OverwatchingOutputType)
-		{//이름 앞에 'on'을 뺀다.
-
-			if (2 <= sEventName.length)
-			{//이름 길이가 충분하다
-
-				if ("on" === sEventName.substring(0, 2).toLowerCase())
-				{//앞에 두글자가 'on'이다.
-
-					//2뒤에 글자만 추출
-					sEventName = sEventName.substring(2);
-				}
-			}
-		}
 
 		(avdTemp.Dom as Node).removeEventListener(sEventName, avdTemp.Event);
 		(avdTemp.Dom as Node).addEventListener(sEventName, avdTemp.Event);
