@@ -5,12 +5,20 @@ export interface AxeViewDomInterface
 	 * 대상 돔
 	 * 사용하는 옵션에 따라 각이 다른 오브젝트가 저장될 수 있다.
 	 * */
-	Dom: HTMLElement | Node | Attr;
+	Dom: HTMLElement | Node | Attr | Function;
 
-
+	/** 엑스뷰에서 동작할 방식 */
 	AxeViewDomType: AxeViewDomType;
+
+	/** 이벤트 이름이 필요할때 추가한다. */
+	EventName?: string | null;
+
+	/** 이벤트 내용이 필요할때 추가한다. */
+	Event?: EventListener | null;
 }
 
+
+/** 엑스뷰에서 동작할 방식 */
 export const enum AxeViewDomType
 {
 	/** 없음. 동작하지 않음 */

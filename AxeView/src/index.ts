@@ -1,6 +1,6 @@
 ﻿
 
-import AxeView, { Overwatch, OverwatchInterface, OverwatchingType } from "./AxeView/AxeView";
+import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, OverwatchingType } from "./AxeView/AxeView";
 
 
 
@@ -22,8 +22,9 @@ export default class StartUp
 			//단순 문자열 검색
 			new Overwatch({
 				Name: "StringTest"
-				, Action: "문자열 출력!!"
-				, OverwatchingType: OverwatchingType.Output_String
+				, FirstData: "문자열 출력!!"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: true
 			}));
 
@@ -31,8 +32,9 @@ export default class StartUp
 			//단순 html 검색
 			new Overwatch({
 				Name: "HtmlTest"
-				, Action: "<h3>Html 출력!</h3>"
-				, OverwatchingType: OverwatchingType.Output_Html
+				, FirstData: "<h3>Html 출력!</h3>"
+				, OverwatchingOutputType: OverwatchingOutputType.Html
+				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: true
 			}));
 
@@ -40,8 +42,9 @@ export default class StartUp
 			//모니터링 문자열 검색
 			new Overwatch({
 				Name: "MonitoringString"
-				, Action: "모니터링중(문자열)"
-				, OverwatchingType: OverwatchingType.Monitoring_String
+				, FirstData: "모니터링중(문자열)"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Monitoring
 				, OverwatchingOneIs: false
 			}));
 
@@ -49,16 +52,18 @@ export default class StartUp
 			//모니터링 문자열 검색
 			new Overwatch({
 				Name: "MonitoringHtml"
-				, Action: "<h1>모니터링중(Html)</h1>"
-				, OverwatchingType: OverwatchingType.Monitoring_Html
+				, FirstData: "<h1>모니터링중(Html)</h1>"
+				, OverwatchingOutputType: OverwatchingOutputType.Html
+				, OverwatchingType: OverwatchingType.Monitoring
 				, OverwatchingOneIs: false
 			}));
 
 		this.arrTarget.push(
 			new Overwatch({
 				Name: "MonitoringAttr1"
-				, Action: "attrTest1"
-				, OverwatchingType: OverwatchingType.Monitoring_String
+				, FirstData: "attrTest1"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Monitoring
 				, OverwatchingOneIs: false
 			}));
 
@@ -66,8 +71,29 @@ export default class StartUp
 			//모니터링 문자열 검색
 			new Overwatch({
 				Name: "MonitoringAttr2"
-				, Action: "attrTest2"
-				, OverwatchingType: OverwatchingType.Monitoring_String
+				, FirstData: "attrTest2"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: false
+			}));
+
+		this.arrTarget.push(
+			//모니터링 문자열 검색
+			new Overwatch({
+				Name: "FunctionTest"
+				, FirstData: function (
+					sender: ChildNode
+					, event: Event
+					, objThis: Overwatch)
+				{
+					alert("바인딩됨");
+					console.log(sender);
+					console.log(event);
+					console.log(objThis);
+					debugger;
+				}
+				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
+				, OverwatchingType: OverwatchingType.Monitoring
 				, OverwatchingOneIs: false
 			}));
 
@@ -86,6 +112,19 @@ export default class StartUp
 
 		this.arrTarget[4].data = "Click1";
 		this.arrTarget[5].data = "Check2";
+
+		this.arrTarget[6].data = function (
+			sender: ChildNode
+			, event: Event
+			, objThis: Overwatch)
+		{
+			alert("재바인딩됨");
+			console.log(sender);
+			console.log(event);
+			console.log(objThis);
+			debugger;
+		};
+
 		console.log("클릭함");
 	}
 }

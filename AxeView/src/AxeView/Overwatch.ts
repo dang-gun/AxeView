@@ -1,31 +1,35 @@
 ﻿import { OverwatchInterface } from "./OverwatchInterface";
 import { AxeViewDomInterface, AxeViewDomType } from "./AxeViewDomInterface";
-import { OverwatchingType } from "./OverwatchingType"
+import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType"
 
 /** 감시 대상  */
-export class Overwatch implements OverwatchInterface
+export class Overwatch
 {
+	/**
+	 * 찾을 이름
+	 * OverwatchInterface.Name 참조
+	 * */
 	public Name: string = "";
 	/** 이름 검색용 문자열
 	 * 자동생성된다.*/
 	public NameFindString: string = "";
-	 
-	public Action: any = null;
+
+	/** 지금 가지고 있는 데이터 */
+	private DataNow: string | Function = "";
+
 	/**
 	 * 실제 동작 get
-	 * 단순 표시의 경우 이 함수를 재정의 하지 말고 사용한다.
 	 */
-	private ActionGet: Function = function () { return this.Action; };
+	private DataNowGet: Function = function () { return this.DataNow; };
 	/**
 	 * 실제 동작 set
-	 * 단순 표시의 경우 이 함수를 재정의 하지 말고 사용한다.
 	 */
-	private ActionSet: Function = function (data: any)
+	private DataNowSet: Function = function (data: any)
 	{
 		//기존값 백업
-		let OldData: any = this.Action;
+		let OldData: any = this.DataNow;
 		//새값 저장
-		this.Action = data;
+		this.DataNow = data;
 
 		if (null !== this._Dom
 			&& 0 < this._Dom.length)
@@ -35,14 +39,14 @@ export class Overwatch implements OverwatchInterface
 			for (let nDomIdx: number = 0; nDomIdx < this._Dom.length; ++nDomIdx)
 			{
 				let item: AxeViewDomInterface = this.Dom[nDomIdx];
-				//item.innerHTML = this.Action;
+				//item.innerHTML = this.DataNow;
 				if (AxeViewDomType.Node === item.AxeViewDomType)
 				{
-					(item.Dom as Node).nodeValue = this.Action;
+					(item.Dom as Node).nodeValue = this.DataNow;
 				}
 				else if (AxeViewDomType.Attr_OneValue === item.AxeViewDomType)
 				{
-					(item.Dom as Attr).value = this.Action;
+					(item.Dom as Attr).value = this.DataNow;
 				}
 				else if (AxeViewDomType.Attr_ReplaceValue === item.AxeViewDomType)
 				{
@@ -53,7 +57,7 @@ export class Overwatch implements OverwatchInterface
 						attrTemp.value
 							= attrTemp.value.replace(
 								OldData.toLowerCase()
-								, this.Action);
+								, this.DataNow);
 					}
 					else
 					{//전체 교체
@@ -61,7 +65,7 @@ export class Overwatch implements OverwatchInterface
 							= this.ReplaceAll(
 								attrTemp.value
 								, OldData.toLowerCase()
-								, this.Action);
+								, this.DataNow);
 					}
 				}
 				else if (AxeViewDomType.Attr_Valueless === item.AxeViewDomType)
@@ -71,7 +75,16 @@ export class Overwatch implements OverwatchInterface
 					//기존 이름 제거
 					elemTemp.removeAttribute(OldData.toLowerCase());
 					//새 이름 추가(값없음)
-					elemTemp.setAttribute(this.Action, "");
+					elemTemp.setAttribute(this.DataNow, "");
+				}
+				else if (AxeViewDomType.Attr_Event === item.AxeViewDomType)
+				{
+					//기존에 연결된 이벤트 제거
+					(item.Dom as Node).removeEventListener(item.EventName, item.Event);
+
+					//새로들어온 이벤트 연결
+					item.Event = data;
+					(item.Dom as Node).addEventListener(item.EventName, item.Event);
 				}
 				else
 				{
@@ -83,9 +96,20 @@ export class Overwatch implements OverwatchInterface
 		}
 	};
 
-
+	/** 
+	 * 출력 방식
+	 * OverwatchInterface.OverwatchingOutputType 참고
+	 * */
+	public OverwatchingOutputType: OverwatchingOutputType;
+	/** 
+	 *  감시 방식
+	 *  OverwatchInterface.OverwatchingType 참고
+	 * */
 	public OverwatchingType: OverwatchingType;
-
+	/** 
+	 * 한개만 감시할지 여부 
+	 * OverwatchInterface.OverwatchingOneIs 참고
+	 */
 	public OverwatchingOneIs: boolean = false;;
 
 	/** 
@@ -119,6 +143,7 @@ export class Overwatch implements OverwatchInterface
 		this._Dom.push({
 			AxeViewDomType: AxeViewDomType.HTMLElement
 			, Dom: domPushData
+			, EventName: null
 		});
 	}
 	/**
@@ -130,6 +155,7 @@ export class Overwatch implements OverwatchInterface
 		this._Dom.push({
 			AxeViewDomType: AxeViewDomType.Node
 			, Dom: domPushData
+			, EventName: null
 		});
 	}
 
@@ -143,6 +169,7 @@ export class Overwatch implements OverwatchInterface
 		this._Dom.push({
 			AxeViewDomType: AxeViewDomType.Attr_Valueless
 			, Dom: domPushData
+			, EventName: null
 		});
 	}
 
@@ -151,6 +178,7 @@ export class Overwatch implements OverwatchInterface
 		this._Dom.push({
 			AxeViewDomType: AxeViewDomType.Attr_OneValue
 			, Dom: domPushData
+			, EventName: null
 		});
 	}
 
@@ -160,6 +188,52 @@ export class Overwatch implements OverwatchInterface
 			AxeViewDomType: AxeViewDomType.Attr_ReplaceValue
 			, Dom: domPushData
 		});
+	}
+
+	/**
+	 * 이벤트
+	 * @param domPushData 이 이벤트를 가지고 있는 부모돔
+	 * @param sEventName
+	 */
+	public Dom_Push_Event(domPushData: ChildNode, sEventName: string)
+	{
+		let objThis: Overwatch = this;
+
+		//돔에 추가할 액스뷰 돔형식 생성
+		let avdTemp: AxeViewDomInterface = {
+			AxeViewDomType: AxeViewDomType.Attr_Event
+			, Dom: domPushData
+			, EventName: sEventName
+		};
+
+		//
+		let funDom = function (event: Event)
+		{
+			(objThis.data as Function)(avdTemp.Dom, event, objThis);
+		};
+
+		avdTemp.Event = funDom;
+
+
+		this._Dom.push(avdTemp);
+
+		if (OverwatchingOutputType.Function_NameRemoveOn === this.OverwatchingOutputType)
+		{//이름 앞에 'on'을 뺀다.
+
+			if (2 <= sEventName.length)
+			{//이름 길이가 충분하다
+
+				if ("on" === sEventName.substring(0, 2).toLowerCase())
+				{//앞에 두글자가 'on'이다.
+
+					//2뒤에 글자만 추출
+					sEventName = sEventName.substring(2);
+				}
+			}
+		}
+
+		(avdTemp.Dom as Node).removeEventListener(sEventName, avdTemp.Event);
+		(avdTemp.Dom as Node).addEventListener(sEventName, avdTemp.Event);
 	}
 
 	/** 연결된 돔 비우기 */
@@ -175,7 +249,7 @@ export class Overwatch implements OverwatchInterface
 	 * */
 	public get data()
 	{
-		return this.ActionGet();
+		return this.DataNowGet();
 	}
 	/** 
 	 *  모니터링 중인 데이터 - 쓰기 
@@ -184,7 +258,7 @@ export class Overwatch implements OverwatchInterface
 	 */
 	public set data(value: any)
 	{
-		this.ActionSet(value);
+		this.DataNowSet(value);
 	}
 	/** 지금 가지고 있는 데이터를 다시 출력시도한다.
 	 * dom이 새로 설정됐다면 꼭 호출해야 한다.*/
@@ -203,13 +277,14 @@ export class Overwatch implements OverwatchInterface
 	{
 		this.Name = target.Name;
 		this.NameFindString = "{{" + this.Name + "}}";
-		this.Action = target.Action;
+		this.DataNow = target.FirstData;
+		this.OverwatchingOutputType = target.OverwatchingOutputType;
 		this.OverwatchingType = target.OverwatchingType;
 		this.OverwatchingOneIs = target.OverwatchingOneIs;
 	}
 
 	/**
-	 * 지정한 문자열을 모두 찾아 
+	 * 지정한 문자열을 모두 찾아 변환한다.
 	 * @param sOriData 원본
 	 * @param sSearch 찾을 문자열
 	 * @param sReplacement 바꿀 문자열

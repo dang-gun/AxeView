@@ -4,7 +4,7 @@ export * from "./OverwatchInterface";
 import { AxeViewDomInterface, AxeViewDomType } from "./AxeViewDomInterface";
 export * from "./AxeViewDomInterface";
 
-import { OverwatchingType } from "./OverwatchingType"
+import { OverwatchingType, OverwatchingOutputType } from "./OverwatchingType"
 export * from "./OverwatchingType";
 
 import { Overwatch } from "./Overwatch"
@@ -141,9 +141,9 @@ export default class AxeView
 				//textnode를 생성해서 추가한다.
 				newParent.push(document.createTextNode(itemStrText.Text));
 			}
-			else if (OverwatchingType.Output_String === itemStrText.Overwatch.OverwatchingType)
-			{//감시자가 없거나
-				//감시 타입이 단순 문자열 출력이다.
+			else if (OverwatchingOutputType.String === itemStrText.Overwatch.OverwatchingOutputType
+					&& OverwatchingType.OutputFirst === itemStrText.Overwatch.OverwatchingType)
+			{//감시 타입이 단순 문자열 출력이다.
 
 				//일반 택스트라는 소리다.
 				//textnode를 생성해서 추가한다.
@@ -151,8 +151,8 @@ export default class AxeView
 					document.createTextNode(
 						itemStrText.Overwatch.data));
 			}
-			else if (OverwatchingType.Monitoring_String
-					=== itemStrText.Overwatch.OverwatchingType)
+			else if (OverwatchingOutputType.String === itemStrText.Overwatch.OverwatchingOutputType
+				&& OverwatchingType.Monitoring === itemStrText.Overwatch.OverwatchingType)
 			{//문자열 모니터링이다.
 				if ("" === itemStrText.Text)
 				{//내용물이 없다.
@@ -176,10 +176,8 @@ export default class AxeView
 					newParent.push(document.createTextNode(itemStrText.Text));
 				}
 			}
-			else if (OverwatchingType.Output_Html === itemStrText.Overwatch.OverwatchingType
-				|| OverwatchingType.Monitoring_Html === itemStrText.Overwatch.OverwatchingType)
-			{//감시 타입이 단순 html 출력이다.
-				//감시 타입이 html모니터링이다.
+			else if (OverwatchingOutputType.Html === itemStrText.Overwatch.OverwatchingOutputType)
+			{//감시 타입이 html 출력이다.
 
 				if ("" === itemStrText.Text)
 				{//내용물이 없다.
@@ -199,8 +197,8 @@ export default class AxeView
 					//리턴 리스트에 추가
 					newParent.push(newMElem.firstChild);
 
-					if (OverwatchingType.Monitoring_Html
-							=== itemStrText.Overwatch.OverwatchingType)
+					if (OverwatchingType.Monitoring
+						=== itemStrText.Overwatch.OverwatchingType)
 					{//모니터링이다.
 
 						//감시자  dom리스트에 추가
@@ -294,15 +292,12 @@ export default class AxeView
 				let newNodeMatch: HTMLElement
 					= this.NodeMatch_Normal(itemNode, owTarget);
 
-				//Array.from((itemNode as HTMLElement).attributes)
-
-
-				//어트리뷰트 판단.
-				this.NodeMatch_Attr(	
+				
+				//새 엘리먼트의 어트리뷰트 판단.
+				this.NodeMatch_Attr(
 					newNodeMatch
 					, owTarget);
-				debugger;
-
+				
 				//새 부모에 추가
 				newElemParent.appendChild(newNodeMatch);
 			}
@@ -472,7 +467,6 @@ export default class AxeView
 		, owTarget: Overwatch[]
 		, nodeParent: ChildNode)
 	{
-		debugger;
 		for (let nOverwatchIdx = 0
 			; nOverwatchIdx < owTarget.length
 			; ++nOverwatchIdx)
@@ -487,14 +481,34 @@ export default class AxeView
 				//다음 검색을 할 필요가 없다.
 				continue;
 			}
-			else if (OverwatchingType.Output_Html === itemOW.OverwatchingType
-				|| OverwatchingType.Monitoring_Html === itemOW.OverwatchingType)
+			else if (OverwatchingOutputType.Html === itemOW.OverwatchingOutputType)
 			{//html 옵션이면 무시한다.
 				continue;
 			}
+			else if (OverwatchingOutputType.Function === itemOW.OverwatchingOutputType
+				|| OverwatchingOutputType.Function_NameRemoveOn === itemOW.OverwatchingOutputType)
+			{//함수
+				
+				//함수는 부분교체가 없으므로 무조건 전체 비교다.
+				if (attrItem.value === itemOW.NameFindString)
+				{//일치한다.
+
+					let elemTemp: HTMLElement = nodeParent as HTMLElement;
+					//속성에 기존 이름 제거
+					elemTemp.removeAttribute(attrItem.name);
+
+					//감시자에 추가
+					itemOW.OneDataIs = true;
+					if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
+					{
+						itemOW.Dom_Push_Event(nodeParent, attrItem.name);
+					}
+				}
+			}
 			else
-			{
-				console.log("attrItem : " + attrItem.name + ", " + attrItem.value);
+			{//문자열과 이외의 상황
+
+				//console.log("attrItem : " + attrItem.name + ", " + attrItem.value);
 				//debugger;
 				if ("" === attrItem.value)
 				{//벨류가 없으면 이름만 있는 속성이다.
@@ -511,11 +525,10 @@ export default class AxeView
 
 						//감시자에 추가
 						itemOW.OneDataIs = true;
+						if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
+						{//모니터링이다.
 
-						debugger;
-
-						if (itemOW.OverwatchingType === OverwatchingType.Monitoring_String)
-						{
+							//감시할 돔 추가
 							itemOW.Dom_Push_Valueless(nodeParent);
 						}
 					}
@@ -528,8 +541,10 @@ export default class AxeView
 
 					//감시자에 추가
 					itemOW.OneDataIs = true;
-					if (itemOW.OverwatchingType === OverwatchingType.Monitoring_String)
-					{
+					if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
+					{//모니터링이다.
+
+						//감시할 돔 추가
 						itemOW.Dom_Push_OneValue(attrItem);
 					}
 				}
@@ -554,8 +569,10 @@ export default class AxeView
 
 					//감시자에 추가
 					itemOW.OneDataIs = true;
-					if (itemOW.OverwatchingType === OverwatchingType.Monitoring_String)
-					{
+					if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
+					{//모니터링 이다.
+
+						//돔추가
 						itemOW.Dom_Push_ReplaceValue(attrItem);
 					}
 				}

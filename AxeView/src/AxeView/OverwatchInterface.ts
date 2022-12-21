@@ -1,4 +1,4 @@
-﻿import { OverwatchingType } from "./OverwatchingType"
+﻿import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType"
 
 /** 감시자 인터페이스 */
 export interface OverwatchInterface
@@ -13,10 +13,15 @@ export interface OverwatchInterface
 	Name: string,
 	/** 처음 바인딩될 동작
 	 * 이벤트를 제외하면 문자열을 사용한다.
-	 * 이벤트(Event) : function */
-	Action: any,
+	 * 이벤트 함수는 'function (sender, event, objThis)' 이렇게 데이터가 전달된다.
+	 * sender : 연결된 엘리먼트 개체
+	 * event : 이벤트 발생에 사용된 이벤트 포인터
+	 * objThis : 이 함수에 연결된 감시자 개체(Overwatch) */
+	FirstData: string | Function,
 
 	/** 감시 타입 */
+	OverwatchingOutputType: OverwatchingOutputType,
+	/** 감시 방식 */
 	OverwatchingType: OverwatchingType,
 	/** 
 	 *  한개만 감시할지 여부
