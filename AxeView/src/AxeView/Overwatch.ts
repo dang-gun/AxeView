@@ -225,7 +225,7 @@ export class Overwatch
 		//
 		let funDom = function (event: Event)
 		{
-			(objThis.data as Function)(avdTemp.Dom, event, objThis);
+			(objThis.data as Function)(event, avdTemp.Dom, objThis);
 		};
 
 		avdTemp.Event = funDom;

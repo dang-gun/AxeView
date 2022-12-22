@@ -122,7 +122,6 @@ export default class StartUp
 			console.log(sender);
 			console.log(event);
 			console.log(objThis);
-			debugger;
 		};
 
 		console.log("클릭함");
