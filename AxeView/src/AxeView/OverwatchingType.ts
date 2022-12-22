@@ -29,15 +29,16 @@ export const enum OverwatchingOutputType
 	 * 이렇게 되면 'onClick'으로 연결한 이벤트가 'click'으로 변환되지 않으므로 클릭이벤트가 발생하지 않는다.
 	 * 이런경우 'Function_NameRemoveOn'타입을 사용해야 한다.
 	 * */
-	Function = 300,
+	Function,
 
 	/**
 	 * 함수 연결 - 속성(attribute)이름 앞에 'on'이 있으면 제거
 	 * 함수는 속성(attribute)에서만 동작한다.
 	 * 속성이름이 'onClick'이면 이벤트리스너에 'click'으로 등록한다.
+	 * 속성에서 추가하는 이벤트 이름에 'on'이 추가되어 있는 경우 사용한다.
 	 * 이렇게 해야 클릭 이벤트가 발생했을때 동작한다.
 	 * */
-	Function_NameRemoveOn = 301,
+	Function_NameRemoveOn,
 }
 
 /** 감시 방식  */
