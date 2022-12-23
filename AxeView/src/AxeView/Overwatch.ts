@@ -52,11 +52,13 @@ export class Overwatch
 				{
 					let attrTemp: Attr = item.Dom as Attr;
 
+					//벨류의 경우 대소문자 구분이 가능하므로 소문자 변환을 하면 안된다.
+
 					if (true === this.OverwatchingOneIs)
 					{//한개만 교체
 						attrTemp.value
 							= attrTemp.value.replace(
-								OldData.toLowerCase()
+								OldData
 								, this.DataNow);
 					}
 					else
@@ -64,7 +66,7 @@ export class Overwatch
 						attrTemp.value
 							= this.ReplaceAll(
 								attrTemp.value
-								, OldData.toLowerCase()
+								, OldData
 								, this.DataNow);
 					}
 				}
@@ -173,6 +175,11 @@ export class Overwatch
 		});
 	}
 
+	/**
+	 * 연결된 돔 추가 - 혼자 값을 사용하는 경우
+	 * 전체 데이터를 변경한다.
+	 * @param domPushData
+	 */
 	public Dom_Push_OneValue(domPushData: Attr)
 	{
 		this._Dom.push({
@@ -182,6 +189,12 @@ export class Overwatch
 		});
 	}
 
+	/**
+	 * 연결된 돔 추가 - 다른 값이 있어 리플레이스 하는 경우
+	 * 감시자외의 다른값이 있다면 변환(리플레이스)로 처리해야 한다.
+	 * 이때 같은 값이 있으면 오작동 할 수 있다.
+	 * @param domPushData
+	 */
 	public Dom_Push_ReplaceValue(domPushData: Attr)
 	{
 		this._Dom.push({
@@ -194,8 +207,12 @@ export class Overwatch
 	 * 이벤트
 	 * @param domPushData 이 이벤트를 가지고 있는 부모돔
 	 * @param sEventName
+	 * @param bPush dom리스트에 추가할지 여부
 	 */
-	public Dom_Push_Event(domPushData: ChildNode, sEventName: string)
+	public Dom_Push_Event(
+		domPushData: ChildNode
+		, sEventName: string
+		, bPush: boolean)
 	{
 		let objThis: Overwatch = this;
 
@@ -230,8 +247,10 @@ export class Overwatch
 
 		avdTemp.Event = funDom;
 
-
-		this._Dom.push(avdTemp);
+		if (true === bPush)
+		{
+			this._Dom.push(avdTemp);
+		}
 
 		(avdTemp.Dom as Node).removeEventListener(sEventName, avdTemp.Event);
 		(avdTemp.Dom as Node).addEventListener(sEventName, avdTemp.Event);

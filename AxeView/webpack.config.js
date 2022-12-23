@@ -13,6 +13,7 @@ const WwwRootPath = path.resolve(__dirname, WwwRoot);
 
 //템플릿 위치
 const IndexHtmlPath = path.resolve(SrcPath, "index.html");
+//const IndexHtmlPath = path.resolve(SrcPath, "test01.html");
 //결과물 출력 폴더 이름
 let OutputFolder = "development";
 //결과물 출력 위치

@@ -492,7 +492,7 @@ export default class AxeView
 				//함수는 부분교체가 없으므로 무조건 전체 비교다.
 				if (attrItem.value === itemOW.NameFindString)
 				{//일치한다.
-
+					
 					let elemTemp: HTMLElement = nodeParent as HTMLElement;
 					//속성에 기존 이름 제거
 					elemTemp.removeAttribute(attrItem.name);
@@ -501,8 +501,14 @@ export default class AxeView
 					itemOW.OneDataIs = true;
 					if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
 					{
-						itemOW.Dom_Push_Event(nodeParent, attrItem.name);
+						itemOW.Dom_Push_Event(nodeParent, attrItem.name, true);
 					}
+					else
+					{
+						//돔에는 추가하지 않는다.
+						itemOW.Dom_Push_Event(nodeParent, attrItem.name, false);
+					}
+
 				}
 			}
 			else

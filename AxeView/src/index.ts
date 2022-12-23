@@ -97,6 +97,17 @@ export default class StartUp
 				, OverwatchingOneIs: false
 			}));
 
+		this.arrTarget.push(
+			//모니터링 문자열 검색
+			new Overwatch({
+				Name: "CssTest"
+				, FirstData: "CssAdd"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: false
+			}));
+
+
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
 			, this.arrTarget);
@@ -123,6 +134,8 @@ export default class StartUp
 			console.log(event);
 			console.log(objThis);
 		};
+
+		this.arrTarget[7].data = "Click3";
 
 		console.log("클릭함");
 	}

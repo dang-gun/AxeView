@@ -33,6 +33,7 @@
   <ItemGroup>
     <None Include="server.ts" />
     <Content Include="src\AxeView\Test.html" />
+    <Content Include="src\test01.html" />
     <Content Include="src\index.html" />
     <Content Include="src\index.ts" />
     <Content Include="tsconfig.json" />
