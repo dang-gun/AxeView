@@ -90,7 +90,20 @@ export class Overwatch
 				}
 				else
 				{
-					(item.Dom as HTMLElement).innerHTML = data;
+					if (true === (data instanceof Element)
+						|| true === (data instanceof HTMLElement)
+						//|| true === (data instanceof ChildNode)
+						|| true === (data instanceof Node))
+					{
+						(item.Dom as HTMLElement).innerHTML = "";
+						(item.Dom as HTMLElement)
+							.insertAdjacentElement("beforeend", data);
+					}
+					else
+					{
+						(item.Dom as HTMLElement).innerHTML = data;
+					}
+					
 					
 				}
 			}
@@ -297,7 +310,33 @@ export class Overwatch
 	{
 		this.Name = target.Name;
 		this.NameFindString = "{{" + this.Name + "}}";
-		this.DataNow = target.FirstData;
+
+		
+		if ("" === target.FirstData
+			|| " " === target.FirstData)
+		{
+			if (OverwatchingOutputType.String === this.OverwatchingOutputType)
+			{
+				//이 값은 절대 비어있으면 안된다.(빈값을 쓰려면 스페이스를 사용하자)
+				//빈값으로는 노드를 생성하지 않고 있기 때문이다.
+				this.DataNow = " ";
+			}
+			else if (OverwatchingOutputType.Html === this.OverwatchingOutputType)
+			{
+				//데이터가 html인경우 빈값을 넣으면 안되고 보이지 않는 요소라라도 하나 넣어야 한다.
+				//(<div></div>)
+				//안그러면 text 노드가 생성되서 에러가 난다.
+				this.DataNow = "<div></div>";
+			}
+		}
+		else
+		{
+			this.DataNow = target.FirstData;
+		}
+
+
+		
+
 		this.OverwatchingOutputType = target.OverwatchingOutputType;
 		this.OverwatchingType = target.OverwatchingType;
 		this.OverwatchingOneIs = target.OverwatchingOneIs;
