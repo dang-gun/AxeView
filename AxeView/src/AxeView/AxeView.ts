@@ -152,7 +152,8 @@ export default class AxeView
 						itemStrText.Overwatch.data));
 			}
 			else if (OverwatchingOutputType.String === itemStrText.Overwatch.OverwatchingOutputType
-				&& OverwatchingType.Monitoring === itemStrText.Overwatch.OverwatchingType)
+				&& (OverwatchingType.Monitoring === itemStrText.Overwatch.OverwatchingType
+					|| OverwatchingType.Monitoring_OneValue === itemStrText.Overwatch.OverwatchingType))
 			{//문자열 모니터링이다.
 				if ("" === itemStrText.Text)
 				{//내용물이 없다.
@@ -197,8 +198,8 @@ export default class AxeView
 					//리턴 리스트에 추가
 					newParent.push(newMElem.firstChild);
 
-					if (OverwatchingType.Monitoring
-						=== itemStrText.Overwatch.OverwatchingType)
+					if (OverwatchingType.Monitoring === itemStrText.Overwatch.OverwatchingType
+						|| OverwatchingType.Monitoring_OneValue === itemStrText.Overwatch.OverwatchingType)
 					{//모니터링이다.
 
 						//감시자  dom리스트에 추가
@@ -499,7 +500,8 @@ export default class AxeView
 
 					//감시자에 추가
 					itemOW.OneDataIs = true;
-					if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
+					if (OverwatchingType.Monitoring === itemOW.OverwatchingType
+						|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
 					{
 						itemOW.Dom_Push_Event(nodeParent, attrItem.name, true);
 					}
@@ -531,7 +533,8 @@ export default class AxeView
 
 						//감시자에 추가
 						itemOW.OneDataIs = true;
-						if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
+						if (OverwatchingType.Monitoring === itemOW.OverwatchingType
+							|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
 						{//모니터링이다.
 
 							//감시할 돔 추가
@@ -549,6 +552,12 @@ export default class AxeView
 					itemOW.OneDataIs = true;
 					if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
 					{//모니터링이다.
+
+						//감시할 돔 추가
+						itemOW.Dom_Push_ReplaceValue(attrItem);
+					}
+					else if (OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
+					{//하나의 값만 사용하는경우
 
 						//감시할 돔 추가
 						itemOW.Dom_Push_OneValue(attrItem);
@@ -575,7 +584,8 @@ export default class AxeView
 
 					//감시자에 추가
 					itemOW.OneDataIs = true;
-					if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
+					if (OverwatchingType.Monitoring === itemOW.OverwatchingType
+						|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
 					{//모니터링 이다.
 
 						//돔추가

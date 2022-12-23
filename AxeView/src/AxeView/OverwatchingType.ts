@@ -7,7 +7,6 @@ export const enum OverwatchingOutputType
 
 	/**
 	 * 문자열 출력
-	 * dom을 수정하지만 추적하지는 않는다.
 	 * 속성(attribute)값에 적용된경우 교체(all replace)를 시도하므로 
 	 * 이미 일치하는 문자열이 있으면 잘못교체될 수 있음을 명심해야 한다.
 	 * */
@@ -15,14 +14,13 @@ export const enum OverwatchingOutputType
 
 	/**
 	 * html 출력
-	 * '속성(attribute)'과 같이 html이 적용되지 않는 경우 무시 된다.
-	 * 
+	 * '속성(attribute)'과 같이 html이 적용되지 않는 경우 무시(감시하지 않음) 된다.
 	 * */
 	Html,
 	
 	/**
 	 * 함수 연결 - 속성(attribute)이름 그대로 사용
-	 * 함수는 속성(attribute)에서만 동작한다.
+	 * 함수는 속성(attribute)에서만 동작한다.(그외는 감시하지 않음)
 	 * 함수는 부분교체가 없고 무조건 전체교체다.
 	 * 함수로 감시자가 매칭되면 해당 속성은 제거되고 이벤트 리스너가 추가된다.
 	 * 이때 이벤트 리스너는 속성이름을 그대로 사용한다.
@@ -54,4 +52,14 @@ export const enum OverwatchingType
 	 * data가 업데이트되면 같이 업데이트
 	 * */
 	Monitoring,
+
+	/**
+	 * data가 업데이트되면 같이 업데이트.
+	 * 속성값에 사용되는 경우 자신외에 다른 데이터가 없으면 
+	 * 리플레이스가 아닌 전체교체로 동작한다.
+	 * 당연히 'Monitoring'보다 속도가 더 빠르다.
+	 * 
+	 * 대신 액스뷰외의 다른방식으로 dom을 컨트롤 하는 경우 데이터가 소실된다.
+	 * */
+	Monitoring_OneValue,
 }
