@@ -117,6 +117,16 @@ export default class StartUp
 				, OverwatchingOneIs: false
 			}));
 
+		this.arrTarget.push(
+			//모니터링 문자열 검색
+			new Overwatch({
+				Name: "MonitoringAttr4"
+				, FirstData: "attrTest4"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Monitoring_AttrValue
+				, OverwatchingOneIs: false
+			}));
+
 
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
@@ -151,8 +161,10 @@ export default class StartUp
 		document.getElementById("divTemp1").setAttribute("axeTest2", sTemp1 + " AddTest");
 		this.arrTarget[8].data = "Click4";
 
-		console.log("클릭함");
+		console.log("클릭함 : " + this.arrTarget[9].data);
+		//this.arrTarget[9].data = "asdfasdfd11";
 	}
+
 }
 
 

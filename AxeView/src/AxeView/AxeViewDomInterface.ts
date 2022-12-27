@@ -44,6 +44,9 @@ export const enum AxeViewDomType
 	/** 속성 - 값을 교체해야 하는 경우 */
 	Attr_ReplaceValue,
 
-	/** 이벤트 */
+	/** 속성 - 이벤트 */
 	Attr_Event,
+
+	/** 속성 - 값 모니터링(UI 우선), 전체 교체로만 동작함 */
+	Attr_ValueMonitoring,
 }

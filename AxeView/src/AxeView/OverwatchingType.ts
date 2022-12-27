@@ -12,6 +12,7 @@ export const enum OverwatchingOutputType
 	 * */
 	String,
 
+
 	/**
 	 * html 출력
 	 * '속성(attribute)'과 같이 html이 적용되지 않는 경우 무시(감시하지 않음) 된다.
@@ -62,4 +63,22 @@ export const enum OverwatchingType
 	 * 대신 액스뷰외의 다른방식으로 dom을 컨트롤 하는 경우 데이터가 소실된다.
 	 * */
 	Monitoring_OneValue,
+
+	/**
+	 * 속성(attribute)의 값(value)만 모니터링 하고 사용자의 입력값을 감시한다.
+	 * 문자열 전용으로 'OverwatchingOutputType.String'일때만 동작한다.
+	 * 무조건 UI에 있는 값을 우선한다.(data를 읽으면 UI의 값과 일치한다.)
+	 * 이 옵션을 선택하면 속성의 이름이 'value'인것만 감시하게 된다.
+	 * 무조건 전체 교체로만 동작하므로 주의해야 한다.
+	 * 
+	 * 이 옵션은 'OverwatchingOneIs=true'와 함께 사용하는 것이 좋은데
+	 * 여러개가 적중하더라도 값은 맨처음 적중한 dom 하나만 출력되기 때문이다.
+	 * 
+	 * 내부적으로는 이벤트리스너의 'change'이벤트로 구현되어 있다.
+	 * 돔개체를 가지고 있어도 읽기/쓰기가 되는데 UI에서 값을 변경하면 
+	 * 이유는 모르겠지만 기존 돔연결이 깨지는 것 처럼 보이는 현상이 있다.
+	 * 이 이유때문에 값(value)가 재대로 읽어지질 않는다.
+	 * 그래서 'change'를 넣어 값이 변경되면 돔이 가지고 있는 값도 수정하도록 변경하였다.
+	 * */
+	Monitoring_AttrValue,
 }

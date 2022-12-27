@@ -483,7 +483,9 @@ export default class AxeView
 				continue;
 			}
 			else if (OverwatchingOutputType.Html === itemOW.OverwatchingOutputType)
-			{//html 옵션이면 무시한다.
+			{//html 옵션이다.
+
+				//속성에 html은 넣을 수 없으므로 이 옵션은 무시한다.
 				continue;
 			}
 			else if (OverwatchingOutputType.Function === itemOW.OverwatchingOutputType
@@ -518,7 +520,35 @@ export default class AxeView
 
 				//console.log("attrItem : " + attrItem.name + ", " + attrItem.value);
 				//debugger;
-				if ("" === attrItem.value)
+
+				if ("value" === attrItem.name
+					&& OverwatchingType.Monitoring_AttrValue === itemOW.OverwatchingType)
+				{//속성이름이 'value'이고
+					//값을 모니터링 중이다.
+
+					//값(value)은 다른속성과 다르게 부모의 필드에 바인딩되는 녀석이라
+					//그냥 속성개체를 저장하면 UI에서 입력된 값을 읽을 수 없다.
+					//정확하게는 ui에서 수정하면 읽어지질 않는다...(개체가 달라지나????)
+					//
+					//그래서 이벤트 리스너로 처리하도록 수정하였다.
+
+					//이 옵션에서는 아래 조건 말고는 동작하지 않는다.
+					if (OverwatchingOutputType.String === itemOW.OverwatchingOutputType)
+					{//출력 방식이 'string'이다.
+						
+						//초기값 입력
+						attrItem.value = itemOW.data;
+
+						//감시자에 추가
+						itemOW.OneDataIs = true;
+
+						//감시할 돔 추가
+						//속성의 값(value)만을 모니터링 하는 옵션이다.
+						itemOW.Dom_Push_Attr_ValueMonitoring(nodeParent);
+					}
+
+				}
+				else if ("" === attrItem.value)
 				{//벨류가 없으면 이름만 있는 속성이다.
 
 					if (itemOW.NameFindString.toLowerCase() === attrItem.name)

@@ -20,7 +20,24 @@ export class Overwatch
 	/**
 	 * 실제 동작 get
 	 */
-	private DataNowGet: Function = function () { return this.DataNow; };
+	private DataNowGet: Function = () =>
+	{
+		let sReturn: string | Function = "";
+		if (true === this.ValueMonitoringIs)
+		{//값 모니터링 전용
+			
+			if (0 < this._Dom.length)
+			{
+				//값 모니터링은 돔의 value를 우선한다.
+				sReturn = (this._Dom[0].Dom as Attr).value;
+			}
+		}
+		else
+		{
+			sReturn = this.DataNow;
+		}
+		return sReturn;
+	};
 	/**
 	 * 실제 동작 set
 	 */
@@ -44,7 +61,8 @@ export class Overwatch
 				{
 					(item.Dom as Node).nodeValue = this.DataNow;
 				}
-				else if (AxeViewDomType.Attr_OneValue === item.AxeViewDomType)
+				else if (AxeViewDomType.Attr_OneValue === item.AxeViewDomType
+					|| AxeViewDomType.Attr_ValueMonitoring === item.AxeViewDomType				)
 				{
 					(item.Dom as Attr).value = this.DataNow;
 				}
@@ -252,7 +270,7 @@ export class Overwatch
 			, EventName: sEventName
 		};
 
-		//
+		//이벤트로 사용할 함수
 		let funDom = function (event: Event)
 		{
 			(objThis.data as Function)(event, avdTemp.Dom, objThis);
@@ -265,9 +283,44 @@ export class Overwatch
 			this._Dom.push(avdTemp);
 		}
 
+		//이벤트 리스너에 등록
 		(avdTemp.Dom as Node).removeEventListener(sEventName, avdTemp.Event);
 		(avdTemp.Dom as Node).addEventListener(sEventName, avdTemp.Event);
 	}
+
+	/**
+	 * 연결된 돔 추가 - 값 모니터링 전용
+	 * 이 경우 하나의 돔만 감시할 수 있으므로 맨처음 적중한 한개 만 추가되고 나머지는 무시된다.
+	 * @param domPushData
+	 */
+	public Dom_Push_Attr_ValueMonitoring(domPushData: ChildNode)
+	{
+		if (0 === this._Dom.length)
+		{
+			let objThis = this;
+
+			//엑스 돔으로 사용할 개체 만들기
+			let avdTemp: AxeViewDomInterface = {
+				AxeViewDomType: AxeViewDomType.Attr_ValueMonitoring
+				, Dom: domPushData
+				, EventName: "change"
+				, Event: function (event: Event)
+				{
+					objThis.data = this.value;
+				}
+			};
+
+			//엑스돔 리스트에 추가
+			objThis._Dom.push(avdTemp);
+
+			this.ValueMonitoringIs = true;
+
+			//체인지 이벤트 추가
+			(avdTemp.Dom as Node).removeEventListener(avdTemp.EventName, avdTemp.Event);
+			(avdTemp.Dom as Node).addEventListener(avdTemp.EventName, avdTemp.Event);
+		}
+	}
+
 
 	/** 연결된 돔 비우기 */
 	public Dom_Clear()
@@ -305,6 +358,9 @@ export class Overwatch
 	/** 'OverwatchingType'가 한번만 적중해야 하는 옵션인경우 
 	 * 맨처음 적중하면 true가 된다.*/
 	public OneDataIs: boolean = false;
+
+	/** 값 모니터링 전용인지 여부 */
+	private ValueMonitoringIs: boolean = false;
 
 	constructor(target: OverwatchInterface)
 	{
