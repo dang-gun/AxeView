@@ -134,6 +134,7 @@ export default class StartUp
 
 
 		document.getElementById("btnClick").onclick = this.TestCilck;
+		document.getElementById("btnClick2").onclick = this.TestCilck2;
 	}
 
 	TestCilck = () =>
@@ -155,7 +156,7 @@ export default class StartUp
 			console.log(objThis);
 		};
 
-		this.arrTarget[7].data = "Click3";
+		this.arrTarget[7].data = "";
 
 		let sTemp1 = document.getElementById("divTemp1").getAttribute("axeTest2");
 		document.getElementById("divTemp1").setAttribute("axeTest2", sTemp1 + " AddTest");
@@ -163,6 +164,11 @@ export default class StartUp
 
 		console.log("클릭함 : " + this.arrTarget[9].data);
 		//this.arrTarget[9].data = "asdfasdfd11";
+	}
+
+	TestCilck2 = () =>
+	{
+		this.arrTarget[7].data = "ReClick";
 	}
 
 }

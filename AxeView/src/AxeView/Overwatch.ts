@@ -5,6 +5,13 @@ import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType"
 /** 감시 대상  */
 export class Overwatch
 {
+	/** 
+	 *  엑스뷰에서 지정한 고유번호.
+	 *  엑스뷰를 바인딩할때 자동으로 입력된다.
+	 *  이 값이 중복되면 교체(Replace)가 잘 안될 수 있다.
+	 * */
+	public MyNumber: number = 0;
+
 	/**
 	 * 찾을 이름
 	 * OverwatchInterface.Name 참조
@@ -16,6 +23,12 @@ export class Overwatch
 
 	/** 지금 가지고 있는 데이터 */
 	private DataNow: string | Function = "";
+	/** 
+	 *  지금 가지고 있는 데이터 - Replace
+	 *  교체(Replace)의 경우 이전값이 빈값이면 동작할 수 없으므로
+	 *  임의의 고유값을 생성하여 저장하는 변수다.
+	 * */
+	private DataNow_ReplaceValue: string = "";
 
 	/**
 	 * 실제 동작 get
@@ -71,21 +84,41 @@ export class Overwatch
 					let attrTemp: Attr = item.Dom as Attr;
 
 					//벨류의 경우 대소문자 구분이 가능하므로 소문자 변환을 하면 안된다.
+					//속성을 교체하는 방식인 경우 빈값이 들어오면 교체하지 못하므로
+					//임의의 고유값을 생성하여 저장한다.
+
+					//이전 데이터를 백업하고
+					let OldDataTemp: string = this.DataNow_ReplaceValue;
+					if ("" === OldDataTemp)
+					{
+						OldDataTemp = OldData;
+					}
+
+					//현재 데이터 저장
+					this.DataNow_ReplaceValue = this.DataNow;
+					
+					if ("" === this.DataNow_ReplaceValue)
+					{//현재 데이터가 비어있다.
+
+						//임의의 값을 생성해 준다.
+						this.DataNow_ReplaceValue
+							= OldData + "_AxeViewTemp" + this.MyNumber;
+					}
 
 					if (true === this.OverwatchingOneIs)
 					{//한개만 교체
 						attrTemp.value
 							= attrTemp.value.replace(
-								OldData
-								, this.DataNow);
+								OldDataTemp
+								, this.DataNow_ReplaceValue);
 					}
 					else
 					{//전체 교체
 						attrTemp.value
 							= this.ReplaceAll(
 								attrTemp.value
-								, OldData
-								, this.DataNow);
+								, OldDataTemp
+								, this.DataNow_ReplaceValue);
 					}
 				}
 				else if (AxeViewDomType.Attr_Valueless === item.AxeViewDomType)

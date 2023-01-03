@@ -13,6 +13,12 @@ export * from "./Overwatch";
 /** AxeView 구현 */
 export default class AxeView
 {
+	/** 
+	 *  이 클래스가 바인딩한 아이템의 개수
+	 *  고유번호 지정에 사용된다.
+	 * */
+	private BindCount: number = 0;
+
 	/**
 	 * html의 주석을 제거할지 여부
 	 * 능동적으로 찾아서 지우는게 아니라 노드 검색시 주석이 발견되면 지우게 된다.
@@ -59,6 +65,15 @@ export default class AxeView
 		{
 			throw "검색할 dom 을 전달해야 합니다.";
 		}
+
+		//let objThis: AxeView = this;
+		//각 감시자별로 처리해야할 내용
+		arrTarget.forEach((item) =>
+		{
+			++this.BindCount;
+			//고유번호 지정
+			item.MyNumber = this.BindCount;
+		});
 
 
 		//새로운 로드를 생성해서 가지고 있을 노드 리스트
