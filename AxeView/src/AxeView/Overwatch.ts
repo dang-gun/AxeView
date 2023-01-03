@@ -58,6 +58,8 @@ export class Overwatch
 	{
 		//기존값 백업
 		let OldData: any = this.DataNow;
+		let OldReplaceValue: string = this.DataNow_ReplaceValue;
+
 		//새값 저장
 		this.DataNow = data;
 
@@ -87,8 +89,10 @@ export class Overwatch
 					//속성을 교체하는 방식인 경우 빈값이 들어오면 교체하지 못하므로
 					//임의의 고유값을 생성하여 저장한다.
 
+					
+
 					//이전 데이터를 백업하고
-					let OldDataTemp: string = this.DataNow_ReplaceValue;
+					let OldDataTemp: string = OldReplaceValue;
 					if ("" === OldDataTemp)
 					{
 						OldDataTemp = OldData;
