@@ -6,7 +6,7 @@ import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, Overwat
 
 export default class StartUp
 {
-	/** 엑스뷰 개체 */
+	/** 액스뷰 개체 */
 	AxeView: AxeView = new AxeView();
 
 	//AxeView 테스트용 변수
@@ -17,7 +17,7 @@ export default class StartUp
 		//주석 제거
 		this.AxeView.CommentDelete = true;
 
-		//엑스뷰 테스트****
+		//액스뷰 테스트****
 		this.arrTarget.push(
 			//단순 문자열 검색
 			new Overwatch({

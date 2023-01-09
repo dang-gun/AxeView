@@ -7,7 +7,7 @@ export interface AxeViewDomInterface
 	 * */
 	Dom: HTMLElement | Node | Attr | Function;
 
-	/** 엑스뷰에서 동작할 방식 */
+	/** 액스뷰에서 동작할 방식 */
 	AxeViewDomType: AxeViewDomType;
 
 	/** 이벤트 이름이 필요할때 추가한다. */
@@ -25,7 +25,7 @@ export interface AxeViewDomInterface
 }
 
 
-/** 엑스뷰에서 동작할 방식 */
+/** 액스뷰에서 동작할 방식 */
 export const enum AxeViewDomType
 {
 	/** 없음. 동작하지 않음 */

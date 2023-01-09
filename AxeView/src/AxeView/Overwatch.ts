@@ -6,8 +6,8 @@ import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType"
 export class Overwatch
 {
 	/** 
-	 *  엑스뷰에서 지정한 고유번호.
-	 *  엑스뷰를 바인딩할때 자동으로 입력된다.
+	 *  액스뷰에서 지정한 고유번호.
+	 *  액스뷰를 바인딩할때 자동으로 입력된다.
 	 *  이 값이 중복되면 교체(Replace)가 잘 안될 수 있다.
 	 * */
 	public MyNumber: number = 0;
@@ -336,7 +336,7 @@ export class Overwatch
 		{
 			let objThis = this;
 
-			//엑스 돔으로 사용할 개체 만들기
+			//액스 돔으로 사용할 개체 만들기
 			let avdTemp: AxeViewDomInterface = {
 				AxeViewDomType: AxeViewDomType.Attr_ValueMonitoring
 				, Dom: domPushData
@@ -347,7 +347,7 @@ export class Overwatch
 				}
 			};
 
-			//엑스돔 리스트에 추가
+			//액스돔 리스트에 추가
 			objThis._Dom.push(avdTemp);
 
 			this.ValueMonitoringIs = true;
