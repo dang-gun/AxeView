@@ -30,7 +30,7 @@ export default class AxeView
 	/**
 	 * 완성된 돔에 추가처리를 할 헬퍼
 	 */
-	public AxeDomHelper: AxeDomHelper | null;
+	public AxeDomHelper: AxeDomHelper | null = null;
 
 
 	/**
