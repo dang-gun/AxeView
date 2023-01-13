@@ -39,8 +39,9 @@ export default class AxeView
 	 * */
 	public CommentDelete: boolean = false;
 
-	constructor()
+	constructor(jsonDomHelperOption?: AxeDomHelperOptionInterface | null)
 	{
+		this.AxeDomHelper = new AxeDomHelper(jsonDomHelperOption);
 	}
 
 	/**
@@ -711,10 +712,6 @@ export default class AxeView
 		, jsonDomHelperOption: AxeDomHelperOptionInterface | null)
 		: void
 	{
-		if (null === this.AxeDomHelper)
-		{//기존 개체가 없다.
-			this.AxeDomHelper = new AxeDomHelper();
-		}
 
 		//돔 처리
 		this.AxeDomHelper.DomHelping(domTarget, jsonDomHelperOption);
