@@ -10,6 +10,14 @@ export * from "./OverwatchingType";
 import { Overwatch } from "./Overwatch"
 export * from "./Overwatch";
 
+
+import { AxeDomHelper } from "./AxeDomHelper"
+export *  from "./AxeDomHelper";
+
+import { AxeDomHelperOptionInterface } from "./AxeDomHelperOptionInterface"
+export * from "./AxeDomHelperOptionInterface";
+
+
 /** AxeView 구현 */
 export default class AxeView
 {
@@ -18,6 +26,12 @@ export default class AxeView
 	 *  고유번호 지정에 사용된다.
 	 * */
 	private BindCount: number = 0;
+
+	/**
+	 * 완성된 돔에 추가처리를 할 헬퍼
+	 */
+	public AxeDomHelper: AxeDomHelper | null;
+
 
 	/**
 	 * html의 주석을 제거할지 여부
@@ -687,6 +701,24 @@ export default class AxeView
 		return sOriData.replace(new RegExp(sSearch, 'g'), sReplacement);
 	}
 
+	/**
+	 * 지정된 돔을 옵션에 따라 처리한다.
+	 * @param domTarget 처리할 돔
+	 * @param jsonDomHelperOption 처리 옵션
+	 */
+	public DomHelper(
+		domTarget: HTMLElement
+		, jsonDomHelperOption: AxeDomHelperOptionInterface | null)
+		: void
+	{
+		if (null === this.AxeDomHelper)
+		{//기존 개체가 없다.
+			this.AxeDomHelper = new AxeDomHelper();
+		}
+
+		//돔 처리
+		this.AxeDomHelper.DomHelping(domTarget, jsonDomHelperOption);
+	}
 }
 
 

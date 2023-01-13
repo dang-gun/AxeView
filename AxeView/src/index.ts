@@ -127,11 +127,22 @@ export default class StartUp
 				, OverwatchingOneIs: false
 			}));
 
-
+		//돔 재생성 및 설정된 뷰모델 연결
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
 			, this.arrTarget);
 
+
+		//돔 추가 처리
+		this.AxeView.DomHelper(
+			document.getElementById("divAxeViewTset")
+			, {
+				AtagClickEventCancel: true
+				, AtagClickEventCallback: function (event)
+				{
+					console.log("A tag click : " + (event.target as any).pathname);
+				}
+			});
 
 		document.getElementById("btnClick").onclick = this.TestCilck;
 		document.getElementById("btnClick2").onclick = this.TestCilck2;

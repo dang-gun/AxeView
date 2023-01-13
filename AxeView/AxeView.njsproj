@@ -49,6 +49,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="src\AxeView\AxeView.ts" />
     <TypeScriptCompile Include="src\AxeView\AxeViewDomInterface.ts" />
+    <TypeScriptCompile Include="src\AxeView\AxeDomHelper.ts" />
+    <TypeScriptCompile Include="src\AxeView\AxeDomHelperOptionInterface.ts" />
     <TypeScriptCompile Include="src\AxeView\Overwatch.ts" />
     <TypeScriptCompile Include="src\AxeView\OverwatchingType.ts" />
     <TypeScriptCompile Include="src\AxeView\OverwatchInterface.ts" />
