@@ -57,9 +57,51 @@ export default class AxeView
 	 * @param domParent 검색할 부모 dom
 	 * @param arrTarget 감시자 리스트
 	 */
-	BindOverwatch(
+	public BindOverwatch(
 		domParent: HTMLElement
 		, arrTarget: Overwatch[])
+		: void;
+
+	/**
+	 * 지정된 HTMLElement의 내용물을 다시 그리고, 타겟 감사자를 찾아 연결한다.
+	 * ☆ 주의 ☆ 기존 내용물은 모두 제거되고 새로 그려진다.
+	 * 새로 그리면서 감시자를 연결한다.
+	 * 지정된 돔 옵션에 따른 추가작업을 한다.
+	 * 
+	 * 기존 내용물을 남기고 부분교체하는 방법을 찾아보았지만 정답이 없어서
+	 * 그냥 새로그리는 방법을 사용하기로 결정하였다.
+	 * 단, 텍스트 노드가 없
+	 * 
+	 * 텍스트 노드가 아닌 대상을 감시할때는 
+	 * @param domParent 검색할 부모 dom
+	 * @param arrTarget 감시자 리스트
+	 * @param jsonDomHelperOption 처리 옵션
+	 */
+	public BindOverwatch(
+		domParent: HTMLElement
+		, arrTarget: Overwatch[]
+		, jsonDomHelperOption: AxeDomHelperOptionInterface | null	)
+		: void;
+
+	/**
+	 * 지정된 HTMLElement의 내용물을 다시 그리고, 타겟 감사자를 찾아 연결한다.
+	 * ☆ 주의 ☆ 기존 내용물은 모두 제거되고 새로 그려진다.
+	 * 새로 그리면서 감시자를 연결한다.
+	 * 
+	 * 기존 내용물을 남기고 부분교체하는 방법을 찾아보았지만 정답이 없어서
+	 * 그냥 새로그리는 방법을 사용하기로 결정하였다.
+	 * 단, 텍스트 노드가 없
+	 * 
+	 * 텍스트 노드가 아닌 대상을 감시할때는 
+	 * @param domParent 검색할 부모 dom
+	 * @param arrTarget 감시자 리스트
+	 * @param jsonDomHelperOption 처리 옵션
+	 */
+	public BindOverwatch(
+		domParent: HTMLElement
+		, arrTarget: Overwatch[]
+		, jsonDomHelperOption?: AxeDomHelperOptionInterface | null)
+		: void
 	{
 		//html 특성상 내용물의 부분 교체가 불가능하다.(무조건 대상을 싹 새로 고친다.)
 		//이 문제 때문에 모니터링이 재대로 안될 수 있다.
@@ -103,6 +145,9 @@ export default class AxeView
 		//console.log(newParent);
 		//새로 만든 노드를 넣어준다.
 		domParent.replaceChildren(...newParent);
+
+		//지정된 돔을 옵션처리 한다.
+		this.DomHelper(domParent, jsonDomHelperOption);
 	}
 
 
@@ -712,9 +757,14 @@ export default class AxeView
 		, jsonDomHelperOption: AxeDomHelperOptionInterface | null)
 		: void
 	{
-
-		//돔 처리
-		this.AxeDomHelper.DomHelping(domTarget, jsonDomHelperOption);
+		if (undefined === jsonDomHelperOption
+			|| null === jsonDomHelperOption
+			|| false === jsonDomHelperOption.OptionUse)
+		{
+			//돔 처리
+			this.AxeDomHelper.DomHelping(domTarget, jsonDomHelperOption);
+		}
+		
 	}
 }
 

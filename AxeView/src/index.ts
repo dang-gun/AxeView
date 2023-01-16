@@ -137,7 +137,8 @@ export default class StartUp
 		this.AxeView.DomHelper(
 			document.getElementById("divAxeViewTset")
 			, {
-				AtagClickEventCancel: true
+				OptionUse: true
+				, AtagClickEventCancel: true
 				, AtagClickEventCallback: function (event)
 				{
 					console.log("A tag click : " + (event.target as any).pathname);

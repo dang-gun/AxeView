@@ -10,13 +10,15 @@ export class AxeDomHelper
 {
 	/** 바인딩에 사용할 옵션이 지정되지 않았을때 사용할 기본 옵션 */
 	private DomHelperOptionDefult: AxeDomHelperOptionInterface = {
-		AtagClickEventCancel: false
+		OptionUse: false
+		, AtagClickEventCancel: false
 		, AtagClickEventCallback: null
 	};
 
 	/** 바인딩에 사용할 저장된 옵션 */
 	public DomHelperOption: AxeDomHelperOptionInterface = {
-		AtagClickEventCancel: false
+		OptionUse: false
+		, AtagClickEventCancel: false
 		, AtagClickEventCallback: null
 		};
 	
@@ -88,6 +90,13 @@ export class AxeDomHelper
 	{
 		let BindOptionTemp: AxeDomHelperOptionInterface = jsonBindOption;
 
+		if (false === BindOptionTemp.OptionUse)
+		{//옵션 사용안함.
+			return;
+		}
+
+
+		//A 태그 처리 옵션 ♧♧♧♧♧♧
 		domTarget.querySelectorAll("a")
 			.forEach((item, key) =>
 			{
@@ -137,5 +146,6 @@ export class AxeDomHelper
 				}
 
 			});
+		
 	}
 }
