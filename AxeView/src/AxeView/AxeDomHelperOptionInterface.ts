@@ -7,6 +7,7 @@ export interface AxeDomHelperOptionInterface
      * 내부에서 event.preventDefault();를 호출한다.
      * 
      * AtagEventCallback가 null이면 아무동작을 하지 않는다.
+     * A태그에 'hrefOnly' 속성이 있다면 이 설정은 무시된다.
      * SPA에서 기존 라우터로 이벤트를 넘겨주려면 이 값을 false로 하고
      * AtagEventCallback에 라우터로 이동하면 된다.
      * */

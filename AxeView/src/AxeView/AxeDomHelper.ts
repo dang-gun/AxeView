@@ -91,9 +91,24 @@ export class AxeDomHelper
 		domTarget.querySelectorAll("a")
 			.forEach((item, key) =>
 			{
+
+				let sHrefOnlyTemp = item.getAttribute("hrefOnly");
+				if (null === sHrefOnlyTemp)
+				{
+					sHrefOnlyTemp = item.getAttribute("hrefonly");
+				}
+
 				//무조건 이벤트를 걸어서 옵션처리하는게 가장 편하지만....
 				//속도면에서는 필요없을때는 이벤트를 걸지 않는게 맞을듯 하여 이렇게 구현함
-				if (true === BindOptionTemp.AtagClickEventCancel
+				if ("" === sHrefOnlyTemp)
+				{//hrefOnly가 빈값이다.
+
+					//hrefOnly가 없으면 null
+					//있는데 데이터가 없으면 ""
+					//속성에 hrefOnly가 있으면 아무런 동작을 하지 않는다.
+					debugger;
+				}
+				else if (true === BindOptionTemp.AtagClickEventCancel
 					&& null !== BindOptionTemp.AtagClickEventCallback)
 				{//이벤트는 캔슬
 					//콜백 이벤트도 있을때
