@@ -106,7 +106,7 @@ export class AxeDomHelper
 					//hrefOnly가 없으면 null
 					//있는데 데이터가 없으면 ""
 					//속성에 hrefOnly가 있으면 아무런 동작을 하지 않는다.
-					debugger;
+					//debugger;
 				}
 				else if (true === BindOptionTemp.AtagClickEventCancel
 					&& null !== BindOptionTemp.AtagClickEventCallback)
