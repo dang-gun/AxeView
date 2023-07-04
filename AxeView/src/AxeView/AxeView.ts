@@ -514,7 +514,7 @@ export default class AxeView
 	/**
 	 * 어트리뷰트의 내용을 매칭시킨다.
 	 * 어트리뷰트는 새로 생성하지 안으므로 'nodeParent'를 직접 수정한다.
-	 * @param nodeParent
+	 * @param nodeParent 이 어트리뷰트가 소속된 개체
 	 * @param owTarget
 	 */
 	private NodeMatch_Attr(
@@ -538,6 +538,12 @@ export default class AxeView
 		}
 	}
 
+	/**
+	 * 어트리뷰트 한개의 내용을 매칭 시킨다.
+	 * @param attrItem
+	 * @param owTarget
+	 * @param nodeParent  이 어트리뷰트가 소속된 개체
+	 */
 	private NodeMatch_AttrOne(
 		attrItem: Attr
 		, owTarget: Overwatch[]
@@ -629,21 +635,36 @@ export default class AxeView
 					if (itemOW.NameFindString.toLowerCase() === attrItem.name)
 					{//이름이 감시자와 일치한다.
 
-						//감시자의 값으로 변경
-						let elemTemp: HTMLElement = nodeParent as HTMLElement;
-						//기존 이름 제거
-						elemTemp.removeAttribute(attrItem.name);
-						//새 이름 추가(값없음)
-						elemTemp.setAttribute(itemOW.data, "");
+						if (OverwatchingOutputType.Dom === itemOW.OverwatchingOutputType)
+						{//돔 개체
 
-						//감시자에 추가
-						itemOW.OneDataIs = true;
-						if (OverwatchingType.Monitoring === itemOW.OverwatchingType
-							|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
-						{//모니터링이다.
+							//소속된 개체를 저장한다.
+							let elemTemp: HTMLElement = nodeParent as HTMLElement;
+							//기존 이름 제거
+							elemTemp.removeAttribute(attrItem.name);
 
-							//감시할 돔 추가
-							itemOW.Dom_Push_Valueless(nodeParent);
+							//돔방식은 개체를 리턴해주므로 별도의 모니터링을 하지 않는다.
+							itemOW.Dom_Push_Dom(elemTemp);
+
+						}
+						else
+						{//일반적인 이름
+
+							//감시자의 값으로 변경
+							let elemTemp: HTMLElement = nodeParent as HTMLElement;
+							//기존 이름 제거
+							elemTemp.removeAttribute(attrItem.name);
+							//새 이름 추가(값없음)
+							elemTemp.setAttribute(itemOW.data, "");
+
+							//감시자에 추가
+							itemOW.OneDataIs = true;
+							if (OverwatchingType.Monitoring === itemOW.OverwatchingType
+								|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType) {//모니터링이다.
+
+								//감시할 돔 추가
+								itemOW.Dom_Push_Valueless(nodeParent);
+							}
 						}
 					}
 				}

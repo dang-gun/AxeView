@@ -8,6 +8,7 @@
 	<!--<link rel="shortcut icon" href="/favicon.ico">-->
 	<!--<base href="/home/">-->
 	<title>AxeView Test</title>
+	<script defer src="../app.js"></script>
 </head>
 <body>
 	<h2>환영!</h2>
@@ -17,6 +18,15 @@
 		<a href="/Example/test_StartUp.html">시작하다</a><br />
 		<a href="/Example/test_BasicSample.html">기본 셈플</a><br />
 		<a href="/Example/test_01.html">테스트</a><br />
+	</div>
+
+	<button id="btnClick">돔을 직접 찾아 교체</button>
+	<button id="btnClick2">엑스뷰를 이용하여 교체</button><br />
+	<input type="text" id="txtInput" value="표시할 값" />
+
+	<div id="divAxeViewTset">
+		<h3>돔</h3>
+		<div {{HtmlDom}}></div>
 	</div>
 
 </body>

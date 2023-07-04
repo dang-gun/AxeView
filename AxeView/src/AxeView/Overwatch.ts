@@ -22,7 +22,7 @@ export class Overwatch
 	public NameFindString: string = "";
 
 	/** 지금 가지고 있는 데이터 */
-	private DataNow: string | Function = "";
+	private DataNow: string | Function | HTMLElement = "";
 	/** 
 	 *  지금 가지고 있는 데이터 - Replace
 	 *  교체(Replace)의 경우 이전값이 빈값이면 동작할 수 없으므로
@@ -33,10 +33,15 @@ export class Overwatch
 	/**
 	 * 실제 동작 get
 	 */
-	private DataNowGet: Function = () =>
+	private DataNowGet: Function = (): string | Function | HTMLElement =>
 	{
-		let sReturn: string | Function = "";
-		if (true === this.ValueMonitoringIs)
+		let sReturn: string | Function | HTMLElement = "";
+
+		if (true === this.DomIs)
+		{//돔 개체 전용
+			sReturn = this.DataNow;
+		}
+		else if (true === this.ValueMonitoringIs)
 		{//값 모니터링 전용
 			
 			if (0 < this._Dom.length)
@@ -53,6 +58,7 @@ export class Overwatch
 	};
 	/**
 	 * 실제 동작 set
+	 * @param data
 	 */
 	private DataNowSet: Function = function (data: any)
 	{
@@ -75,6 +81,20 @@ export class Overwatch
 				if (AxeViewDomType.Node === item.AxeViewDomType)
 				{
 					(item.Dom as Node).nodeValue = this.DataNow;
+				}
+				else if (AxeViewDomType.Dom === item.AxeViewDomType)
+				{//돔인 경우
+
+					//돔은 교체만 허용한다.
+					if (true === (this.DataNow instanceof HTMLElement))
+					{//들어온 값이 HTMLElement다.
+
+						//돔의 경우 이전 개체(OldData)의 부모를 찾아
+						//.replaceChild를 해야 한다.
+						(OldData.parentElement as HTMLElement)
+							.replaceChild(this.DataNow, OldData);
+					}
+					
 				}
 				else if (AxeViewDomType.Attr_OneValue === item.AxeViewDomType
 					|| AxeViewDomType.Attr_ValueMonitoring === item.AxeViewDomType				)
@@ -183,11 +203,14 @@ export class Overwatch
 	public OverwatchingOneIs: boolean = false;;
 
 	/** 
-	 *  연결되있는 돔
-	 *  단순 출력의 경우 추가하지 않는다.
-	 *  여러개가 연결된 경우 각각의 돔이들어있게 된다.
-	 *  'Action'이 어트리뷰트에 연결된 경우 대상 dom이 저장되고,
-	 *  innerText영역에 있는 경우 임의로 생성된 태그가 지정된다.
+	 * 연결되있는 돔
+	 * 단순 출력의 경우 추가하지 않는다.
+	 * 여러개가 연결된 경우 각각의 돔이들어있게 된다.
+	 * 'Action'이 어트리뷰트에 연결된 경우 대상 dom이 저장되고,
+	 * innerText영역에 있는 경우 임의로 생성된 태그가 지정된다.
+	 * 
+	 * Dom 개체 형식의 경우 부모는 무조건 한개가 되므로 이 배열에 추가하지 않는다.
+	 * (DataNow만 사용)
 	 * */
 	private _Dom: AxeViewDomInterface[] = [];
 	/** 연결된 돔 */
@@ -227,6 +250,18 @@ export class Overwatch
 			, Dom: domPushData
 			, EventName: null
 		});
+	}
+
+	/**
+	 * 연결된 돔 추가 - Node
+	 * 돔 개체 형식의 경우 부모는 무조건 하나이고,
+	 * Set 동작은 하지 안으므로 DataNow에 개체를 넣고 배열에는 추가하지 않는다.
+	 * @param domPushData
+	 */
+	public Dom_Push_Dom(domPushData: HTMLElement)
+	{
+		this.DataNow = domPushData;
+		this.DomIs = true;
 	}
 
 	/**
@@ -398,6 +433,8 @@ export class Overwatch
 
 	/** 값 모니터링 전용인지 여부 */
 	private ValueMonitoringIs: boolean = false;
+	/** 돔 개체 전용인지 여부 */
+	private DomIs: boolean = false;
 
 	constructor(target: OverwatchInterface)
 	{
@@ -419,6 +456,7 @@ export class Overwatch
 				//데이터가 html인경우 빈값을 넣으면 안되고 보이지 않는 요소라라도 하나 넣어야 한다.
 				//(<div></div>)
 				//안그러면 text 노드가 생성되서 에러가 난다.
+				//그래서 여기서 넣어준다.
 				this.DataNow = "<div></div>";
 			}
 		}

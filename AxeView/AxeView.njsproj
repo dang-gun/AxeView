@@ -33,6 +33,9 @@
   <ItemGroup>
     <None Include="server.ts" />
     <Content Include="src\AxeView\Test.html" />
+    <Content Include="src\Example\test_BasicSample.html" />
+    <Content Include="src\Example\test_StartUp.html" />
+    <Content Include="src\Example\test_01.html" />
     <Content Include="src\test01.html" />
     <Content Include="src\index.html" />
     <Content Include="src\index.ts" />
@@ -45,6 +48,7 @@
     <Folder Include="public\" />
     <Folder Include="src\" />
     <Folder Include="src\AxeView\" />
+    <Folder Include="src\Example\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\AxeView\AxeView.ts" />
@@ -54,6 +58,9 @@
     <TypeScriptCompile Include="src\AxeView\Overwatch.ts" />
     <TypeScriptCompile Include="src\AxeView\OverwatchingType.ts" />
     <TypeScriptCompile Include="src\AxeView\OverwatchInterface.ts" />
+    <TypeScriptCompile Include="src\Example\test_BasicSample.ts" />
+    <TypeScriptCompile Include="src\Example\test_StartUp.ts" />
+    <TypeScriptCompile Include="src\Example\test_01.ts" />
     <TypeScriptCompile Include="webpack.config.js" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

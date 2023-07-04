@@ -39,6 +39,14 @@ export const enum OverwatchingOutputType
 	 * 이렇게 해야 클릭 이벤트가 발생했을때 동작한다.
 	 * */
 	Function_NameRemoveOn,
+
+	/**
+	 * 돔 개체 - 속성에만 사용가능
+	 * 속해있는 돔 개체(HTMLElement)를 가지고 있는다.
+	 * 돔 개체이므로 Set개념은 없다.(무시됨)
+	 * 이 개채는 바인딩될 때 개체를 저장해 두므로 OverwatchingType.OutputFirst와 동일한 동작을 한다.
+	 */
+	Dom,
 }
 
 /** 감시 방식  */

@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 //소스 위치
 const RootPath = path.resolve(__dirname);
@@ -69,6 +70,32 @@ module.exports = (env, argv) =>
                     "!robots.txt",
                     "!Upload"
                 ]
+            }),
+
+            //그대로 출력폴더에 복사할 파일 지정
+            new CopyPlugin({
+                patterns: [
+                    {
+                        //모든 html파일 복사
+                        from: "./src/**/*.html",
+                        to({ context, absoluteFilename })
+                        {
+                            //'src/'를 제거
+                            let sOutDir = path.relative(context, absoluteFilename).substring(4);
+                            //index.html은 리액트가 생성해주므로 여기선 스킵한다.
+                            if ("index.html" === sOutDir)
+                            {
+                                //sOutDir = "index_Temp.html";
+                                sOutDir = "";
+                            }
+                            //console.log("sOutDir : " + sOutDir);
+                            return `${sOutDir}`;
+                        },
+                    },
+                ],
+                options: {
+                    concurrency: 100,
+                },
             }),
         ],
 

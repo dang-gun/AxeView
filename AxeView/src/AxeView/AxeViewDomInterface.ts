@@ -37,6 +37,9 @@ export const enum AxeViewDomType
 	/** Node로 변환하여 동작함 */
 	Node,
 
+	/** Dom을 그대로 리턴 */
+	Dom,
+
 	/** 속성 - 값없는 속성 */
 	Attr_Valueless,
 	/** 속성 - 값이 하나만 있는 속성 */
@@ -49,4 +52,6 @@ export const enum AxeViewDomType
 
 	/** 속성 - 값 모니터링(UI 우선), 전체 교체로만 동작함 */
 	Attr_ValueMonitoring,
+
+	
 }
