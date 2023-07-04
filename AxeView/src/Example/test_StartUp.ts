@@ -7,181 +7,164 @@ import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, Overwat
 export default class test_StartUp
 {
 	/** 액스뷰 개체 */
-	AxeView: AxeView = new AxeView();
+	private AxeView: AxeView = new AxeView();
 
-	//AxeView 테스트용 변수
-	arrTarget: Overwatch[] = [];
+	/** AxeView 테스트용 변수1 */
+	private arrTarget1: Overwatch[] = [];
+
+	/** AxeView 테스트용 변수2 */
+	private arrTarget2: Overwatch[] = [];
+
+	/** AxeView 테스트용 변수3 */
+	private arrTarget3: Overwatch[] = [];
 
 	constructor()
 	{
 		//주석 제거
 		this.AxeView.CommentDelete = true;
 
-		//액스뷰 테스트****
-		this.arrTarget.push(
+		//액스뷰1 테스트 ******************
+		this.arrTarget1.push(
 			//단순 문자열 검색
 			new Overwatch({
-				Name: "StringTest"
+				Name: "StringTest1"
 				, FirstData: "문자열 출력!!"
 				, OverwatchingOutputType: OverwatchingOutputType.String
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: true
 			}));
 
-		this.arrTarget.push(
-			//단순 html 검색
-			new Overwatch({
-				Name: "HtmlTest"
-				, FirstData: "<h3>Html 출력!</h3>"
-				, OverwatchingOutputType: OverwatchingOutputType.Html
-				, OverwatchingType: OverwatchingType.OutputFirst
-				, OverwatchingOneIs: true
-			}));
-
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			//모니터링 문자열 검색
 			new Overwatch({
-				Name: "MonitoringString"
+				Name: "StringTest2"
 				, FirstData: "모니터링중(문자열)"
 				, OverwatchingOutputType: OverwatchingOutputType.String
 				, OverwatchingType: OverwatchingType.Monitoring
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget.push(
-			//모니터링 문자열 검색
+		//엑스뷰1
+		//돔 재생성 및 설정된 뷰모델 연결
+		this.AxeView.BindOverwatch(
+			document.getElementById("divAxeViewTset1")
+			, this.arrTarget1);
+
+		//이벤트 연결
+		document.getElementById("btnStringTest1").onclick
+			= (event) =>
+			{
+				let sTnput = (document.getElementById("txtInputStringTest1") as HTMLInputElement).value;
+
+				this.arrTarget1[0].data = sTnput;
+				this.arrTarget1[1].data = sTnput;
+			}
+
+
+
+		//액스뷰2 테스트 ******************
+		this.arrTarget2.push(
+			//단순 문자열 검색
 			new Overwatch({
-				Name: "MonitoringHtml"
-				, FirstData: "<h1>모니터링중(Html)</h1>"
+				Name: "HtmlTest1"
+				, FirstData: "<div>HTML div!!</div>"
 				, OverwatchingOutputType: OverwatchingOutputType.Html
 				, OverwatchingType: OverwatchingType.Monitoring
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget.push(
+		this.arrTarget2.push(
+			//모니터링 문자열 검색
 			new Overwatch({
-				Name: "MonitoringAttr1"
-				, FirstData: "attrTest1"
+				Name: "HtmlTest2"
+				, FirstData: "<a href=''>HTML a!!</a>"
+				, OverwatchingOutputType: OverwatchingOutputType.Html
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: false
+			}));
+
+		//엑스뷰2
+		//돔 재생성 및 설정된 뷰모델 연결
+		this.AxeView.BindOverwatch(
+			document.getElementById("divAxeViewTset2")
+			, this.arrTarget2);
+
+		document.getElementById("btnHtmlTest1").onclick
+			= (event) =>
+			{
+				let sTnput = (document.getElementById("txtHtmlTest1") as HTMLTextAreaElement).value;
+
+				this.arrTarget2[0].data = "<div>" + sTnput + "</div>";
+				this.arrTarget2[1].data = "<a href=''>" + sTnput + "</a>";
+			}
+		(document.getElementById("txtHtmlTest1") as HTMLTextAreaElement).value
+			= "<div>기본 div</div>"
+
+
+
+		//액스뷰3 테스트 ******************
+		this.arrTarget3.push(
+			//단순 문자열 검색
+			new Overwatch({
+				Name: "InputMonitoringTest1"
+				, FirstData: "첫 데이터1"
 				, OverwatchingOutputType: OverwatchingOutputType.String
-				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingType: OverwatchingType.Monitoring_AttrValue_Input
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget.push(
-			//모니터링 문자열 검색
+		this.arrTarget3.push(
+			//단순 문자열 검색
 			new Overwatch({
-				Name: "MonitoringAttr2"
-				, FirstData: "attrTest2"
-				, OverwatchingOutputType: OverwatchingOutputType.String
-				, OverwatchingType: OverwatchingType.Monitoring
-				, OverwatchingOneIs: false
-			}));
-
-		this.arrTarget.push(
-			//모니터링 문자열 검색
-			new Overwatch({
-				Name: "FunctionTest"
-				, FirstData: function (
-					event: Event
-					, sender: ChildNode
-					, objThis: Overwatch)
-				{
-					alert("바인딩됨");
-					console.log(sender);
-					console.log(event);
-					console.log(objThis);
-					debugger;
-				}
-				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
-				, OverwatchingType: OverwatchingType.Monitoring
-				, OverwatchingOneIs: false
-			}));
-
-		this.arrTarget.push(
-			//모니터링 문자열 검색
-			new Overwatch({
-				Name: "CssTest"
-				, FirstData: "CssAdd"
-				, OverwatchingOutputType: OverwatchingOutputType.String
-				, OverwatchingType: OverwatchingType.Monitoring
-				, OverwatchingOneIs: false
-			}));
-
-		this.arrTarget.push(
-			//모니터링 문자열 검색
-			new Overwatch({
-				Name: "MonitoringAttr3"
-				, FirstData: "attrTest3"
-				, OverwatchingOutputType: OverwatchingOutputType.String
-				, OverwatchingType: OverwatchingType.Monitoring
-				, OverwatchingOneIs: false
-			}));
-
-		this.arrTarget.push(
-			//모니터링 문자열 검색
-			new Overwatch({
-				Name: "MonitoringAttr4"
-				, FirstData: "attrTest4"
+				Name: "InputMonitoringTest2"
+				, FirstData: "첫 데이터2"
 				, OverwatchingOutputType: OverwatchingOutputType.String
 				, OverwatchingType: OverwatchingType.Monitoring_AttrValue
 				, OverwatchingOneIs: false
 			}));
 
+		this.arrTarget3.push(
+			//모니터링 문자열 검색
+			new Overwatch({
+				Name: "InputMonitoringTest3"
+				, FirstData: "모니터링중(문자열)1"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: false
+			}));
+
+		this.arrTarget3.push(
+			//모니터링 문자열 검색
+			new Overwatch({
+				Name: "InputMonitoringTest4"
+				, FirstData: "모니터링중(문자열)2"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: false
+			}));
+
+
+		//액스뷰3
 		//돔 재생성 및 설정된 뷰모델 연결
 		this.AxeView.BindOverwatch(
-			document.getElementById("divAxeViewTset")
-			, this.arrTarget);
+			document.getElementById("divAxeViewTset3")
+			, this.arrTarget3);
 
-
-		//돔 추가 처리
-		this.AxeView.DomHelper(
-			document.getElementById("divAxeViewTset")
-			, {
-				OptionUse: true
-				, AtagClickEventCancel: true
-				, AtagClickEventCallback: function (event)
-				{
-					console.log("A tag click : " + (event.target as any).pathname);
-				}
+		//첫번째 감시대상의 입력값을 실시간으로 받아온다.
+		(this.arrTarget3[0].Dom as Node)
+			.addEventListener("input", (event) =>
+			{
+				this.arrTarget3[1].data = this.arrTarget3[0].data;
+				this.arrTarget3[2].data = this.arrTarget3[0].data;
 			});
 
-		document.getElementById("btnClick").onclick = this.TestCilck;
-		document.getElementById("btnClick2").onclick = this.TestCilck2;
+		//이벤트 연결
+		document.getElementById("btnInputMonitoringTest1").onclick
+			= (event) =>
+			{
+				this.arrTarget3[3].data = this.arrTarget3[1].data;
+			}
+
+
 	}
-
-	TestCilck = () =>
-	{
-		debugger;
-		this.arrTarget[2].data = "클릭했다!!!";
-		this.arrTarget[3].data = "<h2>클릭했다!!HTML</h2>";
-
-		this.arrTarget[4].data = "Click1";
-		this.arrTarget[5].data = "Check2";
-
-		this.arrTarget[6].data = function (
-			sender: ChildNode
-			, event: Event
-			, objThis: Overwatch)
-		{
-			alert("재바인딩됨");
-			console.log(sender);
-			console.log(event);
-			console.log(objThis);
-		};
-
-		this.arrTarget[7].data = "";
-
-		let sTemp1 = document.getElementById("divTemp1").getAttribute("axeTest2");
-		document.getElementById("divTemp1").setAttribute("axeTest2", sTemp1 + " AddTest");
-		this.arrTarget[8].data = "Click4";
-
-		console.log("클릭함 : " + this.arrTarget[9].data);
-		//this.arrTarget[9].data = "asdfasdfd11";
-	}
-
-	TestCilck2 = () =>
-	{
-		this.arrTarget[7].data = "ReClick";
-	}
-
 }

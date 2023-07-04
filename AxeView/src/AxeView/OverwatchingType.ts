@@ -96,4 +96,10 @@ export const enum OverwatchingType
 	 * 그래서 'change'를 넣어 값이 변경되면 돔이 가지고 있는 값도 수정하도록 변경하였다.
 	 * */
 	Monitoring_AttrValue,
+
+	/**
+	 * 속성(attribute)의 값(value)만 모니터링 하고 사용자의 입력값을 감시한다.
+	 * Monitoring_AttrValue동일하지만 연결하는 이벤트만 'input'로 변경됐다.
+	 */
+	Monitoring_AttrValue_Input,
 }

@@ -5,6 +5,41 @@ import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType"
 /** 감시 대상  */
 export class Overwatch
 {
+	constructor(target: OverwatchInterface)
+	{
+		this.Name = target.Name;
+		this.NameFindString = "{{" + this.Name + "}}";
+
+
+		if ("" === target.FirstData
+			|| " " === target.FirstData)
+		{
+			if (OverwatchingOutputType.String === this.OverwatchingOutputType)
+			{
+				//이 값은 절대 비어있으면 안된다.(빈값을 쓰려면 스페이스를 사용하자)
+				//빈값으로는 노드를 생성하지 않고 있기 때문이다.
+				this.DataNow = " ";
+			}
+			else if (OverwatchingOutputType.Html === this.OverwatchingOutputType)
+			{
+				//데이터가 html인경우 빈값을 넣으면 안되고 보이지 않는 요소라라도 하나 넣어야 한다.
+				//(<div></div>)
+				//안그러면 text 노드가 생성되서 에러가 난다.
+				//그래서 여기서 넣어준다.
+				this.DataNow = "<div></div>";
+			}
+		}
+		else
+		{
+			this.DataNow = target.FirstData;
+		}
+
+
+		this.OverwatchingOutputType = target.OverwatchingOutputType;
+		this.OverwatchingType = target.OverwatchingType;
+		this.OverwatchingOneIs = target.OverwatchingOneIs;
+	}
+
 	/** 
 	 *  액스뷰에서 지정한 고유번호.
 	 *  액스뷰를 바인딩할때 자동으로 입력된다.
@@ -44,10 +79,10 @@ export class Overwatch
 		else if (true === this.ValueMonitoringIs)
 		{//값 모니터링 전용
 			
-			if (0 < this._Dom.length)
+			if (0 < this._Dom_AxeView.length)
 			{
 				//값 모니터링은 돔의 value를 우선한다.
-				sReturn = (this._Dom[0].Dom as Attr).value;
+				sReturn = (this._Dom_AxeView[0].Dom as Attr).value;
 			}
 		}
 		else
@@ -69,14 +104,14 @@ export class Overwatch
 		//새값 저장
 		this.DataNow = data;
 		
-		if (null !== this._Dom
-			&& 0 < this._Dom.length)
+		if (null !== this._Dom_AxeView
+			&& 0 < this._Dom_AxeView.length)
 		{//돔이 있으면 실행
 
 			//저장된 돔개수만큼 실행
-			for (let nDomIdx: number = 0; nDomIdx < this._Dom.length; ++nDomIdx)
+			for (let nDomIdx: number = 0; nDomIdx < this._Dom_AxeView.length; ++nDomIdx)
 			{
-				let item: AxeViewDomInterface = this.Dom[nDomIdx];
+				let item: AxeViewDomInterface = this.Dom_AxeView[nDomIdx];
 				//item.innerHTML = this.DataNow;
 				if (AxeViewDomType.Node === item.AxeViewDomType)
 				{
@@ -203,7 +238,7 @@ export class Overwatch
 	public OverwatchingOneIs: boolean = false;;
 
 	/** 
-	 * 연결되있는 돔
+	 * 연결되있는 액스돔 리스트
 	 * 단순 출력의 경우 추가하지 않는다.
 	 * 여러개가 연결된 경우 각각의 돔이들어있게 된다.
 	 * 'Action'이 어트리뷰트에 연결된 경우 대상 dom이 저장되고,
@@ -212,11 +247,17 @@ export class Overwatch
 	 * Dom 개체 형식의 경우 부모는 무조건 한개가 되므로 이 배열에 추가하지 않는다.
 	 * (DataNow만 사용)
 	 * */
-	private _Dom: AxeViewDomInterface[] = [];
+	private _Dom_AxeView: AxeViewDomInterface[] = [];
 	/** 연결된 돔 */
-	public get Dom(): AxeViewDomInterface[]
+	public get Dom_AxeView(): AxeViewDomInterface[]
 	{
-		return this._Dom;
+		return this._Dom_AxeView;
+	}
+
+	/** 연결된 돔 리스트에서 가장 첫 액스돔이 가지고 있는 돔 */
+	public get Dom(): HTMLElement | Node | Attr | Function
+	{
+		return this.Dom_AxeView[0].Dom;
 	}
 
 	/**
@@ -233,7 +274,7 @@ export class Overwatch
 	 */
 	public Dom_Push_HTMLElement(domPushData: HTMLElement)
 	{
-		this._Dom.push({
+		this._Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.HTMLElement
 			, Dom: domPushData
 			, EventName: null
@@ -245,7 +286,7 @@ export class Overwatch
 	 */
 	public Dom_Push_Node(domPushData: Node)
 	{
-		this._Dom.push({
+		this._Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Node
 			, Dom: domPushData
 			, EventName: null
@@ -279,7 +320,7 @@ export class Overwatch
 		
 		this.DomIs = true;
 
-		this._Dom.push({
+		this._Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Dom
 			, Dom: domPushData
 			, EventName: null
@@ -293,7 +334,7 @@ export class Overwatch
 	 */
 	public Dom_Push_Valueless(domPushData: ChildNode)
 	{
-		this._Dom.push({
+		this._Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Attr_Valueless
 			, Dom: domPushData
 			, EventName: null
@@ -307,7 +348,7 @@ export class Overwatch
 	 */
 	public Dom_Push_OneValue(domPushData: Attr)
 	{
-		this._Dom.push({
+		this._Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Attr_OneValue
 			, Dom: domPushData
 			, EventName: null
@@ -322,7 +363,7 @@ export class Overwatch
 	 */
 	public Dom_Push_ReplaceValue(domPushData: Attr)
 	{
-		this._Dom.push({
+		this._Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Attr_ReplaceValue
 			, Dom: domPushData
 		});
@@ -374,7 +415,7 @@ export class Overwatch
 
 		if (true === bPush)
 		{
-			this._Dom.push(avdTemp);
+			this._Dom_AxeView.push(avdTemp);
 		}
 
 		//이벤트 리스너에 등록
@@ -389,23 +430,45 @@ export class Overwatch
 	 */
 	public Dom_Push_Attr_ValueMonitoring(domPushData: ChildNode)
 	{
-		if (0 === this._Dom.length)
+		if (0 === this._Dom_AxeView.length)
 		{
 			let objThis = this;
 
-			//액스 돔으로 사용할 개체 만들기
-			let avdTemp: AxeViewDomInterface = {
-				AxeViewDomType: AxeViewDomType.Attr_ValueMonitoring
-				, Dom: domPushData
-				, EventName: "change"
-				, Event: function (event: Event)
-				{
-					objThis.data = this.value;
-				}
-			};
+			let avdTemp: AxeViewDomInterface;
+
+			switch (objThis.OverwatchingType)
+			{
+				case OverwatchingType.Monitoring_AttrValue_Input:
+					//액스 돔으로 사용할 개체 만들기
+					avdTemp = {
+						AxeViewDomType: AxeViewDomType.Attr_ValueMonitoring
+						, Dom: domPushData
+						, EventName: "input"
+						, Event: function (event: Event)
+						{
+							objThis.data = this.value;
+						}
+					};
+					break;
+
+				default:
+					//액스 돔으로 사용할 개체 만들기
+					avdTemp = {
+						AxeViewDomType: AxeViewDomType.Attr_ValueMonitoring
+						, Dom: domPushData
+						, EventName: "change"
+						, Event: function (event: Event)
+						{
+							objThis.data = this.value;
+						}
+					};
+					break;
+			}
+
+			
 
 			//액스돔 리스트에 추가
-			objThis._Dom.push(avdTemp);
+			objThis._Dom_AxeView.push(avdTemp);
 
 			this.ValueMonitoringIs = true;
 
@@ -419,7 +482,7 @@ export class Overwatch
 	/** 연결된 돔 비우기 */
 	public Dom_Clear()
 	{
-		this._Dom = [];
+		this._Dom_AxeView = [];
 	}
 
 	/** 
@@ -458,42 +521,7 @@ export class Overwatch
 	/** 돔 개체 전용인지 여부 */
 	private DomIs: boolean = false;
 
-	constructor(target: OverwatchInterface)
-	{
-		this.Name = target.Name;
-		this.NameFindString = "{{" + this.Name + "}}";
-
-		
-		if ("" === target.FirstData
-			|| " " === target.FirstData)
-		{
-			if (OverwatchingOutputType.String === this.OverwatchingOutputType)
-			{
-				//이 값은 절대 비어있으면 안된다.(빈값을 쓰려면 스페이스를 사용하자)
-				//빈값으로는 노드를 생성하지 않고 있기 때문이다.
-				this.DataNow = " ";
-			}
-			else if (OverwatchingOutputType.Html === this.OverwatchingOutputType)
-			{
-				//데이터가 html인경우 빈값을 넣으면 안되고 보이지 않는 요소라라도 하나 넣어야 한다.
-				//(<div></div>)
-				//안그러면 text 노드가 생성되서 에러가 난다.
-				//그래서 여기서 넣어준다.
-				this.DataNow = "<div></div>";
-			}
-		}
-		else
-		{
-			this.DataNow = target.FirstData;
-		}
-
-
-		
-
-		this.OverwatchingOutputType = target.OverwatchingOutputType;
-		this.OverwatchingType = target.OverwatchingType;
-		this.OverwatchingOneIs = target.OverwatchingOneIs;
-	}
+	
 
 	/**
 	 * 지정한 문자열을 모두 찾아 변환한다.

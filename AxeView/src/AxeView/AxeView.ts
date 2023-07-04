@@ -39,6 +39,13 @@ export default class AxeView
 	 * */
 	public CommentDelete: boolean = false;
 
+	/** 마지막으로 사용한 감시대상 리스트*/
+	public LastList: Overwatch[] = [];
+
+	/**
+	 * 
+	 * @param jsonDomHelperOption 헬퍼를 사용할때 전달할 옵션
+	 */
 	constructor(jsonDomHelperOption?: AxeDomHelperOptionInterface | null)
 	{
 		this.AxeDomHelper = new AxeDomHelper(jsonDomHelperOption);
@@ -119,6 +126,10 @@ export default class AxeView
 		{
 			throw "검색할 dom 을 전달해야 합니다.";
 		}
+
+
+		//감시 리스트 백업
+		this.LastList = arrTarget;
 
 		//let objThis: AxeView = this;
 		//각 감시자별로 처리해야할 내용
@@ -284,7 +295,7 @@ export default class AxeView
 					//임시로 텍스트 노드로 생성한다.
 					//원칙적으로는 여기에 오면 안된다.
 					newParent.push(document.createTextNode(itemStrText.Text));
-					debugger;
+					//debugger;
 				}
 			}
 		}
@@ -599,31 +610,34 @@ export default class AxeView
 				//debugger;
 
 				if ("value" === attrItem.name
-					&& OverwatchingType.Monitoring_AttrValue === itemOW.OverwatchingType)
+					&& (OverwatchingType.Monitoring_AttrValue === itemOW.OverwatchingType
+						|| OverwatchingType.Monitoring_AttrValue_Input === itemOW.OverwatchingType))
 				{//속성이름이 'value'이고
 					//값을 모니터링 중이다.
 
-					//값(value)은 다른속성과 다르게 부모의 필드에 바인딩되는 녀석이라
-					//그냥 속성개체를 저장하면 UI에서 입력된 값을 읽을 수 없다.
-					//정확하게는 ui에서 수정하면 읽어지질 않는다...(개체가 달라지나????)
-					//
-					//그래서 이벤트 리스너로 처리하도록 수정하였다.
+					if (itemOW.NameFindString === attrItem.value)
+					{
+						//값(value)은 다른속성과 다르게 부모의 필드에 바인딩되는 녀석이라
+						//그냥 속성개체를 저장하면 UI에서 입력된 값을 읽을 수 없다.
+						//정확하게는 ui에서 수정하면 읽어지질 않는다...(개체가 달라지나????)
+						//
+						//그래서 이벤트 리스너로 처리하도록 수정하였다.
 
-					//이 옵션에서는 아래 조건 말고는 동작하지 않는다.
-					if (OverwatchingOutputType.String === itemOW.OverwatchingOutputType)
-					{//출력 방식이 'string'이다.
-						
-						//초기값 입력
-						attrItem.value = itemOW.data;
+						//이 옵션에서는 아래 조건 말고는 동작하지 않는다.
+						if (OverwatchingOutputType.String === itemOW.OverwatchingOutputType)
+						{//출력 방식이 'string'이다.
 
-						//감시자에 추가
-						itemOW.OneDataIs = true;
+							//초기값 입력
+							attrItem.value = itemOW.data;
 
-						//감시할 돔 추가
-						//속성의 값(value)만을 모니터링 하는 옵션이다.
-						itemOW.Dom_Push_Attr_ValueMonitoring(nodeParent);
+							//감시자에 추가
+							itemOW.OneDataIs = true;
+
+							//감시할 돔 추가
+							//속성의 값(value)만을 모니터링 하는 옵션이다.
+							itemOW.Dom_Push_Attr_ValueMonitoring(nodeParent);
+						}
 					}
-
 				}
 				else if ("" === attrItem.value)
 				{//벨류가 없으면 이름만 있는 속성이다.
@@ -781,8 +795,32 @@ export default class AxeView
 			//돔 처리
 			this.AxeDomHelper.DomHelping(domTarget, jsonDomHelperOption);
 		}
-		
 	}
+
+
+	// #region 리스트 관리 기능
+
+	/**
+	 * 사용할 감시 대상 리스트를 설정한다.
+	 * @param arrOverwatch
+	 */
+	public ListSet = (arrOverwatch: Overwatch[]): void =>
+	{
+		this.LastList = arrOverwatch;
+	}
+
+	/**
+	 * 가지고 있는 리스트에서 이름으로 감시대상을 찾는다.
+	 * @param sName
+	 * @returns
+	 */
+	public FindName = (sName: string): Overwatch | null =>
+	{
+		return this.LastList.find(f => f.Name === sName);
+
+	}
+	// #endregion
+
 }
 
 

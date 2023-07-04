@@ -14,10 +14,10 @@
 	<h2>환영!</h2>
 
 	<div>
-		<a href="/Example/index.html">홈</a><br />
-		<a href="/Example/test_StartUp.html">시작하다</a><br />
-		<a href="/Example/test_BasicSample.html">기본 셈플</a><br />
-		<a href="/Example/test_01.html">테스트</a><br />
+		<a href="../Example/index.html">홈</a><br />
+		<a href="../Example/test_StartUp.html">시작하다</a><br />
+		<a href="../Example/test_BasicSample.html">기본 셈플</a><br />
+		<a href="../Example/test_01.html">테스트</a><br />
 	</div>
 
 	<button id="btnClick">돔을 직접 찾아 교체</button>
@@ -27,6 +27,17 @@
 	<div id="divAxeViewTset">
 		<h3>돔</h3>
 		<div {{HtmlDom}}></div>
+	</div>
+
+	<br />
+	<h3>값 가지고 오기</h3>
+	<button id="btnInputMonitoringTest1">입력2 확인</button><br />
+	<div id="divAxeViewTset3">
+		입력1 : <input value="{{InputMonitoringTest1}}" />
+		<br />
+		입력2 : <input value="{{InputMonitoringTest2}}" />
+		<br />
+		읽은 값 : {{InputMonitoringTest3}}, {{InputMonitoringTest4}}
 	</div>
 
 </body>
