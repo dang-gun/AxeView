@@ -68,7 +68,7 @@ export class Overwatch
 
 		//새값 저장
 		this.DataNow = data;
-
+		
 		if (null !== this._Dom
 			&& 0 < this._Dom.length)
 		{//돔이 있으면 실행
@@ -253,15 +253,37 @@ export class Overwatch
 	}
 
 	/**
-	 * 연결된 돔 추가 - Node
-	 * 돔 개체 형식의 경우 부모는 무조건 하나이고,
-	 * Set 동작은 하지 안으므로 DataNow에 개체를 넣고 배열에는 추가하지 않는다.
+	 * 연결된 돔 추가 - Dom
+	 * 돔 개체 형식의 경우 부모는 무조건 하나다.
+	 * 
+	 * 2023-07-04 : 돔 교체를 지원하기 위해 모니터링에 추가함
 	 * @param domPushData
 	 */
 	public Dom_Push_Dom(domPushData: HTMLElement)
 	{
 		this.DataNow = domPushData;
+
+		//if ("" === this.DataNow)
+		//{//첫 데이터가 비어 있다.
+		//	this.DataNow = domPushData;
+		//}
+		//else if (true === (this.DataNow instanceof HTMLElement))
+		//{//첫 돔이 있다.
+
+		//	//돔의 경우 이전 개체(OldData)의 부모를 찾아
+		//	//.replaceChild를 해야 한다.
+		//	//(domPushData.parentElement as HTMLElement)
+		//	//	.replaceChild(this.DataNow as HTMLElement, domPushData);
+		//	//domPushData = this.DataNow as HTMLElement;
+		//}
+		
 		this.DomIs = true;
+
+		this._Dom.push({
+			AxeViewDomType: AxeViewDomType.Dom
+			, Dom: domPushData
+			, EventName: null
+		});
 	}
 
 	/**

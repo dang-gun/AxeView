@@ -38,7 +38,7 @@ module.exports = (env, argv) =>
     return {
         /** 서비스 모드 */
         mode: EnvPrductionIs ? "production" : "development",
-        devtool: "eval",
+        devtool: "inline-source-map",
         //devtool: "inline-source-map",
         resolve: {
             extensions: [".js", ".ts"]
