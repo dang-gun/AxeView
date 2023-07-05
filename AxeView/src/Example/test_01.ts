@@ -25,21 +25,20 @@ export default class test_01
 
 		this.domNew.innerHTML = "<h5>추가됐습니다.</h5>";
 
+		this.arrTarget.push(
+			//돔 찾기
+			new Overwatch({
+				Name: "HtmlDom"
+				, FirstData: this.domNew
+				, OverwatchingOutputType: OverwatchingOutputType.Dom
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: true
+			}));
 
-		//this.arrTarget.push(
-		//	//돔 찾기
-		//	new Overwatch({
-		//		Name: "HtmlDom"
-		//		, FirstData: this.domNew
-		//		, OverwatchingOutputType: OverwatchingOutputType.Dom
-		//		, OverwatchingType: OverwatchingType.OutputFirst
-		//		, OverwatchingOneIs: true
-		//	}));
-
-		////돔 재생성 및 설정된 뷰모델 연결
-		//this.AxeView.BindOverwatch(
-		//	document.getElementById("divAxeViewTset")
-		//	, this.arrTarget);
+		//돔 재생성 및 설정된 뷰모델 연결
+		this.AxeView.BindOverwatch(
+			document.getElementById("divAxeViewTset")
+			, this.arrTarget);
 
 
 
@@ -51,52 +50,52 @@ export default class test_01
 
 
 
-		this.arrTarget3.push(
-			//단순 문자열 검색
-			new Overwatch({
-				Name: "InputMonitoringTest1"
-				, FirstData: "첫 데이터1"
-				, OverwatchingOutputType: OverwatchingOutputType.String
-				, OverwatchingType: OverwatchingType.Monitoring_AttrValue
-				, OverwatchingOneIs: false
-			}));
+		//this.arrTarget3.push(
+		//	//단순 문자열 검색
+		//	new Overwatch({
+		//		Name: "InputMonitoringTest1"
+		//		, FirstData: "첫 데이터1"
+		//		, OverwatchingOutputType: OverwatchingOutputType.String
+		//		, OverwatchingType: OverwatchingType.Monitoring_AttrValue
+		//		, OverwatchingOneIs: false
+		//	}));
 
-		this.arrTarget3.push(
-			//단순 문자열 검색
-			new Overwatch({
-				Name: "InputMonitoringTest2"
-				, FirstData: "첫 데이터2"
-				, OverwatchingOutputType: OverwatchingOutputType.String
-				, OverwatchingType: OverwatchingType.Monitoring_AttrValue
-				, OverwatchingOneIs: false
-			}));
+		//this.arrTarget3.push(
+		//	//단순 문자열 검색
+		//	new Overwatch({
+		//		Name: "InputMonitoringTest2"
+		//		, FirstData: "첫 데이터2"
+		//		, OverwatchingOutputType: OverwatchingOutputType.String
+		//		, OverwatchingType: OverwatchingType.Monitoring_AttrValue
+		//		, OverwatchingOneIs: false
+		//	}));
 
-		this.arrTarget3.push(
-			//모니터링 문자열 검색
-			new Overwatch({
-				Name: "InputMonitoringTest3"
-				, FirstData: "모니터링중(문자열)1"
-				, OverwatchingOutputType: OverwatchingOutputType.String
-				, OverwatchingType: OverwatchingType.Monitoring
-				, OverwatchingOneIs: false
-			}));
+		//this.arrTarget3.push(
+		//	//모니터링 문자열 검색
+		//	new Overwatch({
+		//		Name: "InputMonitoringTest3"
+		//		, FirstData: "모니터링중(문자열)1"
+		//		, OverwatchingOutputType: OverwatchingOutputType.String
+		//		, OverwatchingType: OverwatchingType.Monitoring
+		//		, OverwatchingOneIs: false
+		//	}));
 
-		this.arrTarget3.push(
-			//모니터링 문자열 검색
-			new Overwatch({
-				Name: "InputMonitoringTest4"
-				, FirstData: "모니터링중(문자열)2"
-				, OverwatchingOutputType: OverwatchingOutputType.String
-				, OverwatchingType: OverwatchingType.Monitoring
-				, OverwatchingOneIs: false
-			}));
+		//this.arrTarget3.push(
+		//	//모니터링 문자열 검색
+		//	new Overwatch({
+		//		Name: "InputMonitoringTest4"
+		//		, FirstData: "모니터링중(문자열)2"
+		//		, OverwatchingOutputType: OverwatchingOutputType.String
+		//		, OverwatchingType: OverwatchingType.Monitoring
+		//		, OverwatchingOneIs: false
+		//	}));
 
 
-		//액스뷰3
-		//돔 재생성 및 설정된 뷰모델 연결
-		this.AxeView.BindOverwatch(
-			document.getElementById("divAxeViewTset3")
-			, this.arrTarget3);
+		////액스뷰3
+		////돔 재생성 및 설정된 뷰모델 연결
+		//this.AxeView.BindOverwatch(
+		//	document.getElementById("divAxeViewTset3")
+		//	, this.arrTarget3);
 	}
 
 	TestCilck = () =>

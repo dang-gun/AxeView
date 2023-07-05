@@ -10,6 +10,9 @@ export * from "./OverwatchingType";
 import { Overwatch } from "./Overwatch"
 export * from "./Overwatch";
 
+import { OverwatchDomPushHelper } from "./OverwatchDomPushHelper"
+
+
 
 import { AxeDomHelper } from "./AxeDomHelper"
 export *  from "./AxeDomHelper";
@@ -30,7 +33,7 @@ export default class AxeView
 	/**
 	 * 완성된 돔에 추가처리를 할 헬퍼
 	 */
-	public AxeDomHelper: AxeDomHelper | null = null;
+	public AxeDomHelper: AxeDomHelper;
 
 
 	/**
@@ -41,7 +44,9 @@ export default class AxeView
 
 	/** 마지막으로 사용한 감시대상 리스트*/
 	public LastList: Overwatch[] = [];
-
+	/** 감시대상의 처리를 공통화 해주는 도우미 */
+	private OverwatchDomPushHelper: OverwatchDomPushHelper;
+	
 	/**
 	 * 
 	 * @param jsonDomHelperOption 헬퍼를 사용할때 전달할 옵션
@@ -49,6 +54,7 @@ export default class AxeView
 	constructor(jsonDomHelperOption?: AxeDomHelperOptionInterface | null)
 	{
 		this.AxeDomHelper = new AxeDomHelper(jsonDomHelperOption);
+		this.OverwatchDomPushHelper = new OverwatchDomPushHelper();
 	}
 
 	/**
@@ -153,8 +159,12 @@ export default class AxeView
 		//새로 만든 노드를 넣어준다.
 		domParent.replaceChildren(...newParent);
 
+
 		//지정된 돔을 옵션처리 한다.
 		this.DomHelper(domParent, jsonDomHelperOption);
+
+		//돔 교체 작업을 해준다.
+		this.AxeDomHelper.DomReplace(arrTarget);
 	}
 
 
@@ -215,6 +225,8 @@ export default class AxeView
 		for (let i = 0; i < arrStrText.length; ++i)
 		{
 			let itemStrText: MatchStringInterface = arrStrText[i];
+			//이번 루프에 사용하는 감시대상 지정
+			this.OverwatchDomPushHelper.OverwatchSet(itemStrText.Overwatch);
 
 			if (null === itemStrText.Overwatch)
 			{//내용물은 있는데 감시자가 없다.
@@ -249,7 +261,7 @@ export default class AxeView
 					//부모에 전달
 					newParent.push(newTextDom);
 					//감시자에 추가
-					itemStrText.Overwatch.Dom_Push_Node(newTextDom);
+					this.OverwatchDomPushHelper.Dom_Push_Node(newTextDom);
 				}
 				else
 				{//내용물은 있는데 감시자가 없다.
@@ -285,7 +297,7 @@ export default class AxeView
 					{//모니터링이다.
 
 						//감시자  dom리스트에 추가
-						itemStrText.Overwatch.Dom_Push_HTMLElement(
+						this.OverwatchDomPushHelper.Dom_Push_HTMLElement(
 							<HTMLElement>newMElem.firstChild);
 					}
 				}
@@ -378,7 +390,8 @@ export default class AxeView
 				
 				//새 엘리먼트의 어트리뷰트 판단.
 				this.NodeMatch_Attr(
-					newNodeMatch
+					itemNode
+					, newNodeMatch
 					, owTarget);
 				
 				//새 부모에 추가
@@ -521,16 +534,18 @@ export default class AxeView
 	/**
 	 * 어트리뷰트의 내용을 매칭시킨다.
 	 * 어트리뷰트는 새로 생성하지 안으므로 'nodeParent'를 직접 수정한다.
-	 * @param nodeParent 이 어트리뷰트가 소속된 개체
+	 * @param nodeParentNew 이 어트리뷰트가 소속된 개체의 원본
+	 * @param nodeParentNew 이 어트리뷰트가 소속된 개체
 	 * @param owTarget
 	 */
 	private NodeMatch_Attr(
 		nodeParent: ChildNode
+		, nodeParentNew: ChildNode
 		, owTarget: Overwatch[])
 	{
 
 		//어트리뷰트를 추출한다.
-		let arrAttr: Attr[] = Array.from((nodeParent as HTMLElement).attributes);
+		let arrAttr: Attr[] = Array.from((nodeParentNew as HTMLElement).attributes);
 
 		//
 		for (let nAttrIdx: number = 0
@@ -540,7 +555,7 @@ export default class AxeView
 			//검사할 어트리뷰트
 			let itemAttr: Attr = arrAttr[nAttrIdx];
 
-			this.NodeMatch_AttrOne(itemAttr, owTarget, nodeParent);
+			this.NodeMatch_AttrOne(itemAttr, owTarget, nodeParent, nodeParentNew);
 
 		}
 	}
@@ -549,18 +564,22 @@ export default class AxeView
 	 * 어트리뷰트 한개의 내용을 매칭 시킨다.
 	 * @param attrItem
 	 * @param owTarget
-	 * @param nodeParent  이 어트리뷰트가 소속된 개체
+	 * @param nodeParent 이 어트리뷰트가 소속된 개체의 원본
+	 * @param nodeParentNew 이 어트리뷰트가 소속된 개체
 	 */
 	private NodeMatch_AttrOne(
 		attrItem: Attr
 		, owTarget: Overwatch[]
-		, nodeParent: ChildNode)
+		, nodeParent: ChildNode
+		, nodeParentNew: ChildNode)
 	{
 		for (let nOverwatchIdx = 0
 			; nOverwatchIdx < owTarget.length
 			; ++nOverwatchIdx)
 		{
 			let itemOW: Overwatch = owTarget[nOverwatchIdx];
+			//이번 루프에 사용하는 감시대상 지정
+			this.OverwatchDomPushHelper.OverwatchSet(itemOW);
 
 			if (true === itemOW.OverwatchingOneIs
 				&& true === itemOW.OneDataIs)
@@ -584,7 +603,7 @@ export default class AxeView
 				if (attrItem.value === itemOW.NameFindString)
 				{//일치한다.
 					
-					let elemTemp: HTMLElement = nodeParent as HTMLElement;
+					let elemTemp: HTMLElement = nodeParentNew as HTMLElement;
 					//속성에 기존 이름 제거
 					elemTemp.removeAttribute(attrItem.name);
 
@@ -593,12 +612,12 @@ export default class AxeView
 					if (OverwatchingType.Monitoring === itemOW.OverwatchingType
 						|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
 					{
-						itemOW.Dom_Push_Event(nodeParent, attrItem.name, true);
+						this.OverwatchDomPushHelper.Dom_Push_Event(nodeParentNew, attrItem.name, true);
 					}
 					else
 					{
 						//돔에는 추가하지 않는다.
-						itemOW.Dom_Push_Event(nodeParent, attrItem.name, false);
+						this.OverwatchDomPushHelper.Dom_Push_Event(nodeParentNew, attrItem.name, false);
 					}
 
 				}
@@ -635,13 +654,14 @@ export default class AxeView
 
 							//감시할 돔 추가
 							//속성의 값(value)만을 모니터링 하는 옵션이다.
-							itemOW.Dom_Push_Attr_ValueMonitoring(nodeParent);
+							this.OverwatchDomPushHelper.Dom_Push_Attr_ValueMonitoring(nodeParentNew);
 						}
 					}
 				}
 				else if ("" === attrItem.value)
 				{//벨류가 없으면 이름만 있는 속성이다.
 
+					//속성이름은 소문자로만 오므로 소문자 처리해야한다. 
 					if (itemOW.NameFindString.toLowerCase() === attrItem.name)
 					{//이름이 감시자와 일치한다.
 
@@ -649,19 +669,18 @@ export default class AxeView
 						{//돔 개체
 							
 							//소속된 개체를 저장한다.
-							let elemTemp: HTMLElement = nodeParent as HTMLElement;
+							let elemTemp: HTMLElement = nodeParentNew as HTMLElement;
 							//기존 이름 제거
 							elemTemp.removeAttribute(attrItem.name);
-							//돔방식은 개체를 리턴해주므로 별도의 모니터링을 하지 않는다.
 							//2023-07-04 : 돔 교체를 지원하기 위해 모니터링에 추가함
-							itemOW.Dom_Push_Dom(elemTemp);
+							this.OverwatchDomPushHelper.Dom_Push_Dom(elemTemp);
 
 						}
 						else
 						{//일반적인 이름
 
 							//감시자의 값으로 변경
-							let elemTemp: HTMLElement = nodeParent as HTMLElement;
+							let elemTemp: HTMLElement = nodeParentNew as HTMLElement;
 							//기존 이름 제거
 							elemTemp.removeAttribute(attrItem.name);
 							//새 이름 추가(값없음)
@@ -673,7 +692,7 @@ export default class AxeView
 								|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType) {//모니터링이다.
 
 								//감시할 돔 추가
-								itemOW.Dom_Push_Valueless(nodeParent);
+								this.OverwatchDomPushHelper.Dom_Push_Valueless(nodeParentNew);
 							}
 						}
 					}
@@ -690,13 +709,13 @@ export default class AxeView
 					{//모니터링이다.
 
 						//감시할 돔 추가
-						itemOW.Dom_Push_ReplaceValue(attrItem);
+						this.OverwatchDomPushHelper.Dom_Push_ReplaceValue(attrItem);
 					}
 					else if (OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
 					{//하나의 값만 사용하는경우
 
 						//감시할 돔 추가
-						itemOW.Dom_Push_OneValue(attrItem);
+						this.OverwatchDomPushHelper.Dom_Push_OneValue(attrItem);
 					}
 				}
 				else if (true === attrItem.value.includes(itemOW.NameFindString))
@@ -725,7 +744,7 @@ export default class AxeView
 					{//모니터링 이다.
 
 						//돔추가
-						itemOW.Dom_Push_ReplaceValue(attrItem);
+						this.OverwatchDomPushHelper.Dom_Push_ReplaceValue(attrItem);
 					}
 				}
 			}//end if (true === itemOW.OverwatchingOneIs
@@ -785,16 +804,11 @@ export default class AxeView
 	 */
 	public DomHelper(
 		domTarget: HTMLElement
-		, jsonDomHelperOption: AxeDomHelperOptionInterface | null)
+		, jsonDomHelperOption?: AxeDomHelperOptionInterface | null)
 		: void
 	{
-		if (undefined === jsonDomHelperOption
-			|| null === jsonDomHelperOption
-			|| false === jsonDomHelperOption.OptionUse)
-		{
-			//돔 처리
-			this.AxeDomHelper.DomHelping(domTarget, jsonDomHelperOption);
-		}
+		//돔 처리
+		this.AxeDomHelper.DomHelping(domTarget, jsonDomHelperOption);
 	}
 
 
@@ -821,6 +835,51 @@ export default class AxeView
 	}
 	// #endregion
 
+
+	// #region 감시대상(Overwatch) 생성 기능
+
+	/**
+	 * 감시대상 전체 옵션을 가지고 새로 생성한다.
+	 * @param target
+	 * @returns
+	 */
+	public New_All(target: OverwatchInterface): Overwatch
+	{
+		return new Overwatch(target);
+	}
+
+	/**
+	 * 단순 문자열 출력만 한다.(전체 검사)
+	 * @param sName
+	 * @param sData
+	 */
+	public New_OutputString(sName: string, sData: string): Overwatch
+	{
+		return new Overwatch({
+			Name: sName
+			, FirstData: sData
+			, OverwatchingOutputType: OverwatchingOutputType.String
+			, OverwatchingType: OverwatchingType.OutputFirst
+			, OverwatchingOneIs: true
+		});
+	}
+
+	/**
+	 * 대상을 모니터링 하는 문자열.(전체 검사)
+	 * @param sName
+	 * @param sData
+	 */
+	public New_MonitoringString(sName: string, sData: string): Overwatch
+	{
+		return new Overwatch({
+			Name: sName
+			, FirstData: sData
+			, OverwatchingOutputType: OverwatchingOutputType.String
+			, OverwatchingType: OverwatchingType.Monitoring
+			, OverwatchingOneIs: true
+		});
+	}
+	// #endregion
 }
 
 

@@ -137,7 +137,7 @@ export default class testBasicSample
 		this.AxeView.DomHelper(
 			document.getElementById("divAxeViewTset")
 			, {
-				OptionUse: true
+				OptionUseIs: true
 				, AtagClickEventCancel: true
 				, AtagClickEventCallback: function (event:any)
 				{

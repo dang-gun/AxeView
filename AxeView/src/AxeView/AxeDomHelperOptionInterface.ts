@@ -4,9 +4,9 @@ export interface AxeDomHelperOptionInterface
 {
     /**
      * 옵션 사용여부
-     * AxeDomHelper를 사용안하
+     * AxeDomHelper를 사용할지 말지 여부이다.
      * */
-    OptionUse: boolean,
+    OptionUseIs: boolean,
 
     /**
      * A태그의 클릭 이벤트를 취소할지 여부

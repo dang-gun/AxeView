@@ -25,7 +25,7 @@ export default class test_StartUp
 
 		//액스뷰1 테스트 ******************
 		this.arrTarget1.push(
-			//단순 문자열 검색
+			//단순 문자열 출력
 			new Overwatch({
 				Name: "StringTest1"
 				, FirstData: "문자열 출력!!"
@@ -35,7 +35,7 @@ export default class test_StartUp
 			}));
 
 		this.arrTarget1.push(
-			//모니터링 문자열 검색
+			//모니터링 문자열
 			new Overwatch({
 				Name: "StringTest2"
 				, FirstData: "모니터링중(문자열)"
