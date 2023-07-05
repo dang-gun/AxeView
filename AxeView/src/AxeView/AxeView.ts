@@ -249,6 +249,7 @@ export default class AxeView
 				&& (OverwatchingType.Monitoring === itemStrText.Overwatch.OverwatchingType
 					|| OverwatchingType.Monitoring_OneValue === itemStrText.Overwatch.OverwatchingType))
 			{//문자열 모니터링이다.
+
 				if ("" === itemStrText.Text)
 				{//내용물이 없다.
 					continue;
@@ -261,7 +262,8 @@ export default class AxeView
 					//부모에 전달
 					newParent.push(newTextDom);
 					//감시자에 추가
-					this.OverwatchDomPushHelper.Dom_Push_Node(newTextDom);
+					this.OverwatchDomPushHelper
+						.Dom_Push_Node(newTextDom, "");
 				}
 				else
 				{//내용물은 있는데 감시자가 없다.
@@ -298,7 +300,7 @@ export default class AxeView
 
 						//감시자  dom리스트에 추가
 						this.OverwatchDomPushHelper.Dom_Push_HTMLElement(
-							<HTMLElement>newMElem.firstChild);
+							<HTMLElement>newMElem.firstChild, "");
 					}
 				}
 				else
@@ -432,12 +434,20 @@ export default class AxeView
 				break;
 			}
 
-			//뒤에 남은게 있나 검사
-			nFindIdx = sTemp.indexOf(owTarget.NameFindString);
+			//정규식으로 액스뷰 형식 찾기
+			let arrRegExpTemp: RegExpExecArray
+				= owTarget.NameFindString.exec(sTemp);
 
-			if (0 > nFindIdx)
+			//뒤에 남은게 있나 검사
+			if (null === arrRegExpTemp
+				|| 0 >= arrRegExpTemp.length)
 			{//일치하는게 하나도 없다.
 				break;
+			}
+			else
+			{
+				//남은 개수 입력
+				nFindIdx = arrRegExpTemp.length;
 			}
 
 			//if (owTarget.NameFindString === "{{HtmlTest}}") debugger;
@@ -458,13 +468,13 @@ export default class AxeView
 
 			//일치값 추가
 			arrStrText.push({
-				Text: owTarget.NameFindString
+				Text: arrRegExpTemp[0]
 				, Overwatch: owTarget
 				, Match: true
 			});
 
 			//뒤에값은 한번 더 검사해야하니 임시저장
-			sTemp = sTemp.substring(nFindIdx + owTarget.NameFindString.length);
+			sTemp = sTemp.substring(nFindIdx + arrRegExpTemp[0].length);
 
 			if ("" === sTemp)
 			{//뒤에 값이 없다.
@@ -506,7 +516,17 @@ export default class AxeView
 			let itemFindText: MatchStringInterface = arrStrText[nFindTextIdx];
 
 			//일치하는 문자열 찾기
-			let nFindIdx = itemFindText.Text.indexOf(itemOW.NameFindString);
+			let nFindIdx = 0;
+
+			//정규식으로 액스뷰 형식 찾기
+			//일치하는 문자열 찾기
+			let arrRegExpTemp: RegExpExecArray
+				= itemOW.NameFindString.exec(itemFindText.Text);
+
+			if (null !== arrRegExpTemp)
+			{//일치하는게 있다.
+				nFindIdx = arrRegExpTemp.length;
+			}
 
 			if (0 <= nFindIdx
 				&& itemFindText.Match === false)
@@ -598,9 +618,16 @@ export default class AxeView
 			else if (OverwatchingOutputType.Function === itemOW.OverwatchingOutputType
 				|| OverwatchingOutputType.Function_NameRemoveOn === itemOW.OverwatchingOutputType)
 			{//함수
+
+				debugger;
+
+				//정규식으로 액스뷰 형식 찾기
+				let arrRegExpTemp: RegExpExecArray
+					= itemOW.NameFindString.exec(attrItem.value);
 				
 				//함수는 부분교체가 없으므로 무조건 전체 비교다.
-				if (attrItem.value === itemOW.NameFindString)
+				if (null !== arrRegExpTemp
+					&& 0 < arrRegExpTemp.length)
 				{//일치한다.
 					
 					let elemTemp: HTMLElement = nodeParentNew as HTMLElement;
@@ -612,12 +639,22 @@ export default class AxeView
 					if (OverwatchingType.Monitoring === itemOW.OverwatchingType
 						|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
 					{
-						this.OverwatchDomPushHelper.Dom_Push_Event(nodeParentNew, attrItem.name, true);
+						this.OverwatchDomPushHelper
+							.Dom_Push_Event(
+								nodeParentNew
+								, arrRegExpTemp[0]
+								, attrItem.name
+								, true);
 					}
 					else
 					{
 						//돔에는 추가하지 않는다.
-						this.OverwatchDomPushHelper.Dom_Push_Event(nodeParentNew, attrItem.name, false);
+						this.OverwatchDomPushHelper
+							.Dom_Push_Event(
+								nodeParentNew
+								, arrRegExpTemp[0]
+								, attrItem.name
+								, false);
 					}
 
 				}
@@ -626,15 +663,27 @@ export default class AxeView
 			{//문자열과 이외의 상황
 
 				//console.log("attrItem : " + attrItem.name + ", " + attrItem.value);
-				//debugger;
+				debugger;
 
-				if ("value" === attrItem.name
+				//이 if문 안에서 결과가 일치했는지 여부
+				let bComplete = false;
+
+
+				if (false === bComplete
+					&& "value" === attrItem.name
 					&& (OverwatchingType.Monitoring_AttrValue === itemOW.OverwatchingType
 						|| OverwatchingType.Monitoring_AttrValue_Input === itemOW.OverwatchingType))
 				{//속성이름이 'value'이고
 					//값을 모니터링 중이다.
 
-					if (itemOW.NameFindString === attrItem.value)
+					bComplete = true;
+
+
+					//정규식으로 액스뷰 형식 찾기
+					let arrRegExpTemp1: RegExpExecArray
+						= itemOW.NameFindString.exec(attrItem.value);
+
+					if (0 < arrRegExpTemp1.length)
 					{
 						//값(value)은 다른속성과 다르게 부모의 필드에 바인딩되는 녀석이라
 						//그냥 속성개체를 저장하면 UI에서 입력된 값을 읽을 수 없다.
@@ -654,15 +703,29 @@ export default class AxeView
 
 							//감시할 돔 추가
 							//속성의 값(value)만을 모니터링 하는 옵션이다.
-							this.OverwatchDomPushHelper.Dom_Push_Attr_ValueMonitoring(nodeParentNew);
+							this.OverwatchDomPushHelper
+								.Dom_Push_Attr_ValueMonitoring(
+									nodeParentNew, arrRegExpTemp1[0]);
 						}
 					}
 				}
-				else if ("" === attrItem.value)
+
+
+				if (false === bComplete
+					&& "" === attrItem.value)
 				{//벨류가 없으면 이름만 있는 속성이다.
 
+					bComplete = true;
+
+					//정규식으로 액스뷰 형식 찾기
 					//속성이름은 소문자로만 오므로 소문자 처리해야한다. 
-					if (itemOW.NameFindString.toLowerCase() === attrItem.name)
+					let arrRegExpTemp: RegExpExecArray
+						= itemOW.NameFindStringLowerCase.exec(attrItem.name);
+
+					if (null === arrRegExpTemp)
+					{//일치하는게 없다.
+					}
+					else if (0 < arrRegExpTemp.length)
 					{//이름이 감시자와 일치한다.
 
 						if (OverwatchingOutputType.Dom === itemOW.OverwatchingOutputType)
@@ -673,7 +736,8 @@ export default class AxeView
 							//기존 이름 제거
 							elemTemp.removeAttribute(attrItem.name);
 							//2023-07-04 : 돔 교체를 지원하기 위해 모니터링에 추가함
-							this.OverwatchDomPushHelper.Dom_Push_Dom(elemTemp);
+							this.OverwatchDomPushHelper
+								.Dom_Push_Dom(elemTemp, arrRegExpTemp[0]);
 
 						}
 						else
@@ -692,61 +756,88 @@ export default class AxeView
 								|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType) {//모니터링이다.
 
 								//감시할 돔 추가
-								this.OverwatchDomPushHelper.Dom_Push_Valueless(nodeParentNew);
+								this.OverwatchDomPushHelper
+									.Dom_Push_Valueless(nodeParentNew, arrRegExpTemp[0]);
 							}
 						}
 					}
 				}
-				else if (attrItem.value === itemOW.NameFindString)
-				{//벨류가 하나만 있고, 이것이 일치 한다.
 
-					//초기값 입력
-					attrItem.value = itemOW.data;
+				if (false === bComplete)
+				{
 
-					//감시자에 추가
-					itemOW.OneDataIs = true;
-					if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
-					{//모니터링이다.
+					//정규식으로 액스뷰 형식 찾기
+					let arrRegExpTemp: RegExpExecArray
+						= itemOW.NameFindString.exec(attrItem.value);
 
-						//감시할 돔 추가
-						this.OverwatchDomPushHelper.Dom_Push_ReplaceValue(attrItem);
+					if (null === arrRegExpTemp)
+					{//일치하는게 없다.
 					}
-					else if (OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
-					{//하나의 값만 사용하는경우
+					else if (attrItem.value === arrRegExpTemp[0])
+					{//벨류가 하나만 있고, 이것이 일치 한다.
+						bComplete = true;
 
-						//감시할 돔 추가
-						this.OverwatchDomPushHelper.Dom_Push_OneValue(attrItem);
-					}
-				}
-				else if (true === attrItem.value.includes(itemOW.NameFindString))
-				{//값에 부분 일치가 있다.
+						//초기값 입력
+						attrItem.value = itemOW.data;
 
-					if (true === itemOW.OverwatchingOneIs)
-					{//하나만 교체
-						attrItem.value
-							= attrItem.value.replace(
-								itemOW.NameFindString
-								, itemOW.data);
+						//감시자에 추가
+						itemOW.OneDataIs = true;
+						if (OverwatchingType.Monitoring === itemOW.OverwatchingType)
+						{//모니터링이다.
+
+							//감시할 돔 추가
+							this.OverwatchDomPushHelper
+								.Dom_Push_ReplaceValue(
+									attrItem
+									, arrRegExpTemp[0]);
+						}
+						else if (OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
+						{//하나의 값만 사용하는경우
+
+							//감시할 돔 추가
+							this.OverwatchDomPushHelper
+								.Dom_Push_OneValue(
+									attrItem
+									, arrRegExpTemp[0]);
+						}
 					}
 					else
-					{//전체 교체
-						attrItem.value = this.ReplaceAll(
+					{//값에 부분 일치가 있다.
+
+						bComplete = true;
+
+						if (true === itemOW.OverwatchingOneIs)
+						{//하나만 교체
 							attrItem.value
-							, itemOW.NameFindString
-							, itemOW.data);
-					}
-					
+								= attrItem.value.replace(
+									arrRegExpTemp[0]
+									, itemOW.data);
+						}
+						else
+						{//전체 교체
+							attrItem.value = this.ReplaceAll(
+								attrItem.value
+								, arrRegExpTemp[0]
+								, itemOW.data);
+						}
 
-					//감시자에 추가
-					itemOW.OneDataIs = true;
-					if (OverwatchingType.Monitoring === itemOW.OverwatchingType
-						|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
-					{//모니터링 이다.
 
-						//돔추가
-						this.OverwatchDomPushHelper.Dom_Push_ReplaceValue(attrItem);
+						//감시자에 추가
+						itemOW.OneDataIs = true;
+						if (OverwatchingType.Monitoring === itemOW.OverwatchingType
+							|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType)
+						{//모니터링 이다.
+
+							//돔추가
+							this.OverwatchDomPushHelper
+								.Dom_Push_ReplaceValue(
+									attrItem
+									, arrRegExpTemp[0]);
+						}
 					}
 				}
+
+
 			}//end if (true === itemOW.OverwatchingOneIs
 
 		}//end for nOverwatchIdx

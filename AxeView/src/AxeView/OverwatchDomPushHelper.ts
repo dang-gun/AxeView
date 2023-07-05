@@ -32,33 +32,53 @@ export class OverwatchDomPushHelper
 	/**
 	 * 연결된 돔 추가 - Element
 	 * @param domPushData
+	 * @param sMatchString 추출된 문자열 그대로
 	 */
-	public Dom_Push_Element(domPushData: Element)
+	public Dom_Push_Element(
+		domPushData: Element
+		, sMatchString: string)
 	{
-		this.Dom_Push_HTMLElement(domPushData as HTMLElement);
+		this.Dom_Push_HTMLElement(
+			domPushData as HTMLElement
+			, sMatchString);
 	}
 	/**
 	 * 연결된 돔 추가 - HTMLElement
 	 * @param domPushData
+	 * @param sMatchString 추출된 문자열 그대로
 	 */
-	public Dom_Push_HTMLElement(domPushData: HTMLElement)
+	public Dom_Push_HTMLElement(
+		domPushData: HTMLElement
+		, sMatchString: string)
 	{
+
+		//전달된 문자열을 json으로 바꾼다.
+		let jsonOpt: JSON = this.MatchToTossOpt(sMatchString);
+
 		this._MyOw.Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.HTMLElement
 			, Dom: domPushData
 			, EventName: null
+			, TossOption: jsonOpt
 		});
 	}
 	/**
 	 * 연결된 돔 추가 - Node
 	 * @param domPushData
+	 * @param sMatchString 추출된 문자열 그대로
 	 */
-	public Dom_Push_Node(domPushData: Node)
+	public Dom_Push_Node(
+		domPushData: Node
+		, sMatchString: string)
 	{
+		//전달된 문자열을 json으로 바꾼다.
+		let jsonOpt: JSON = this.MatchToTossOpt(sMatchString);
+
 		this._MyOw.Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Node
 			, Dom: domPushData
 			, EventName: null
+			, TossOption: jsonOpt
 		});
 	}
 
@@ -69,7 +89,9 @@ export class OverwatchDomPushHelper
 	 * 2023-07-04 : 돔 교체를 지원하기 위해 모니터링에 추가함
 	 * @param domPushData
 	 */
-	public Dom_Push_Dom(domPushData: HTMLElement)
+	public Dom_Push_Dom(
+		domPushData: HTMLElement
+		, sMatchString: string)
 	{
 		//초기돔을 임시저장하고
 		this._MyOw.Temp = this._MyOw.data;
@@ -79,10 +101,14 @@ export class OverwatchDomPushHelper
 		//돔개체 전용
 		this._MyOw.DomIs = true;
 
+		//전달된 문자열을 json으로 바꾼다.
+		let jsonOpt: JSON = this.MatchToTossOpt(sMatchString);
+
 		this._MyOw.Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Dom
 			, Dom: domPushData
 			, EventName: null
+			, TossOption: jsonOpt
 		});
 	}
 
@@ -90,13 +116,20 @@ export class OverwatchDomPushHelper
 	 * 연결된 돔 추가 - 값없는 속성
 	 * 이 함수를 호출하기전에 속성의 이름을 이 감시자가 가지고 있는 값으로 변경해야 한다.
 	 * @param domPushData
+	 * @param sMatchString 추출된 문자열 그대로
 	 */
-	public Dom_Push_Valueless(domPushData: ChildNode)
+	public Dom_Push_Valueless(
+		domPushData: ChildNode
+		, sMatchString: string)
 	{
+		//전달된 문자열을 json으로 바꾼다.
+		let jsonOpt: JSON = this.MatchToTossOpt(sMatchString);
+
 		this._MyOw.Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Attr_Valueless
 			, Dom: domPushData
 			, EventName: null
+			, TossOption: jsonOpt
 		});
 	}
 
@@ -104,13 +137,20 @@ export class OverwatchDomPushHelper
 	 * 연결된 돔 추가 - 혼자 값을 사용하는 경우
 	 * 전체 데이터를 변경한다.
 	 * @param domPushData
+	 * @param sMatchString 추출된 문자열 그대로
 	 */
-	public Dom_Push_OneValue(domPushData: Attr)
+	public Dom_Push_OneValue(
+		domPushData: Attr
+		, sMatchString: string)
 	{
+		//전달된 문자열을 json으로 바꾼다.
+		let jsonOpt: JSON = this.MatchToTossOpt(sMatchString);
+
 		this._MyOw.Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Attr_OneValue
 			, Dom: domPushData
 			, EventName: null
+			, TossOption: jsonOpt
 		});
 	}
 
@@ -119,30 +159,43 @@ export class OverwatchDomPushHelper
 	 * 감시자외의 다른값이 있다면 변환(리플레이스)로 처리해야 한다.
 	 * 이때 같은 값이 있으면 오작동 할 수 있다.
 	 * @param domPushData
+	 * @param sMatchString 추출된 문자열 그대로
 	 */
-	public Dom_Push_ReplaceValue(domPushData: Attr)
+	public Dom_Push_ReplaceValue(
+		domPushData: Attr
+		, sMatchString: string)
 	{
+		//전달된 문자열을 json으로 바꾼다.
+		let jsonOpt: JSON = this.MatchToTossOpt(sMatchString);
+
 		this._MyOw.Dom_AxeView.push({
 			AxeViewDomType: AxeViewDomType.Attr_ReplaceValue
 			, Dom: domPushData
+			, TossOption: jsonOpt
 		});
 	}
 
 	/**
 	 * 이벤트
 	 * @param domPushData 이 이벤트를 가지고 있는 부모돔
+	 * @param sMatchString 추출된 문자열 그대로
 	 * @param sEventName
 	 * @param bPush dom리스트에 추가할지 여부
 	 */
 	public Dom_Push_Event(
 		domPushData: ChildNode
+		, sMatchString: string
 		, sEventName: string
 		, bPush: boolean)
 	{
 		let objThis: Overwatch = this._MyOw;
 
+		//전달된 문자열을 json으로 바꾼다.
+		let jsonOpt: JSON = this.MatchToTossOpt(sMatchString);
+
 		//이름 처리
-		if (OverwatchingOutputType.Function_NameRemoveOn === this._MyOw.OverwatchingOutputType)
+		if (OverwatchingOutputType.Function_NameRemoveOn
+				=== this._MyOw.OverwatchingOutputType)
 		{//이름 앞에 'on'을 뺀다.
 
 			if (2 <= sEventName.length)
@@ -162,6 +215,7 @@ export class OverwatchDomPushHelper
 			AxeViewDomType: AxeViewDomType.Attr_Event
 			, Dom: domPushData
 			, EventName: sEventName
+			, TossOption: jsonOpt
 		};
 
 		//이벤트로 사용할 함수
@@ -186,14 +240,20 @@ export class OverwatchDomPushHelper
 	 * 연결된 돔 추가 - 값 모니터링 전용
 	 * 이 경우 하나의 돔만 감시할 수 있으므로 맨처음 적중한 한개 만 추가되고 나머지는 무시된다.
 	 * @param domPushData
+	 * @param sMatchString 추출된 문자열 그대로
 	 */
-	public Dom_Push_Attr_ValueMonitoring(domPushData: ChildNode)
+	public Dom_Push_Attr_ValueMonitoring(
+		domPushData: ChildNode
+		, sMatchString: string)
 	{
 		if (0 === this._MyOw.Dom_AxeView.length)
 		{
 			let objThis = this._MyOw;
 
 			let avdTemp: AxeViewDomInterface;
+
+			//전달된 문자열을 json으로 바꾼다.
+			let jsonOpt: JSON = this.MatchToTossOpt(sMatchString);
 
 			switch (objThis.OverwatchingType)
 			{
@@ -207,6 +267,7 @@ export class OverwatchDomPushHelper
 						{
 							objThis.data = this.value;
 						}
+						, TossOption: jsonOpt
 					};
 					break;
 
@@ -220,6 +281,7 @@ export class OverwatchDomPushHelper
 						{
 							objThis.data = this.value;
 						}
+						, TossOption: jsonOpt
 					};
 					break;
 			}
@@ -236,5 +298,29 @@ export class OverwatchDomPushHelper
 			(avdTemp.Dom as Node).addEventListener(avdTemp.EventName, avdTemp.Event);
 		}
 	}
+
+	/**
+	 * 매칭으로 추출된 문자열을 자르고 감시대상에 있는 
+	 * 전달 옵션과 합쳐 리턴한다.
+	 * @param sMatchString
+	 * @returns
+	 */
+	private MatchToTossOpt(sMatchString: string): JSON
+	{
+		let jsonReturn: JSON = JSON.parse("{}");
+		debugger;
+
+		if ("" === sMatchString
+			|| null === sMatchString
+			|| undefined === sMatchString)
+		{//옵션이 없다.
+
+			//감시대상에 등록된 옵션만 사용함
+			jsonReturn = this.MyOw.TossOption;
+		}
+
+		return jsonReturn;
+	}
+	 
 }
 
