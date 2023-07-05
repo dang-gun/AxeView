@@ -33,6 +33,18 @@ export default class App
 				this.PageNow = new test_01();
 				break;
 		}
+
+		//메뉴 추가
+		let domMenu = document.getElementById("divMenu");
+		domMenu.innerHTML = "";
+
+		domMenu.insertAdjacentHTML('beforeend', '<a href="index.html">홈</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_StartUp.html">시작하다</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_Dom.html">HTML 돔 처리</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_BasicSample.html">기본 셈플</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_01.html">테스트</a><br />');
+
+		domMenu.style.marginBottom = "2rem";
 	}
 
 }
