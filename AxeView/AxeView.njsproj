@@ -33,6 +33,7 @@
   <ItemGroup>
     <None Include="server.ts" />
     <Content Include="src\AxeView\Test.html" />
+    <Content Include="src\Example\test_ATag.html" />
     <Content Include="src\Example\test_Dom.html" />
     <Content Include="src\Example\test_BasicSample.html" />
     <Content Include="src\Example\test_StartUp.html" />
@@ -60,6 +61,7 @@
     <TypeScriptCompile Include="src\AxeView\Overwatch.ts" />
     <TypeScriptCompile Include="src\AxeView\OverwatchingType.ts" />
     <TypeScriptCompile Include="src\AxeView\OverwatchInterface.ts" />
+    <TypeScriptCompile Include="src\Example\test_ATag.ts" />
     <TypeScriptCompile Include="src\Example\test_Dom.ts" />
     <TypeScriptCompile Include="src\Example\test_BasicSample.ts" />
     <TypeScriptCompile Include="src\Example\test_StartUp.ts" />

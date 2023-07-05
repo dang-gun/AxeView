@@ -3,8 +3,12 @@
 import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, OverwatchingType } from "./AxeView/AxeView";
 
 import test_StartUp from "./Example/test_StartUp";
+import test_Dom from "./Example/test_Dom";
+import test_ATag from "./Example/test_ATag";
+
 import test_BasicSample from "./Example/test_BasicSample";
 import test_01 from "./Example/test_01";
+
 
 export default class App
 {
@@ -24,6 +28,14 @@ export default class App
 			case "test_StartUp.html":
 				this.PageNow = new test_StartUp();
 				break;
+			case "test_Dom.html":
+				this.PageNow = new test_Dom();
+				break;
+			case "test_ATag.html":
+				this.PageNow = new test_ATag();
+				break;
+
+
 
 			case "test_BasicSample.html":
 				this.PageNow = new test_BasicSample();
@@ -41,6 +53,9 @@ export default class App
 		domMenu.insertAdjacentHTML('beforeend', '<a href="index.html">홈</a><br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_StartUp.html">시작하다</a><br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_Dom.html">HTML 돔 처리</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_ATag.html">A태그 처리</a><br />');
+
+		domMenu.insertAdjacentHTML('beforeend', '<br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_BasicSample.html">기본 셈플</a><br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_01.html">테스트</a><br />');
 

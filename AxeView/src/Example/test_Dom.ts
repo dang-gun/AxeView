@@ -4,16 +4,13 @@ import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, Overwat
 
 
 
-export default class test_01
+export default class test_Dom
 {
 	/** 액스뷰 개체 */
 	private AxeView: AxeView = new AxeView();
 
 	/** AxeView 테스트용 변수 */
 	private arrTarget: Overwatch[] = [];
-
-	/** AxeView 테스트용 변수3 */
-	private arrTarget3: Overwatch[] = [];
 
 	/** 돔개체 테스트용 */
 	public domNew: HTMLElement = document.createElement("div");
@@ -42,78 +39,24 @@ export default class test_01
 
 
 
-		document.getElementById("btnClick").onclick = this.TestCilck;
-		document.getElementById("btnClick2").onclick = this.TestCilck2;
+		document.getElementById("btnClick").onclick
+			= (event) =>
+			{
+				this.TextInput();
+
+				let findTarget = document.querySelector("#divAxeViewTset > div");
 
 
+				let findParent = document.querySelector("#divAxeViewTset");
+				findParent.replaceChild(this.domNew, findTarget);
+			};
+		document.getElementById("btnClick2").onclick
+			= (event) =>
+			{
+				this.TextInput();
 
-
-
-
-		//this.arrTarget3.push(
-		//	//단순 문자열 검색
-		//	new Overwatch({
-		//		Name: "InputMonitoringTest1"
-		//		, FirstData: "첫 데이터1"
-		//		, OverwatchingOutputType: OverwatchingOutputType.String
-		//		, OverwatchingType: OverwatchingType.Monitoring_AttrValue
-		//		, OverwatchingOneIs: false
-		//	}));
-
-		//this.arrTarget3.push(
-		//	//단순 문자열 검색
-		//	new Overwatch({
-		//		Name: "InputMonitoringTest2"
-		//		, FirstData: "첫 데이터2"
-		//		, OverwatchingOutputType: OverwatchingOutputType.String
-		//		, OverwatchingType: OverwatchingType.Monitoring_AttrValue
-		//		, OverwatchingOneIs: false
-		//	}));
-
-		//this.arrTarget3.push(
-		//	//모니터링 문자열 검색
-		//	new Overwatch({
-		//		Name: "InputMonitoringTest3"
-		//		, FirstData: "모니터링중(문자열)1"
-		//		, OverwatchingOutputType: OverwatchingOutputType.String
-		//		, OverwatchingType: OverwatchingType.Monitoring
-		//		, OverwatchingOneIs: false
-		//	}));
-
-		//this.arrTarget3.push(
-		//	//모니터링 문자열 검색
-		//	new Overwatch({
-		//		Name: "InputMonitoringTest4"
-		//		, FirstData: "모니터링중(문자열)2"
-		//		, OverwatchingOutputType: OverwatchingOutputType.String
-		//		, OverwatchingType: OverwatchingType.Monitoring
-		//		, OverwatchingOneIs: false
-		//	}));
-
-
-		////액스뷰3
-		////돔 재생성 및 설정된 뷰모델 연결
-		//this.AxeView.BindOverwatch(
-		//	document.getElementById("divAxeViewTset3")
-		//	, this.arrTarget3);
-	}
-
-	TestCilck = () =>
-	{
-		this.TextInput();
-
-		let findTarget = document.querySelector("#divAxeViewTset > div");
-
-
-		let findParent = document.querySelector("#divAxeViewTset");
-		findParent.replaceChild(this.domNew, findTarget)
-	}
-
-	TestCilck2 = () =>
-	{
-		this.TextInput();
-
-		this.arrTarget[0].data = this.domNew;
+				this.arrTarget[0].data = this.domNew;
+			};
 	}
 
 	private TextInput = () =>
