@@ -32,6 +32,16 @@ export default class test_Dom
 				, OverwatchingOneIs: true
 			}));
 
+		this.arrTarget.push(
+			//돔 찾기
+			new Overwatch({
+				Name: "HtmlDom2"
+				, FirstData: ""
+				, OverwatchingOutputType: OverwatchingOutputType.Dom
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: true
+			}));
+
 		//돔 재생성 및 설정된 뷰모델 연결
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
@@ -56,6 +66,8 @@ export default class test_Dom
 				this.TextInput();
 
 				this.arrTarget[0].data = this.domNew;
+
+				this.arrTarget[1].data = this.TextInputNew();
 			};
 	}
 
@@ -65,4 +77,13 @@ export default class test_Dom
 		this.domNew.innerHTML = "<h5>" + sTnput + "</h5>";
 	}
 
+	private TextInputNew = (): HTMLElement =>
+	{
+		let sTnput = (document.getElementById("txtInput") as HTMLInputElement).value;
+
+		let domReturn = document.createElement("div");
+		domReturn.innerHTML = "<h5>" + sTnput + "</h5>";
+
+		return domReturn;
+	}
 }

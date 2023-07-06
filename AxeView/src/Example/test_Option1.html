@@ -11,29 +11,29 @@
 	<script defer src="../app.js"></script>
 </head>
 <body>
-	<h2>환영!</h2>
+	<h2>뷰나 감시자에서 옵션 전달하기</h2>
 
 	<div id="divMenu">
 	</div>
 
-	<button id="btnClick"></button>
-	<input type="text" id="txtInput" value="표시할 값" />
-
-	<div id="divAxeViewTset">
-		
-		돈(money)
-		<ul>
-			<li>돈(콤마,$) : {{Money@val:100,coma:true,currency'$'}}</li>
-			<li>돈(콤마,￦) : {{Money@val:500,coma:true,currency'￦'}}</li>
-			<li>돈(￥) : {{Money@val:500,coma:true,currency'￥'}}</li>
-			<li>돈(￡) : {{Money@val:500,coma:true,currency'￡'}}</li>
-		</ul>
-		<br />
-		
-		<br />
-		<br />
+	<div>
+		뷰나 감시자에서 옵션을 전달할 수 있다.<br />
 	</div>
+	<br />
 
+	
+	<div id="divAxeViewTset">
+		<h3>돔1</h3>
+		<div {{HtmlDom}}>돔1</div>
+		<br />
+		<br />
+		<br />
+		<h3>돔2 (뷰옵션과 감시자옵션 둘다 설정함)</h3>
+		<div {{HtmlDom2@title:제목hTml,coma:true}}></div>
+		<br />
+		<br />
+		<h2>*** 콘솔(console) 확인 ***</h2>
+	</div>
 
 </body>
 </html>

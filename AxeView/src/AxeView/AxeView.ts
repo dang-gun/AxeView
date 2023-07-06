@@ -962,7 +962,7 @@ export default class AxeView
 			, FirstData: sData
 			, OverwatchingOutputType: OverwatchingOutputType.String
 			, OverwatchingType: OverwatchingType.OutputFirst
-			, OverwatchingOneIs: true
+			, OverwatchingOneIs: false
 		});
 	}
 
@@ -978,7 +978,7 @@ export default class AxeView
 			, FirstData: sData
 			, OverwatchingOutputType: OverwatchingOutputType.String
 			, OverwatchingType: OverwatchingType.Monitoring
-			, OverwatchingOneIs: true
+			, OverwatchingOneIs: false
 		});
 	}
 	// #endregion

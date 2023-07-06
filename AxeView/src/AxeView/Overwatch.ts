@@ -29,7 +29,12 @@ export class Overwatch
 		if ("" === target.FirstData
 			|| " " === target.FirstData)
 		{
-			if (OverwatchingOutputType.String === this.OverwatchingOutputType)
+			if (OverwatchingOutputType.Dom === this.OverwatchingOutputType)
+			{
+				//빈값은 돔인경우만 허용된다.
+				this._DataNow = "";
+			}
+			else if (OverwatchingOutputType.String === this.OverwatchingOutputType)
 			{
 				//이 값은 절대 비어있으면 안된다.(빈값을 쓰려면 스페이스를 사용하자)
 				//빈값으로는 노드를 생성하지 않고 있기 때문이다.

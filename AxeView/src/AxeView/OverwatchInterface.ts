@@ -14,6 +14,7 @@ export interface OverwatchInterface
 	/** 처음 바인딩될 동작
 	 * 이벤트를 제외하면 문자열을 사용한다.
 	 * 이벤트 함수는 'function (sender, event, owThis)' 이렇게 데이터가 전달된다.
+	 * OverwatchingOutputType.Dom 경우에만 빈값이 허용된다.
 	 * event : 이벤트 발생에 사용된 이벤트 개체(이벤트에 따라 다른 개체가 넘어옴)
 	 * sender : 연결된 엘리먼트 개체
 	 * owThis : 이 함수에 연결된 감시자 개체(Overwatch) */

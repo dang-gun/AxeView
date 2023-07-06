@@ -5,6 +5,7 @@ import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, Overwat
 import test_StartUp from "./Example/test_StartUp";
 import test_Dom from "./Example/test_Dom";
 import test_ATag from "./Example/test_ATag";
+import test_Option1 from "./Example/test_Option1";
 
 import test_BasicSample from "./Example/test_BasicSample";
 import test_01 from "./Example/test_01";
@@ -34,6 +35,9 @@ export default class App
 			case "test_ATag.html":
 				this.PageNow = new test_ATag();
 				break;
+			case "test_Option1.html":
+				this.PageNow = new test_Option1();
+				break;
 
 
 
@@ -54,6 +58,7 @@ export default class App
 		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_StartUp.html">시작하다</a><br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_Dom.html">HTML 돔 처리</a><br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_ATag.html">A태그 처리</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_Option1.html">옵션처리1</a><br />');
 
 		domMenu.insertAdjacentHTML('beforeend', '<br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="../Example/test_BasicSample.html">기본 셈플</a><br />');
