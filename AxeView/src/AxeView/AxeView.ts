@@ -423,7 +423,11 @@ export default class AxeView
 		//검사할 값 임시 저장
 		let sTemp: string = sText;
 
+
+		//문자열에서 데이터가 일치한 인덱스
 		let nFindIdx: number = -1;
+
+		//debugger;
 
 		while(true)
 		{
@@ -435,22 +439,22 @@ export default class AxeView
 			}
 
 			//정규식으로 액스뷰 형식 찾기
+			owTarget.NameFindString.lastIndex = 0;
 			let arrRegExpTemp: RegExpExecArray
 				= owTarget.NameFindString.exec(sTemp);
+				
 
-			//뒤에 남은게 있나 검사
+			//일치하는게 있었는지 검사
 			if (null === arrRegExpTemp
 				|| 0 >= arrRegExpTemp.length)
 			{//일치하는게 하나도 없다.
 				break;
 			}
-			else
-			{
-				//남은 개수 입력
-				nFindIdx = arrRegExpTemp.length;
-			}
 
-			//if (owTarget.NameFindString === "{{HtmlTest}}") debugger;
+
+			//일치하는 데이터
+			//시작 인덱스 저장
+			nFindIdx = arrRegExpTemp.index;
 			owTarget.OneDataIs = true;
 
 			if (0 !== nFindIdx)
@@ -520,12 +524,13 @@ export default class AxeView
 
 			//정규식으로 액스뷰 형식 찾기
 			//일치하는 문자열 찾기
+			itemOW.NameFindString.lastIndex = 0;
 			let arrRegExpTemp: RegExpExecArray
 				= itemOW.NameFindString.exec(itemFindText.Text);
 
 			if (null !== arrRegExpTemp)
 			{//일치하는게 있다.
-				nFindIdx = arrRegExpTemp.length;
+				nFindIdx = arrRegExpTemp.index;
 			}
 
 			if (0 <= nFindIdx
@@ -567,6 +572,7 @@ export default class AxeView
 		//어트리뷰트를 추출한다.
 		let arrAttr: Attr[] = Array.from((nodeParentNew as HTMLElement).attributes);
 
+		
 		//
 		for (let nAttrIdx: number = 0
 			; nAttrIdx < arrAttr.length
@@ -622,6 +628,7 @@ export default class AxeView
 				debugger;
 
 				//정규식으로 액스뷰 형식 찾기
+				itemOW.NameFindString.lastIndex = 0;
 				let arrRegExpTemp: RegExpExecArray
 					= itemOW.NameFindString.exec(attrItem.value);
 				
@@ -663,7 +670,7 @@ export default class AxeView
 			{//문자열과 이외의 상황
 
 				//console.log("attrItem : " + attrItem.name + ", " + attrItem.value);
-				debugger;
+				//debugger;
 
 				//이 if문 안에서 결과가 일치했는지 여부
 				let bComplete = false;
@@ -680,10 +687,12 @@ export default class AxeView
 
 
 					//정규식으로 액스뷰 형식 찾기
-					let arrRegExpTemp1: RegExpExecArray
+					itemOW.NameFindString.lastIndex = 0;
+					let arrRegExpTemp: RegExpExecArray
 						= itemOW.NameFindString.exec(attrItem.value);
 
-					if (0 < arrRegExpTemp1.length)
+					if (null !== arrRegExpTemp
+						&& 0 < arrRegExpTemp.length)
 					{
 						//값(value)은 다른속성과 다르게 부모의 필드에 바인딩되는 녀석이라
 						//그냥 속성개체를 저장하면 UI에서 입력된 값을 읽을 수 없다.
@@ -705,7 +714,7 @@ export default class AxeView
 							//속성의 값(value)만을 모니터링 하는 옵션이다.
 							this.OverwatchDomPushHelper
 								.Dom_Push_Attr_ValueMonitoring(
-									nodeParentNew, arrRegExpTemp1[0]);
+									nodeParentNew, arrRegExpTemp[0]);
 						}
 					}
 				}
@@ -719,6 +728,7 @@ export default class AxeView
 
 					//정규식으로 액스뷰 형식 찾기
 					//속성이름은 소문자로만 오므로 소문자 처리해야한다. 
+					itemOW.NameFindStringLowerCase.lastIndex = 0;
 					let arrRegExpTemp: RegExpExecArray
 						= itemOW.NameFindStringLowerCase.exec(attrItem.name);
 
@@ -767,6 +777,7 @@ export default class AxeView
 				{
 
 					//정규식으로 액스뷰 형식 찾기
+					itemOW.NameFindString.lastIndex = 0;
 					let arrRegExpTemp: RegExpExecArray
 						= itemOW.NameFindString.exec(attrItem.value);
 

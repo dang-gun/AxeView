@@ -35,12 +35,29 @@ export default class test_01
 				, OverwatchingOneIs: true
 			}));
 
+		this.arrTarget.push(this.AxeView.New_OutputString("HtmlDomOpt", "없음"));
+
+		this.arrTarget.push(
+			//돔 찾기
+			new Overwatch({
+				Name: "HtmlDom2"
+				, FirstData: document.createElement("div")
+				, OverwatchingOutputType: OverwatchingOutputType.Dom
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: true
+				, TossOption: JSON.parse('{"coma":"false", "Message":"메시지 입니다."}')
+			}));
+
+		this.arrTarget.push(this.AxeView.New_MonitoringString("HtmlDom2Opt", "없음2"));
+
+
 		//돔 재생성 및 설정된 뷰모델 연결
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
 			, this.arrTarget);
 
-
+		this.arrTarget[1].data = JSON.stringify(this.arrTarget[0].TossOption);
+		this.arrTarget[3].data = JSON.stringify(this.arrTarget[2].TossOption);
 
 		document.getElementById("btnClick").onclick = this.TestCilck;
 		document.getElementById("btnClick2").onclick = this.TestCilck2;
@@ -51,11 +68,7 @@ export default class test_01
 	{
 		this.TextInput();
 
-		let findTarget = document.querySelector("#divAxeViewTset > div");
-
-
-		let findParent = document.querySelector("#divAxeViewTset");
-		findParent.replaceChild(this.domNew, findTarget)
+		this.arrTarget[1].data = "asdfadsf";
 	}
 
 	TestCilck2 = () =>

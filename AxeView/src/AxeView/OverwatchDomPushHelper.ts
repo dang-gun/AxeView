@@ -308,7 +308,7 @@ export class OverwatchDomPushHelper
 	private MatchToTossOpt(sMatchString: string): JSON
 	{
 		let jsonReturn: JSON = JSON.parse("{}");
-		debugger;
+		
 
 		if ("" === sMatchString
 			|| null === sMatchString
@@ -317,6 +317,44 @@ export class OverwatchDomPushHelper
 
 			//감시대상에 등록된 옵션만 사용함
 			jsonReturn = this.MyOw.TossOption;
+		}
+		else
+		{
+			//구분자를 기준으로 데이터를 자른다.
+			let arrDataString: string[] = sMatchString.split("<");
+
+			if (1 < arrDataString.length)
+			{//잘린 데이터가 있으면
+
+				//전달된 옵션 만 자르기
+				let arrDataCut
+					= arrDataString[1]
+						.substring(0, arrDataString[1].length - 2)
+						.split(",");
+
+				let jsonTemp: JSON = JSON.parse("{}");
+
+				for (let i = 0; i < arrDataCut.length; ++i)
+				{
+					let item = arrDataCut[i];
+					//구분자로 키와 데이터를 분리한다.
+					let itemCut = item.split(":");
+
+					if (2 <= itemCut.length)
+					{//잘린 개수가 2개 이상이다.
+
+						//첫번째는 무조건 키고
+						//나머지는 값이다.
+						//맨앞에 콜론(:)은 넣지 않기위해 +1 한다.
+						jsonTemp[itemCut[0]]
+							= item.substring(itemCut[0].length + 1);
+					}
+				}//end for i
+
+
+				//기본값과 합치기
+				jsonReturn = Object.assign(this.MyOw.TossOption, jsonTemp);
+			}
 		}
 
 		return jsonReturn;
