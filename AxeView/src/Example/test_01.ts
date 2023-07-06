@@ -52,7 +52,7 @@ export default class test_01
 
 	private ViewAll(ow: Overwatch, nMoney: number)
 	{
-		let arrOwDom: AxeViewDomInterface[] = ow.Dom_AxeView;
+		let arrOwDom: AxeViewDomInterface[] = ow.Dom_AxeViewList;
 
 		for (let i = 0; i < arrOwDom.length; ++i)
 		{

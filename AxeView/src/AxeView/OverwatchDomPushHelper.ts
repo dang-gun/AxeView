@@ -56,7 +56,7 @@ export class OverwatchDomPushHelper
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
 		
-		this._MyOw.Dom_AxeView.push({
+		this._MyOw.Dom_AxeViewList.push({
 			AxeViewDomType: AxeViewDomType.HTMLElement
 			, Dom: domPushData
 			, EventName: null
@@ -77,7 +77,7 @@ export class OverwatchDomPushHelper
 		//전달된 문자열을 json으로 바꾼다.
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
-		this._MyOw.Dom_AxeView.push({
+		this._MyOw.Dom_AxeViewList.push({
 			AxeViewDomType: AxeViewDomType.Node
 			, Dom: domPushData
 			, EventName: null
@@ -108,7 +108,7 @@ export class OverwatchDomPushHelper
 		//전달된 문자열을 json으로 바꾼다.
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
-		this._MyOw.Dom_AxeView.push({
+		this._MyOw.Dom_AxeViewList.push({
 			AxeViewDomType: AxeViewDomType.Dom
 			, Dom: domPushData
 			, EventName: null
@@ -130,7 +130,7 @@ export class OverwatchDomPushHelper
 		//전달된 문자열을 json으로 바꾼다.
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
-		this._MyOw.Dom_AxeView.push({
+		this._MyOw.Dom_AxeViewList.push({
 			AxeViewDomType: AxeViewDomType.Attr_Valueless
 			, Dom: domPushData
 			, EventName: null
@@ -152,7 +152,7 @@ export class OverwatchDomPushHelper
 		//전달된 문자열을 json으로 바꾼다.
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
-		this._MyOw.Dom_AxeView.push({
+		this._MyOw.Dom_AxeViewList.push({
 			AxeViewDomType: AxeViewDomType.Attr_OneValue
 			, Dom: domPushData
 			, EventName: null
@@ -175,7 +175,7 @@ export class OverwatchDomPushHelper
 		//전달된 문자열을 json으로 바꾼다.
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
-		this._MyOw.Dom_AxeView.push({
+		this._MyOw.Dom_AxeViewList.push({
 			AxeViewDomType: AxeViewDomType.Attr_ReplaceValue
 			, Dom: domPushData
 			, TossOption: jsonOpt
@@ -237,7 +237,7 @@ export class OverwatchDomPushHelper
 
 		if (true === bPush)
 		{
-			this._MyOw.Dom_AxeView.push(avdTemp);
+			this._MyOw.Dom_AxeViewList.push(avdTemp);
 		}
 
 		//이벤트 리스너에 등록
@@ -255,7 +255,7 @@ export class OverwatchDomPushHelper
 		domPushData: ChildNode
 		, sMatchString: string)
 	{
-		if (0 === this._MyOw.Dom_AxeView.length)
+		if (0 === this._MyOw.Dom_AxeViewList.length)
 		{
 			let objThis = this._MyOw;
 
@@ -300,7 +300,7 @@ export class OverwatchDomPushHelper
 
 
 			//액스돔 리스트에 추가
-			objThis.Dom_AxeView.push(avdTemp);
+			objThis.Dom_AxeViewList.push(avdTemp);
 
 			this._MyOw.ValueMonitoringIs = true;
 

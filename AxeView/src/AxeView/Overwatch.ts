@@ -108,7 +108,7 @@ export class Overwatch
 		//	= this.Dom_AxeView[0].TossOption as OverwatchTossOptions<T>;
 
 		//debugger;
-		return this.Dom_AxeView[0].TossOption as T;
+		return this.Dom_AxeViewList[0].TossOption as T;
 	}
 
 
@@ -144,10 +144,10 @@ export class Overwatch
 		else if (true === this.ValueMonitoringIs)
 		{//값 모니터링 전용
 			
-			if (0 < this._Dom_AxeView.length)
+			if (0 < this.Dom_AxeViewListOri.length)
 			{
 				//값 모니터링은 돔의 value를 우선한다.
-				sReturn = (this._Dom_AxeView[0].Dom as Attr).value;
+				sReturn = (this.Dom_AxeViewListOri[0].Dom as Attr).value;
 			}
 		}
 		else
@@ -169,14 +169,14 @@ export class Overwatch
 		//새값 저장
 		this._DataNow = data;
 		
-		if (null !== this._Dom_AxeView
-			&& 0 < this._Dom_AxeView.length)
+		if (null !== this.Dom_AxeViewListOri
+			&& 0 < this.Dom_AxeViewListOri.length)
 		{//돔이 있으면 실행
 
 			//저장된 돔개수만큼 실행
-			for (let nDomIdx: number = 0; nDomIdx < this._Dom_AxeView.length; ++nDomIdx)
+			for (let nDomIdx: number = 0; nDomIdx < this.Dom_AxeViewListOri.length; ++nDomIdx)
 			{
-				let item: AxeViewDomInterface = this.Dom_AxeView[nDomIdx];
+				let item: AxeViewDomInterface = this.Dom_AxeViewList[nDomIdx];
 				//item.innerHTML = this._DataNow;
 				if (AxeViewDomType.Node === item.AxeViewDomType)
 				{
@@ -312,24 +312,24 @@ export class Overwatch
 	 * Dom 개체 형식의 경우 부모는 무조건 한개가 되므로 이 배열에 추가하지 않는다.
 	 * (DataNow만 사용)
 	 * */
-	private _Dom_AxeView: AxeViewDomInterface[] = [];
+	private Dom_AxeViewListOri: AxeViewDomInterface[] = [];
 	/** 연결된 돔 */
-	public get Dom_AxeView(): AxeViewDomInterface[]
+	public get Dom_AxeViewList(): AxeViewDomInterface[]
 	{
-		return this._Dom_AxeView;
+		return this.Dom_AxeViewListOri;
 	}
 
 	/** 연결된 돔 리스트에서 가장 첫 액스돔이 가지고 있는 돔 */
 	public get Dom(): HTMLElement | Node | Attr | Function
 	{
-		return this.Dom_AxeView[0].Dom;
+		return this.Dom_AxeViewList[0].Dom;
 	}
 
 
 	/** 연결된 돔 비우기 */
 	public Dom_Clear()
 	{
-		this._Dom_AxeView = [];
+		this.Dom_AxeViewListOri = [];
 	}
 
 	/** 
