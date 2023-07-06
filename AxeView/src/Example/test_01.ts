@@ -51,6 +51,9 @@ export default class test_01
 		this.arrTarget.push(this.AxeView.New_MonitoringString("HtmlDom2Opt", "없음2"));
 
 
+		//this.arrTarget.push(this.AxeView.New_MonitoringString("Money", "0"));
+
+
 		//돔 재생성 및 설정된 뷰모델 연결
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
@@ -62,13 +65,34 @@ export default class test_01
 		document.getElementById("btnClick").onclick = this.TestCilck;
 		document.getElementById("btnClick2").onclick = this.TestCilck2;
 
+
 	}
 
 	TestCilck = () =>
 	{
-		this.TextInput();
+		
 
-		this.arrTarget[1].data = "asdfadsf";
+		//let aaa: any = this.arrTarget[2].TossOptionFirst<TossTemp>() as TossT;
+
+
+		
+		console.log("to TossTemp : ");
+		let tt1: TossTemp
+			= this.arrTarget[2].TossOptionFirst<TossTemp>();
+		console.log(tt1);
+		console.log("msg : " + tt1.Message);
+
+		console.log("to TossTemp2 : ");
+		let tt2: TossTemp2
+			= this.arrTarget[2].TossOptionFirst<TossTemp2>();
+		console.log(tt2);
+		console.log("msg : " + tt2.Message);
+
+		console.log("to menu :");
+		let tt3: { Message: string }
+			= this.arrTarget[2].TossOptionFirst<{ Message: string }>();
+		console.log(tt3);
+		console.log("msg : " + tt3.Message);
 	}
 
 	TestCilck2 = () =>
@@ -84,4 +108,17 @@ export default class test_01
 		this.domNew.innerHTML = "<h5>" + sTnput + "</h5>";
 	}
 
+	
+}
+
+interface TossTemp
+{
+	Message: string
+}
+
+
+interface TossTemp2
+{
+	Message: string
+	coma: string
 }

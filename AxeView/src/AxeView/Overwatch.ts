@@ -1,4 +1,4 @@
-﻿import { OverwatchInterface } from "./OverwatchInterface";
+﻿import { OverwatchInterface, OverwatchTossOptions } from "./OverwatchInterface";
 import { AxeViewDomInterface, AxeViewDomType } from "./AxeViewDomInterface";
 import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType"
 
@@ -95,7 +95,17 @@ export class Overwatch
 	 * 뷰단에서 넘어오는 옵션은 이 옵션과 합쳐서 사용한다.
 	 * 뷰에서 넘어온 옵션이 우선이다.
 	 */
-	public TossOption: JSON = JSON.parse("{}");
+	public TossOption: { [key: string]: string } = {};
+
+	public TossOptionFirst<T>():T
+	{
+		//const Options: OverwatchTossOptions<T> 
+		//	= this.Dom_AxeView[0].TossOption as OverwatchTossOptions<T>;
+
+		//debugger;
+		return this.Dom_AxeView[0].TossOption as T;
+	}
+
 
 	/** 지금 가지고 있는 데이터 */
 	private _DataNow: string | Function | HTMLElement = "";
