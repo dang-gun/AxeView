@@ -4,7 +4,7 @@ import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, Overwat
 
 
 
-export default class test_01
+export default class test_Option2
 {
 	/** 액스뷰 개체 */
 	private AxeView: AxeView = new AxeView();
@@ -12,11 +12,11 @@ export default class test_01
 	/** AxeView 테스트용 변수 */
 	private arrTarget: Overwatch[] = [];
 
+
 	constructor()
 	{
 		//주석 제거
 		this.AxeView.CommentDelete = false;
-
 
 		this.arrTarget.push(
 			//모니터링 문자열
@@ -41,13 +41,14 @@ export default class test_01
 			= (event) =>
 			{
 				this.arrTarget[0].data = this.TextInput();
-			}		
+			}	
 	}
+
 
 	private TextInput = (): number =>
 	{
 		return Number((document.getElementById("txtInput") as HTMLInputElement).value);
-		
+
 	}
 
 	private AxeDomSet_DataEdit(
@@ -80,8 +81,7 @@ export default class test_01
 			}
 		}
 
-		debugger;
+		//debugger;
 		return sReturn;
 	}
-
 }
