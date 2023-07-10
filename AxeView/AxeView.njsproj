@@ -33,6 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="server.ts" />
+    <Content Include="README - Copy.md" />
+    <Content Include="README%28kr%29.md" />
     <Content Include="src\AxeView\Test.html" />
     <Content Include="src\Example\test_ATag.html" />
     <Content Include="src\Example\test_Option2.html" />
@@ -46,7 +48,7 @@
     <Content Include="src\index.ts" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
-    <Content Include="README.md" />
+    <Content Include="LICENSE.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="build\" />
