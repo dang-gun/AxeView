@@ -17,16 +17,50 @@ export default class test_01
 		//주석 제거
 		this.AxeView.CommentDelete = false;
 
+		this.arrTarget.push(
+			this.AxeView.New_MonitoringString("StringTest1", "")
+		);
 
 		this.arrTarget.push(
-			//모니터링 문자열
+			this.AxeView.New_MonitoringString("CssTest1", "AxeCss")
+		);
+
+		this.arrTarget.push(
 			new Overwatch({
-				Name: "Money"
-				, FirstData: "0"
-				, OverwatchingOutputType: OverwatchingOutputType.String
+				Name: "RadioChange"
+				, FirstData: (
+					event: Event
+					, sender: ChildNode
+					, objThis: Overwatch) =>
+				{
+					let radio: HTMLInputElement = event.target as HTMLInputElement;
+
+					switch (radio.value)
+					{
+						case "1"://R
+							this.arrTarget[0].data
+								= "background-color: #ff0000;"
+							this.arrTarget[1].data
+								= "background-color: #ff0000;"
+							break;
+						case "2"://G
+							this.arrTarget[0].data
+								= "background-color: #00ff00;"
+							this.arrTarget[1].data
+								= "background-color: #00ff00;"
+							break;
+						case "3"://B
+							this.arrTarget[0].data
+								= "background-color: #0000ff;"
+							this.arrTarget[1].data
+								= "background-color: #0000ff;"
+							break;
+					}
+
+				}
+				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.Monitoring
 				, OverwatchingOneIs: false
-				, AxeDomSet_DataEdit: this.AxeDomSet_DataEdit
 			}));
 
 
@@ -34,54 +68,8 @@ export default class test_01
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset")
 			, this.arrTarget);
-
-
-		//이벤트 연결
-		document.getElementById("btnClick").onclick
-			= (event) =>
-			{
-				this.arrTarget[0].data = this.TextInput();
-			}		
+	
 	}
 
-	private TextInput = (): number =>
-	{
-		return Number((document.getElementById("txtInput") as HTMLInputElement).value);
-		
-	}
-
-	private AxeDomSet_DataEdit(
-		objThis: Overwatch
-		, axeDom: AxeViewDomInterface
-		, data: any)
-		: string
-	{
-		let sReturn = "";
-
-		let tossOpt: { val: string, coma: string, currency: string }
-			= axeDom.TossOptionType<{ val: string, coma: string, currency: string }>();
-		let nMoney: number = Number(data);
-
-		if (false === isNaN(nMoney))
-		{//숫자형이 맞다.
-
-			if ("true" === tossOpt.coma)
-			{//콤마 사용
-				sReturn = nMoney.toLocaleString();
-			}
-			else
-			{
-				sReturn = nMoney.toString();
-			}
-
-			if ("" !== tossOpt.currency)
-			{
-				sReturn = tossOpt.currency + " " + sReturn;
-			}
-		}
-
-		debugger;
-		return sReturn;
-	}
 
 }

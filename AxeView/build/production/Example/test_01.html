@@ -16,14 +16,22 @@
 	<div id="divMenu">
 	</div>
 
-	<div id="divAxeViewTset">
+	<button id="btnClick">금액 적용</button>
+	<input type="text" id="txtInput" value="10000" />
 
-		<input type="radio" name="CssTest1" id="radioCssTest1" value="1" onchange="{{RadioChange}}" />R
-		<input type="radio" name="CssTest1" id="radioCssTest1" value="2" onchange="{{RadioChange}}" />G
-		<input type="radio" name="CssTest1" id="radioCssTest1" value="3" onchange="{{RadioChange}}" />B
-		<div style="{{CssTest1}}">
-			{{StringTest1}}
-		</div>
+	<div id="divAxeViewTset">
+		
+		돈(money)
+		<ul>
+			<li>돈(콤마,$) : {{Money@val:100,coma:true,currency:$}}</li>
+			<li>돈(콤마,￦) : {{Money@val:500,coma:true,currency:￦}}</li>
+			<li>돈(￥) : {{Money@val:500,coma:false,currency:￥}}</li>
+			<li>돈(￡) : {{Money@val:500,coma:false,currency:￡}}</li>
+		</ul>
+		<br />
+		
+		<br />
+		<br />
 	</div>
 
 
