@@ -36,6 +36,7 @@
     <Content Include="README.md" />
     <Content Include="README%28kr%29.md" />
     <Content Include="src\AxeView\Test.html" />
+    <Content Include="src\Example\test_Event.html" />
     <Content Include="src\Example\test_ATag.html" />
     <Content Include="src\Example\test_Option2.html" />
     <Content Include="src\Example\test_Option1.html" />
@@ -65,6 +66,7 @@
     <TypeScriptCompile Include="src\AxeView\Overwatch.ts" />
     <TypeScriptCompile Include="src\AxeView\OverwatchingType.ts" />
     <TypeScriptCompile Include="src\AxeView\OverwatchInterface.ts" />
+    <TypeScriptCompile Include="src\Example\test_Event.ts" />
     <TypeScriptCompile Include="src\Example\test_ATag.ts" />
     <TypeScriptCompile Include="src\Example\test_Option2.ts" />
     <TypeScriptCompile Include="src\Example\test_Option1.ts" />

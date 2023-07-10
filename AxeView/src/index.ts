@@ -7,6 +7,7 @@ import test_Dom from "./Example/test_Dom";
 import test_ATag from "./Example/test_ATag";
 import test_Option1 from "./Example/test_Option1";
 import test_Option2 from "./Example/test_Option2";
+import test_Event from "./Example/test_Event";
 
 import test_BasicSample from "./Example/test_BasicSample";
 import test_01 from "./Example/test_01";
@@ -45,6 +46,9 @@ export default class App
 			case "test_Option2.html":
 				this.PageNow = new test_Option2();
 				break;
+			case "test_Event.html":
+				this.PageNow = new test_Event();
+				break;
 
 
 
@@ -66,7 +70,8 @@ export default class App
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Dom.html">HTML 돔 처리</a><br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_ATag.html">A태그 처리</a><br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Option1.html">옵션 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Option2.html">개별 옵션 처리</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Option2.html">개별 옵션 처리</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Event.html">이벤트 연결</a><br />');
 
 		domMenu.insertAdjacentHTML('beforeend', '<br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_BasicSample.html">기본 셈플</a><br />');
