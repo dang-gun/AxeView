@@ -15,7 +15,7 @@ import test_01 from "./Example/test_01";
 
 export default class App
 {
-	//지금 보여주고 있는 페이지에서 사용할 개체
+	/** 지금 보여주고 있는 페이지에서 사용할 개체 */
 	public PageNow: any = null;
 
 	constructor()

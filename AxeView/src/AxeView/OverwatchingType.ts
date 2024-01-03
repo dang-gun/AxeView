@@ -44,6 +44,8 @@ export const enum OverwatchingOutputType
 	 * 돔 개체 - 속성에만 사용가능
 	 * 속해있는 돔 개체(HTMLElement)를 가지고 있는다.
 	 * Set을하면 replaceChild으로 처리된다.
+	 * ☆주의☆ html dom은 한개만 감시가 가능하다.
+	 * 여러개를 감시하려고하면 'replaceChild'에서 에러가 발생한다.
 	 */
 	Dom,
 }

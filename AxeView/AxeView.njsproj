@@ -47,6 +47,7 @@
     <Content Include="src\test01.html" />
     <Content Include="src\index.html" />
     <Content Include="src\index.ts" />
+    <Content Include="jsdoc.conf" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
   </ItemGroup>

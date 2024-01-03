@@ -182,8 +182,9 @@ export class Overwatch
 				
 				if (AxeViewDomType.Node === item.AxeViewDomType)
 				{
-					//(item.Dom as Node).nodeValue = DataNowThis;
-					(item.Dom as Node).nodeValue = ViewData;
+					//현재 데이터 저장
+					item.DataView = ViewData;
+					(item.Dom as Node).nodeValue = item.DataView;
 				}
 				else if (AxeViewDomType.Dom === item.AxeViewDomType)
 				{//돔인 경우
@@ -202,7 +203,9 @@ export class Overwatch
 				else if (AxeViewDomType.Attr_OneValue === item.AxeViewDomType
 					|| AxeViewDomType.Attr_ValueMonitoring === item.AxeViewDomType				)
 				{
-					(item.Dom as Attr).value = ViewData;
+					//현재 데이터 저장
+					item.DataView = ViewData;
+					(item.Dom as Attr).value = item.DataView;
 				}
 				else if (AxeViewDomType.Attr_ReplaceValue === item.AxeViewDomType)
 				{
@@ -255,7 +258,7 @@ export class Overwatch
 					//기존 이름 제거
 					elemTemp.removeAttribute(OldData.toLowerCase());
 					//새 이름 추가(값없음)
-					elemTemp.setAttribute(ViewData, "");
+					elemTemp.setAttribute(DataNowThis, "");
 				}
 				else if (AxeViewDomType.Attr_Event === item.AxeViewDomType)
 				{
@@ -272,7 +275,7 @@ export class Overwatch
 						|| true === (DataNowThis instanceof HTMLElement)
 						//|| true === (data instanceof ChildNode)
 						|| true === (DataNowThis instanceof Node))
-					{//들어온 데이터가 개체 타입이다.
+					{//들어온 데이터가 html개체 타입이다.
 						(item.Dom as HTMLElement).innerHTML = "";
 						(item.Dom as HTMLElement)
 							.insertAdjacentElement("beforeend", DataNowThis);
@@ -280,9 +283,10 @@ export class Overwatch
 					else
 					{//html string 이다.
 
-						(item.Dom as HTMLElement).innerHTML = ViewData;
+						//현재 데이터 저장
+						item.DataView = ViewData;
+						(item.Dom as HTMLElement).innerHTML = item.DataView;
 					}
-					
 					
 				}
 			}//end for nDomIdx

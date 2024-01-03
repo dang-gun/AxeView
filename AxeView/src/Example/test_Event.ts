@@ -104,9 +104,6 @@ export default class test_01
 
 
 
-
-
-
 		document.getElementById("btnEventChange1").onclick = (event) =>
 		{
 			this.arrTarget2[2].data = this.EventChange1;
@@ -163,21 +160,21 @@ export default class test_01
 			{
 				case "1"://R
 					this.arrTarget2[0].data
-						= "background-color: #aa0000;"
+						= "background-color: #880000;"
 					this.arrTarget2[1].data
-						= "background-color: #aa0000;"
+						= "background-color: #880000;"
 					break;
 				case "2"://G
 					this.arrTarget2[0].data
-						= "background-color: #00aa00;"
+						= "background-color: #008800;"
 					this.arrTarget2[1].data
-						= "background-color: #00aa00;"
+						= "background-color: #008800;"
 					break;
 				case "3"://B
 					this.arrTarget2[0].data
-						= "background-color: #0000aa;"
+						= "background-color: #000088;"
 					this.arrTarget2[1].data
-						= "background-color: #0000aa;"
+						= "background-color: #000088;"
 					break;
 			}
 
