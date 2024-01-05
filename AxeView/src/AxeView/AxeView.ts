@@ -125,7 +125,7 @@ export default class AxeView
 		//다양한 기능을 추가하면서 이런 예외를 따로 분리해주는 코드가 복잡해지는 문제가 발생하여
 		//그냥 모든 개체를 다시 생성하는 방향으로 재구현 하였다.
 		//
-		//모든 구현이 끝나고 최적화할때 다시 도전해볼 예정이다.
+		//버전2에서 다시 도전해볼 예정이다.
 
 
 		if (!(domParent))
@@ -329,11 +329,11 @@ export default class AxeView
 	 * 텍스트 노드는 감시자와 비교하여 잘라내고, 
 	 * 감시자를 연결하고 새로 생성된 HTMLElement을 리턴한다.
 	 * @param nodeParent
-	 * @param owTarget
+	 * @param owTargetList
 	 */
 	private NodeMatch_Normal(
 		nodeParent: ChildNode
-		, owTarget: Overwatch[])
+		, owTargetList: Overwatch[])
 		: HTMLElement
 	{
 
@@ -363,7 +363,7 @@ export default class AxeView
 
 				//텍스트 노드를 생성하고
 				let newText: ChildNode[]
-					= this.NodeMatch_Text(itemNode as Text, owTarget);
+					= this.NodeMatch_Text(itemNode as Text, owTargetList);
 				//노드에 추가
 				for (let nNewTextIdx = 0; nNewTextIdx < newText.length; ++nNewTextIdx)
 				{
@@ -387,14 +387,14 @@ export default class AxeView
 
 				//새 엘리먼트를 매칭 시키고
 				let newNodeMatch: HTMLElement
-					= this.NodeMatch_Normal(itemNode, owTarget);
+					= this.NodeMatch_Normal(itemNode, owTargetList);
 
 				
 				//새 엘리먼트의 어트리뷰트 판단.
 				this.NodeMatch_Attr(
 					itemNode
 					, newNodeMatch
-					, owTarget);
+					, owTargetList);
 				
 				//새 부모에 추가
 				newElemParent.appendChild(newNodeMatch);

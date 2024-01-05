@@ -1,9 +1,16 @@
 ﻿
 
-import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, OverwatchingType, AxeViewDomInterface } from "../AxeView/AxeView";
+import AxeView
+, {
+	Overwatch
+	, OverwatchInterface
+	, OverwatchingOutputType
+	, OverwatchingType
+	, AxeViewDomInterface
+} from "../AxeView/AxeView";
 
 
-
+/** 테스트용 */
 export default class test_01
 {
 	/** 액스뷰 개체 */

@@ -7,6 +7,7 @@
 
 소스코드는 타입스크립트로 재공되지만 자바스크립트에서도 빌드없이 사용가능합니다.
 
+데모 : https://dang-gun.github.io/AxeView1Test/Example/test_StartUp.html
 
 ## Index
   - [주요 기능](#주요-기능) 
@@ -51,6 +52,36 @@ import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, Overwat
 
 
 ## 테스트 해보기
+
+### 테스트 프로젝트 세팅 (선택)
+
+다운로드된 프로젝트를 비주얼 스튜디오 20xx에서 디버깅 하려면 ".vscode/launch.json"에 다음 내용이 있어야 합니다.
+
+```
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "edge",
+      "request": "launch",
+      "name": "localhost (Edge)",
+      "url": "http://localhost:9401",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "localhost (Chrome)",
+      "url": "http://localhost:9401",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}
+
+```
+
+
+### 테스트 코드 작성
 
 HTML에 아래 코드를 추가해줍니다.
 
