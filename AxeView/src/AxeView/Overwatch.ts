@@ -428,30 +428,55 @@ export class Overwatch
 		{
 			let item: AxeViewDomInterface = this.Dom_AxeViewList[nDomIdx];
 
+			
+
 			switch (typeOverwatchingOutput)
 			{
 				case OverwatchingOutputType.String:
 					{
-						if (AxeViewDomType.HTMLElement === item.AxeViewDomType)
-						{//원래 HTMLElement 타입이였다.
+						if (AxeViewDomType.HTMLElement === item.AxeViewDomType
+							|| AxeViewDomType.Dom === item.AxeViewDomType)
+						{//원래 HTMLElement 타입이나
+							//Dom 타입이였다.
 
+							//변환 시작
 							this.OutputTypeChange_One(item, typeOverwatchingOutput);
 						}
 
+						//타입변경 확정
 						item.AxeViewDomType = AxeViewDomType.Node;
 					}
 					break;
 
 				case OverwatchingOutputType.Html:
 					{
-						if (AxeViewDomType.Node === item.AxeViewDomType)
-						{//원래 노드 타입이였다.
+						if (AxeViewDomType.Node === item.AxeViewDomType
+							|| AxeViewDomType.Dom === item.AxeViewDomType)
+						{//원래 Node 타입이나
+							//Dom 타입이였다.
 
+							//변환 시작
 							this.OutputTypeChange_One(item, typeOverwatchingOutput);
 						}
 
 						//타입변경 확정
 						item.AxeViewDomType = AxeViewDomType.HTMLElement;
+					}
+					break;
+
+				case OverwatchingOutputType.Dom:
+					{
+						if (AxeViewDomType.Node === item.AxeViewDomType
+							|| AxeViewDomType.HTMLElement === item.AxeViewDomType)
+						{//원래 Node 타입이나
+							//HTMLElement 타입이였다.
+
+							//변환 시작
+							this.OutputTypeChange_One(item, typeOverwatchingOutput);
+						}
+
+						//타입변경 확정
+						item.AxeViewDomType = AxeViewDomType.Dom;
 					}
 					break;
 
@@ -505,19 +530,48 @@ export class Overwatch
 						break;
 
 					case OverwatchingOutputType.Html:
+					case OverwatchingOutputType.Dom:
 						{
 							//html 개체를 만들고
 							let newMElem: HTMLElement
-								= document.createElement("template");
+								= document.createElement("div");
 							//내용물을 html 처리를 한 후
 							newMElem.insertAdjacentHTML(
 								"beforeend"
-								, `<lable>${this.data}</lable>`);
+								, `${this.data}`);
+
 
 							//돔 교체
-							this.Dom = newMElem.firstChild;
+							this.Dom = newMElem;
 							//자식에 추가
-							arrOldChild.push(newMElem.firstChild);
+							arrOldChild.push(newMElem);
+
+							if (OverwatchingOutputType.Dom === typeOverwatchingOutput)
+							{//돔이다.
+
+								//돔의 경우 기존값도 변경하지 않으면 에러가 난다.
+
+								if (true === (this._DataNow instanceof Element)
+									|| true === (this._DataNow instanceof HTMLElement)
+									//|| true === (this._DataNow instanceof ChildNode)
+									|| true === (this._DataNow instanceof Node))
+								{//기존 데이터가 html개체 타입이다.
+
+									//별도의 처리가 필요없다.
+								}
+								else
+								{
+									let newMElem2: HTMLElement
+										= document.createElement("div");
+									//내용물을 html 처리를 한 후
+									newMElem2.insertAdjacentHTML(
+										"beforeend"
+										, `${this._DataNow}`);
+
+									this._DataNow = newMElem;
+								}
+								
+							}
 						}
 						break;
 				}//end switch (typeOverwatchingOutput)

@@ -54,19 +54,46 @@ export default class test_01
 		//this.arrTarget[0].data = "첫 바인딩 문자열2";
 
 		//UI 연결
-		document.getElementById("btnString").onclick = () =>
+		document.getElementById("btnStringTo").onclick = () =>
 		{
 			this.arrTarget[0].OutputTypeChange_All(OverwatchingOutputType.String);
-
-			this.arrTarget[0].data = "<h1>문자열로 변환됨</h1>"
+			this.arrTarget[0].data = "<h3>문자열로 변환됨</h3>"
 		}
-		document.getElementById("btnHtml").onclick = () =>
+		document.getElementById("btnHtmlTo").onclick = () =>
 		{
-			
 			this.arrTarget[0].OutputTypeChange_All(OverwatchingOutputType.Html);
+			this.arrTarget[0].data = "<h3>html로 변환됨</h3>"
+		}
+		document.getElementById("btnDomTo").onclick = () =>
+		{
+			this.arrTarget[0].OutputTypeChange_All(OverwatchingOutputType.Dom);
 
+			//html 개체를 만들고
+			let newMElem: HTMLElement
+				= document.createElement("template");
+			//내용물을 html 처리를 한 후
+			newMElem.insertAdjacentHTML(
+				"beforeend"
+				, `<h3>Dom으로 변환됨</h3>`);
+			this.arrTarget[0].data = newMElem.firstChild;
+		}
 
-			this.arrTarget[0].data = "<h1>html로 변환됨</h1>"
+		document.getElementById("btnStringSet").onclick = () =>
+		{
+			let sData: string = (document.getElementById("txtInput1") as HTMLInputElement).value;
+			this.arrTarget[0].data = `${sData}`;
+		}
+		document.getElementById("btnHtmlSet").onclick = () =>
+		{
+			let sData: string = (document.getElementById("txtInput1") as HTMLInputElement).value;
+			this.arrTarget[0].data = `<h3>${sData}</h3>`;
+		}
+		document.getElementById("btnDomSet").onclick = () =>
+		{
+			let sData: string = (document.getElementById("txtInput1") as HTMLInputElement).value;
+			let newMElem: HTMLElement = document.createElement("h3");
+			newMElem.insertAdjacentHTML("beforeend", `<h3>${sData}</h3>`);
+			this.arrTarget[0].data = newMElem;
 		}
 	}
 
