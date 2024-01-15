@@ -139,12 +139,13 @@ export default class AxeView
 
 		//let objThis: AxeView = this;
 		//각 감시자별로 처리해야할 내용
-		arrTarget.forEach((item) =>
-		{
-			++this.BindCount;
-			//고유번호 지정
-			item.MyNumber = this.BindCount;
-		});
+		arrTarget.forEach(
+			(item) =>
+			{
+				++this.BindCount;
+				//고유번호 지정
+				item.MyNumber = this.BindCount;
+			});
 
 		//새로운 로드를 생성해서 가지고 있을 노드 리스트
 		let newParent: ChildNode[] = [];
@@ -174,7 +175,7 @@ export default class AxeView
 	 * 지정된 텍스트 노드에서 감시자와의 매칭 정보를 찾고
 	 * 새로운 노드를 생성하여 리턴한다.
 	 * @param nodeText
-	 * @param owTarget
+	 * @param owTarget 매칭시킬 감시대상 개체
 	 * @param refMatch
 	 * @returns 새로 생성된 ChildNode
 	 */
@@ -452,7 +453,16 @@ export default class AxeView
 			}
 
 
-			//일치하는 데이터
+			//일치하는 데이터 처리 *****
+
+			if (OverwatchingOutputType.Unidentified == owTarget.OverwatchingOutputType)
+			{//불확실 타입이다.
+
+				//문자열 타입으로 변경해준다.
+				owTarget.OverwatchingOutputType = OverwatchingOutputType.String;
+			}
+
+
 			//시작 인덱스 저장
 			nFindIdx = arrRegExpTemp.index;
 			owTarget.OneDataIs = true;
@@ -674,6 +684,13 @@ export default class AxeView
 
 				//이 if문 안에서 결과가 일치했는지 여부
 				let bComplete = false;
+
+				if (false === bComplete
+					&& "value" === attrItem.name
+					&& OverwatchingOutputType.Unidentified == itemOW.OverwatchingOutputType )
+				{
+					itemOW.OverwatchingOutputType = OverwatchingOutputType.String;
+				}
 
 
 				if (false === bComplete

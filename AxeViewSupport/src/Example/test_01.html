@@ -16,16 +16,44 @@
 	<div id="divMenu">
 	</div>
 
+	---- 템플릿1 --------------
 	<div id="divAxeViewTset1">
 		<div axe-view-template="template1">
-
+			템플릿!
+		</div>
+		<div>
+			액스뷰 [{{TestString1}}] 입니다.
+		</div>
+		<div axe-view-data="{{TestString2}}" >
+			액스뷰 [{{TestString1@ssdf:111,ddffd:2222}}] 입니다.
 		</div>
 	</div>
 
+	<br />
+	<br />
+	<br />
+	---- 템플릿2 --------------
 	<div id="divAxeViewTset2">
-		<div axe-view-template="template2">
-
+		<div axe-view-template="template2_1">
+			<button>버튼</button>
 		</div>
+		<div axe-view-template="template2_2">
+			<label>레이블</label>
+		</div>
+	</div>
+
+	<br />
+	<br />
+	<br />
+	---- 템플릿3 --------------
+	<div id="divAxeViewTset3">
+		<div axe-view-template="template3_1">
+			<button>버튼</button>
+			<div axe-view-template="template3_2">
+				<label>레이블</label>
+			</div>
+		</div>
+		
 	</div>
 
 

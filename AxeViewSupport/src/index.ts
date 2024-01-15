@@ -1,6 +1,11 @@
 ﻿
-//AxeView.njsproj 프로젝트를 상대경로로 참조
-import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, OverwatchingType } from "../../AxeView/src/AxeView/AxeView";
+//AxeView 프로젝트를 상대경로로 참조
+import AxeView, {
+	Overwatch
+	, OverwatchInterface
+	, OverwatchingOutputType
+	, OverwatchingType
+} from "../../AxeView/src/AxeView/AxeView";
 
 
 import test_01 from "./Example/test_01";

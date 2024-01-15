@@ -153,6 +153,7 @@ export default class testBasicSample
 	{
 		debugger;
 		this.arrTarget[2].data = "클릭했다!!!";
+		//this.arrTarget[2].data = "<h2>클릭했다!!HTML</h2>";
 		this.arrTarget[3].data = "<h2>클릭했다!!HTML</h2>";
 
 		this.arrTarget[4].data = "Click1";

@@ -8,10 +8,10 @@ export class Overwatch
 	constructor(target: OverwatchInterface)
 	{
 		this.Name = target.Name;
-		this.NameFindStringOri =
-			new RegExp(`\{\{${this.Name}+\}\}|\{\{${this.Name}+@.*\}\}`, 'g');
-		this.NameFindStringLowerCaseOri =
-			new RegExp(`\{\{${this.Name.toLowerCase()}+\}\}|\{\{${this.Name.toLowerCase() }+@.*\}\}`, 'g');
+		this.NameFindStringOri
+			= new RegExp(`\{\{${this.Name}+\}\}|\{\{${this.Name}+@.*\}\}`, 'g');
+		this.NameFindStringLowerCaseOri
+			= new RegExp(`\{\{${this.Name.toLowerCase()}+\}\}|\{\{${this.Name.toLowerCase()}+@.*\}\}`, 'g');
 
 		//전달 옵션
 		if (undefined !== target.TossOption
@@ -201,7 +201,7 @@ export class Overwatch
 					
 				}
 				else if (AxeViewDomType.Attr_OneValue === item.AxeViewDomType
-					|| AxeViewDomType.Attr_ValueMonitoring === item.AxeViewDomType				)
+					|| AxeViewDomType.Attr_ValueMonitoring === item.AxeViewDomType)
 				{
 					//현재 데이터 저장
 					item.DataView = ViewData;

@@ -21,7 +21,17 @@ export default class test_01
 	
 	constructor()
 	{
-	
+
+		//돔에서 템플릿을 분리한다.
+		this.AxeViewSpt.BindOverwatch(
+			document.getElementById("divAxeViewTset1")
+			, []);
+		//this.AxeViewSpt.BindOverwatch(document.getElementById("divAxeViewTset3"));
+
+		//돔 재생성 및 설정된 뷰모델 연결
+		//this.AxeView.BindOverwatch(
+		//	document.getElementById("divAxeViewTset")
+		//	, this.arrTarget);
 	}
 
 
