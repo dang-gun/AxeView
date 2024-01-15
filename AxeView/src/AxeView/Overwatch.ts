@@ -16,13 +16,13 @@ export class Overwatch
 		//전달 옵션
 		if (undefined !== target.TossOption
 			&& null !== target.TossOption)
-		{//있을때만 전달
+		{//있을 때만 전달
 			this.TossOption = target.TossOption;
 		}
 
 		if (undefined !== target.AxeDomSet_DataEdit
 			&& null !== target.AxeDomSet_DataEdit)
-		{//있을때만 전달
+		{//있을 때만 전달
 			this.AxeDomSet_DataEdit = target.AxeDomSet_DataEdit;
 		}
 
@@ -332,6 +332,12 @@ export class Overwatch
 	{
 		return this.Dom_AxeViewList[0].Dom;
 	}
+	/** 연결된 돔 리스트에서 가장 첫 액스돔이 가지고 있는 돔 */
+	private set Dom(value: HTMLElement | Node | Attr | Function)
+	{
+		this.Dom_AxeViewList[0].Dom = value;
+	}
+
 
 
 	/** 연결된 돔 비우기 */
@@ -408,6 +414,125 @@ export class Overwatch
 	private ReplaceAll(sOriData: string, sSearch: string, sReplacement: string): string
 	{
 		return sOriData.replace(new RegExp(sSearch, 'g'), sReplacement);
+	}
+
+
+	/**
+	 * 출력 타입 변경
+	 * 성능에 안좋은 영향을 주므로 가급적 안쓰는 것이 좋다.
+	 * @param typeOverwatchingOutput
+	 */
+	public OutputTypeChange_All(typeOverwatchingOutput: OverwatchingOutputType): void
+	{
+		for (let nDomIdx: number = 0; nDomIdx < this.Dom_AxeViewListOri.length; ++nDomIdx)
+		{
+			let item: AxeViewDomInterface = this.Dom_AxeViewList[nDomIdx];
+
+			switch (typeOverwatchingOutput)
+			{
+				case OverwatchingOutputType.String:
+					{
+						if (AxeViewDomType.HTMLElement === item.AxeViewDomType)
+						{//원래 HTMLElement 타입이였다.
+
+							this.OutputTypeChange_One(item, typeOverwatchingOutput);
+						}
+
+						item.AxeViewDomType = AxeViewDomType.Node;
+					}
+					break;
+
+				case OverwatchingOutputType.Html:
+					{
+						if (AxeViewDomType.Node === item.AxeViewDomType)
+						{//원래 노드 타입이였다.
+
+							this.OutputTypeChange_One(item, typeOverwatchingOutput);
+						}
+
+						//타입변경 확정
+						item.AxeViewDomType = AxeViewDomType.HTMLElement;
+					}
+					break;
+
+			}//end switch (typeOverwatchingOutput)
+			
+		}//end for i
+	}
+
+	/**
+	 * 지정한 아이템의 출력타입을 변경한다.
+	 * 기존 출력타입 체크를 하지 않으므로 호출전에 기존 출력타입을 확인한 후 호출해야한다.
+	 * @param item
+	 * @param typeOverwatchingOutput
+	 */
+	private OutputTypeChange_One(
+		item: AxeViewDomInterface
+		, typeOverwatchingOutput: OverwatchingOutputType)
+	{
+		//텍스트 노드를 Html엘리먼트로 변경해야 한다.
+		//부모의 자식노드를 하나식 백업한다.
+		//변경해야할 노드가 나오면 해당 노드만 교체하여 백업한다.
+		//백업된 노드를 부모노드에 추가한다.
+
+		//부모 노드 찾기
+		let parentElement: HTMLElement = (this.Dom as Node).parentElement;
+		let listOldChild: NodeListOf<ChildNode>
+			= parentElement.childNodes;
+
+		//기존에 가지고 있던 자식들 옮기기
+		let arrOldChild: ChildNode[] = [];
+
+
+		for (let i = 0; i < listOldChild.length; ++i)
+		{
+			let item: ChildNode = listOldChild[i];
+
+			if (item === this.Dom)
+			{//변환할 대상
+
+				switch (typeOverwatchingOutput)
+				{
+					case OverwatchingOutputType.String:
+						{
+							let newTextNode: Text 
+								= document.createTextNode(this.data);
+							//돔 교체
+							this.Dom = newTextNode;
+							//자식에 추가
+							arrOldChild.push(newTextNode);
+						}
+						break;
+
+					case OverwatchingOutputType.Html:
+						{
+							//html 개체를 만들고
+							let newMElem: HTMLElement
+								= document.createElement("template");
+							//내용물을 html 처리를 한 후
+							newMElem.insertAdjacentHTML(
+								"beforeend"
+								, `<lable>${this.data}</lable>`);
+
+							//돔 교체
+							this.Dom = newMElem.firstChild;
+							//자식에 추가
+							arrOldChild.push(newMElem.firstChild);
+						}
+						break;
+				}//end switch (typeOverwatchingOutput)
+				
+			}
+			else
+			{//일반 대상
+
+				//변경이 없는 노드는 그대로 추가한다.
+				arrOldChild.push(item);
+			}
+		}
+
+		//모두 교체하기 비우기
+		parentElement.replaceChildren(...arrOldChild);
 	}
 
 }

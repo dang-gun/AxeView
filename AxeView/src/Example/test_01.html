@@ -12,17 +12,21 @@
 </head>
 <body>
 	<h2>환영!</h2>
+	<h3>OverwatchingOutputType 변경 테스트</h3>
 
 	<div id="divMenu">
 	</div>
 
 	<div id="divAxeViewTset">
-
-		<input type="radio" name="CssTest1" id="radioCssTest1" value="1" onchange="{{RadioChange}}" />R
-		<input type="radio" name="CssTest1" id="radioCssTest1" value="2" onchange="{{RadioChange}}" />G
-		<input type="radio" name="CssTest1" id="radioCssTest1" value="3" onchange="{{RadioChange}}" />B
-		<div style="{{CssTest1}}">
-			{{StringTest1}}
+		<div>
+			string -&gt; html {{Test1}} test
+		</div>
+		<div>
+			html -&gt; string {{Test2}} test
+		</div>
+		<div>
+			<button id="btnString">문자열로 변경</button>
+			<button id="btnHtml">Html로 변경</button>
 		</div>
 	</div>
 
