@@ -17,22 +17,24 @@
 	<div id="divMenu">
 	</div>
 
-	<div id="divAxeViewTset">
+	<div id="divAxeViewTset1">
 		<div>
 			string -&gt; html, html -&gt; string <br />
 			front {{Test1}}  back <br />
-			<button id="btnStringTo">문자열로 변경</button>
-			<button id="btnHtmlTo">Html로 변경</button>
-			<button id="btnDomTo">Dom으로 변경</button>
+			<button onclick="{{funcStringTo}}">문자열로 변경</button>
+			<button onclick="{{funcHtmlTo}}">Html로 변경</button>
+			<button onclick="{{funcDomTo}}">Dom으로 변경</button>
 			<br />
 			<br />
-			<input type="text" id="txtInput1" value="테스트 입력1" />
-			<button id="btnStringSet">문자열 입력</button>
-			<button id="btnHtmlSet">Html 입력</button>
-			<button id="btnDomSet">Dom 입력</button>
+			<input type="text" value="{{txtInput1}}" placeholder="String input" /><br />
+			*Html, Dom입력은 자동으로 h3으로 생성됨<br />
+			<button onclick="{{funcStringSet}}">문자열 입력</button>
+			<button onclick="{{funcHtmlSet}}">Html 입력</button>
+			<button onclick="{{funcDomSet}}">Dom 입력</button>
 		</div>
 		<br />
 		<br />
+		
 		<br />
 
 		<div>

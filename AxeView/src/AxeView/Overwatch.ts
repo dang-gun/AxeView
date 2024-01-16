@@ -157,12 +157,11 @@ export class Overwatch
 
 		//기존값 백업
 		let OldData: any = this._DataNow;
+		//새값 사용
+		let DataNowThis = data;
+		//this._DataNow에 데이터를 저장할지 여부
+		let bDataNowSaveIs: boolean = true;
 		
-
-		//새값 저장
-		this._DataNow = data;
-		//저장된 새값 사용
-		let DataNowThis = this._DataNow;
 
 		
 		if (null !== this.Dom_AxeViewListOri
@@ -182,9 +181,18 @@ export class Overwatch
 				
 				if (AxeViewDomType.Node === item.AxeViewDomType)
 				{
-					//현재 데이터 저장
-					item.DataView = ViewData;
-					(item.Dom as Node).nodeValue = item.DataView;
+					if (typeof ViewData === "string")
+					{
+						//현재 데이터 저장
+						item.DataView = ViewData;
+						(item.Dom as Node).nodeValue = item.DataView;
+					}
+					else
+					{
+						//문자열 타입일때 다른 형식을 넣을 수 없습니다.
+						console.log("AxeView Overwatch : When it is a string type, other formats cannot be entered.");
+						bDataNowSaveIs = false;
+					}
 				}
 				else if (AxeViewDomType.Dom === item.AxeViewDomType)
 				{//돔인 경우
@@ -193,10 +201,21 @@ export class Overwatch
 					if (true === (DataNowThis instanceof HTMLElement))
 					{//들어온 값이 HTMLElement다.
 
-						//돔의 경우 이전 개체(OldData)의 부모를 찾아
-						//.replaceChild를 해야 한다.
-						(OldData.parentElement as HTMLElement)
-							.replaceChild(DataNowThis, OldData);
+						//돔의 경우 이전 개체(OldData)의 부모를 찾아 .replaceChild를 해야 한다.
+						//2024-01-16 : 부모개체를 바인딩 하는 시점에서 저장하도록 하였으므로
+						//				저장된 부모개체를 사용한다.
+						//(OldData.parentElement as HTMLElement)
+						item.ParentDom.replaceChild(DataNowThis, OldData);
+
+						//2024-01-16 : 돔 교체를 하도록 동작이 변경되었으므로
+						//				마지막 사용된 dom 개체를 저장해야 한다.
+						item.Dom = DataNowThis;
+					}
+					else
+					{
+						//DOM 타입일때 다른 형식을 넣을 수 없습니다.
+						console.log("AxeView Overwatch : When it is a DOM type, other formats cannot be entered.");
+						bDataNowSaveIs = false;
 					}
 					
 				}
@@ -292,6 +311,16 @@ export class Overwatch
 			}//end for nDomIdx
 			
 		}
+
+		if (true === bDataNowSaveIs)
+		{//새값 저장 여부
+
+			//조건에 따라 새값이 UI에 적용되지 않는 경우가 있으므로
+			//데이터 백업을 할지 말지를 각 코드에서 확인하여 전달한다.
+
+			//새값 저장
+			this._DataNow = data;
+		}
 	};
 
 	/** 
@@ -317,8 +346,7 @@ export class Overwatch
 	 * 'Action'이 어트리뷰트에 연결된 경우 대상 dom이 저장되고,
 	 * innerText영역에 있는 경우 임의로 생성된 태그가 지정된다.
 	 * 
-	 * Dom 개체 형식의 경우 부모는 무조건 한개가 되므로 이 배열에 추가하지 않는다.
-	 * (DataNow만 사용)
+	 * Dom 개체 형식의 경우 전달 받은 돔은 무조건 한개만 표시할 수 있으므로 여러개가 지정해봐야 의미없다.
 	 * */
 	private Dom_AxeViewListOri: AxeViewDomInterface[] = [];
 	/** 연결된 돔 */
@@ -326,6 +354,18 @@ export class Overwatch
 	{
 		return this.Dom_AxeViewListOri;
 	}
+	/** Dom_AxeViewList의 정보를 갱신한다.  */
+	public Dom_AxeViewList_Refresh(): void
+	{
+		for (let i = 0; i < this.Dom_AxeViewListOri.length; ++i)
+		{
+			let item: AxeViewDomInterface = this.Dom_AxeViewListOri[i];
+
+			//부모 개체 미리 찾아두기
+			item.ParentDom = (item.Dom as HTMLElement).parentElement;
+		}//end for i
+	}
+
 
 	/** 연결된 돔 리스트에서 가장 첫 액스돔이 가지고 있는 돔 */
 	public get Dom(): HTMLElement | Node | Attr | Function
@@ -442,6 +482,15 @@ export class Overwatch
 							//변환 시작
 							this.OutputTypeChange_One(item, typeOverwatchingOutput);
 						}
+						else if (AxeViewDomType.Node === item.AxeViewDomType)
+						{
+							//같은 타입으로 변환하려고 했다.
+							console.log("AxeView Overwatch : I tried to change it to the same type.");
+						}
+						else
+						{//변환 할 수 없는 타입
+							throw "This is a type that cannot be converted.";
+						}
 
 						//타입변경 확정
 						item.AxeViewDomType = AxeViewDomType.Node;
@@ -488,20 +537,21 @@ export class Overwatch
 	/**
 	 * 지정한 아이템의 출력타입을 변경한다.
 	 * 기존 출력타입 체크를 하지 않으므로 호출전에 기존 출력타입을 확인한 후 호출해야한다.
-	 * @param item
+	 * @param avdItem
 	 * @param typeOverwatchingOutput
 	 */
 	private OutputTypeChange_One(
-		item: AxeViewDomInterface
+		avdItem: AxeViewDomInterface
 		, typeOverwatchingOutput: OverwatchingOutputType)
 	{
 		//텍스트 노드를 Html엘리먼트로 변경해야 한다.
 		//부모의 자식노드를 하나식 백업한다.
 		//변경해야할 노드가 나오면 해당 노드만 교체하여 백업한다.
 		//백업된 노드를 부모노드에 추가한다.
-
+		
 		//부모 노드 찾기
-		let parentElement: HTMLElement = (this.Dom as Node).parentElement;
+		let parentElement: HTMLElement = avdItem.ParentDom;
+		
 		let listOldChild: NodeListOf<ChildNode>
 			= parentElement.childNodes;
 
@@ -513,7 +563,7 @@ export class Overwatch
 		{
 			let item: ChildNode = listOldChild[i];
 
-			if (item === this.Dom)
+			if (item === avdItem.Dom)
 			{//변환할 대상
 
 				switch (typeOverwatchingOutput)
@@ -550,27 +600,10 @@ export class Overwatch
 							{//돔이다.
 
 								//돔의 경우 기존값도 변경하지 않으면 에러가 난다.
-
-								if (true === (this._DataNow instanceof Element)
-									|| true === (this._DataNow instanceof HTMLElement)
-									//|| true === (this._DataNow instanceof ChildNode)
-									|| true === (this._DataNow instanceof Node))
-								{//기존 데이터가 html개체 타입이다.
-
-									//별도의 처리가 필요없다.
-								}
-								else
-								{
-									let newMElem2: HTMLElement
-										= document.createElement("div");
-									//내용물을 html 처리를 한 후
-									newMElem2.insertAdjacentHTML(
-										"beforeend"
-										, `${this._DataNow}`);
-
-									this._DataNow = newMElem;
-								}
-								
+								//돔에서 돔으로 변경된게 아닌이상 기존 주소가 없어서
+								//replaceChild에러가 나게 된다.
+								//그러니 무조건 this._DataNow를 새로 생성한 개체로 교체해야 한다.
+								this._DataNow = newMElem;
 							}
 						}
 						break;

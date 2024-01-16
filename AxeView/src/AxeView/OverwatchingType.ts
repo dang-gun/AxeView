@@ -10,18 +10,20 @@ export const enum OverwatchingOutputType
 	 * 속성(attribute)값에 적용된경우 교체(all replace)를 시도하므로 
 	 * 이미 일치하는 문자열이 있으면 잘못교체될 수 있음을 명심해야 한다.
 	 * 'Monitoring_OneValue'옵션을 사용할 수 있는 상황이면 성능향상에 도움이 된다.
+	 * 
+	 * Unidentified : 불확실 타입일때 이 타입이 사용된다.
 	 * */
 	String,
 
 
 	/**
-	 * html 출력
+	 * html 출력 - 노드 전용
 	 * '속성(attribute)'과 같이 html이 적용되지 않는 경우 무시(감시하지 않음) 된다.
 	 * */
 	Html,
 	
 	/**
-	 * 함수 연결 - 속성(attribute)이름 그대로 사용
+	 * 함수 연결 - 속성(attribute)이름 그대로 사용, 속성 전용
 	 * 함수는 속성(attribute)에서만 동작한다.(그외는 감시하지 않음)
 	 * 함수는 부분교체가 없고 무조건 전체교체다.
 	 * 함수로 감시자가 매칭되면 해당 속성은 제거되고 이벤트 리스너가 추가된다.
@@ -32,16 +34,18 @@ export const enum OverwatchingOutputType
 	Function,
 
 	/**
-	 * 함수 연결 - 속성(attribute)이름 앞에 'on'이 있으면 제거
+	 * 함수 연결 - 속성(attribute)이름 앞에 'on'이 있으면 제거, 속성 전용
 	 * 함수는 속성(attribute)에서만 동작한다.
 	 * 속성이름이 'onClick'이면 이벤트리스너에 'click'으로 등록한다.
 	 * 속성에서 추가하는 이벤트 이름에 'on'이 추가되어 있는 경우 사용한다.
 	 * 이렇게 해야 클릭 이벤트가 발생했을때 동작한다.
+	 * 
+	 * Unidentified : 불확실 타입일때 이 타입이 사용된다.
 	 * */
 	Function_NameRemoveOn,
 
 	/**
-	 * 돔 개체 - 속성에만 사용가능
+	 * 돔 개체 - 노드 전용
 	 * 속해있는 돔 개체(HTMLElement)를 가지고 있는다.
 	 * Set을하면 replaceChild으로 처리된다.
 	 * ☆주의☆ html dom은 한개만 감시가 가능하다.

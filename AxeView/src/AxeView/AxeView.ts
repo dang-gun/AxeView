@@ -104,12 +104,12 @@ export default class AxeView
 	 * 
 	 * 텍스트 노드가 아닌 대상을 감시할때는 
 	 * @param domParent 검색할 부모 dom
-	 * @param arrTarget 감시자 리스트
+	 * @param arrTargetOw 감시자 리스트
 	 * @param jsonDomHelperOption 처리 옵션
 	 */
 	public BindOverwatch(
 		domParent: HTMLElement
-		, arrTarget: Overwatch[]
+		, arrTargetOw: Overwatch[]
 		, jsonDomHelperOption?: AxeDomHelperOptionInterface | null)
 		: void
 	{
@@ -135,11 +135,11 @@ export default class AxeView
 
 
 		//감시 리스트 백업
-		this.LastList = arrTarget;
+		this.LastList = arrTargetOw;
 
 		//let objThis: AxeView = this;
 		//각 감시자별로 처리해야할 내용
-		arrTarget.forEach(
+		arrTargetOw.forEach(
 			(item) =>
 			{
 				++this.BindCount;
@@ -152,8 +152,15 @@ export default class AxeView
 		//자식만 추가한다.
 		newParent.push(
 			...Array.from(
-				this.NodeMatch_Normal(domParent, arrTarget)
+				this.NodeMatch_Normal(domParent, arrTargetOw)
 					.childNodes));
+
+		//노드리스트가 완성되고 나서 처리해야 할 내용들
+		for (let i = 0; i < arrTargetOw.length; ++i)
+		{
+			//감시자와 연결된 dom의 정보를 갱신한다.
+			arrTargetOw[i].Dom_AxeViewList_Refresh();
+		}//end for i
 
 		//console.log("***** newParent *****");
 		//console.log(newParent);
@@ -165,7 +172,7 @@ export default class AxeView
 		this.DomHelper(domParent, jsonDomHelperOption);
 
 		//돔 교체 작업을 해준다.
-		this.AxeDomHelper.DomReplace(arrTarget);
+		this.AxeDomHelper.DomReplace(arrTargetOw);
 	}
 
 
@@ -313,7 +320,7 @@ export default class AxeView
 					//debugger;
 				}
 			}
-		}
+		}//end for i
 
 
 		//console.log("▷▷▷ newParent End : " + nodeText.textContent);
