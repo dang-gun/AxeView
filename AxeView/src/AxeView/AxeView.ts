@@ -461,14 +461,12 @@ export default class AxeView
 
 
 			//일치하는 데이터 처리 *****
+			if (OverwatchingType.Unidentified === owTarget.OverwatchingType)
+			{//감시타입이 불확실이다.
 
-			if (OverwatchingOutputType.Unidentified == owTarget.OverwatchingOutputType)
-			{//불확실 타입이다.
-
-				//문자열 타입으로 변경해준다.
-				owTarget.OverwatchingOutputType = OverwatchingOutputType.String;
+				//모니터링으로만 동작한다.
+				owTarget.OverwatchingType = OverwatchingType.Monitoring;
 			}
-
 
 			//시작 인덱스 저장
 			nFindIdx = arrRegExpTemp.index;
@@ -562,6 +560,12 @@ export default class AxeView
 				//예> this.NodeMatch_TextCut
 				//각 if문 안에서 필요에 따라 변경하자
 
+				if (OverwatchingType.Unidentified === itemOW.OverwatchingType)
+				{//감시타입이 불확실이다.
+
+					//모니터링으로만 동작한다.
+					itemOW.OverwatchingType = OverwatchingType.Monitoring;
+				}
 
 				let arrStrTextCut: MatchStringInterface[]
 					= this.NodeMatch_TextCut(itemFindText.Text, itemOW);
@@ -576,7 +580,7 @@ export default class AxeView
 	/**
 	 * 어트리뷰트의 내용을 매칭시킨다.
 	 * 어트리뷰트는 새로 생성하지 안으므로 'nodeParent'를 직접 수정한다.
-	 * @param nodeParentNew 이 어트리뷰트가 소속된 개체의 원본
+	 * @param nodeParent 이 어트리뷰트가 소속된 개체의 원본
 	 * @param nodeParentNew 이 어트리뷰트가 소속된 개체
 	 * @param owTarget
 	 */
@@ -653,7 +657,21 @@ export default class AxeView
 				if (null !== arrRegExpTemp
 					&& 0 < arrRegExpTemp.length)
 				{//일치한다.
-					
+
+					if (OverwatchingType.Unidentified === itemOW.OverwatchingType)
+					{//감시타입이 불확실이다.
+
+						//모니터링으로만 동작한다.
+						itemOW.OverwatchingType = OverwatchingType.Monitoring;
+						if ("function" !== typeof itemOW.data)
+						{//데이터가 함수형이 아니다.
+
+							//함수형 데이터로 초기화한다.
+							itemOW.data = () => { };
+						}
+						
+					}
+
 					let elemTemp: HTMLElement = nodeParentNew as HTMLElement;
 					//속성에 기존 이름 제거
 					elemTemp.removeAttribute(attrItem.name);
@@ -686,26 +704,22 @@ export default class AxeView
 			else
 			{//문자열과 이외의 상황
 
+				//함수를 제외한 속성은 문자열로만 동작한다.
 				//console.log("attrItem : " + attrItem.name + ", " + attrItem.value);
 				//debugger;
 
 				//이 if문 안에서 결과가 일치했는지 여부
 				let bComplete = false;
-
-				if (false === bComplete
-					&& "value" === attrItem.name
-					&& OverwatchingOutputType.Unidentified == itemOW.OverwatchingOutputType )
-				{
-					itemOW.OverwatchingOutputType = OverwatchingOutputType.String;
-				}
-
+				
 
 				if (false === bComplete
 					&& "value" === attrItem.name
 					&& (OverwatchingType.Monitoring_AttrValue === itemOW.OverwatchingType
-						|| OverwatchingType.Monitoring_AttrValue_Input === itemOW.OverwatchingType))
+						|| OverwatchingType.Monitoring_AttrValue_Input === itemOW.OverwatchingType
+						|| OverwatchingType.Unidentified === itemOW.OverwatchingType))
 				{//속성이름이 'value'이고
-					//값을 모니터링 중이다.
+					//값을 모니터링 중이거나
+					//아웃풋 타입이 불확실 타입이다.
 
 					bComplete = true;
 
@@ -723,6 +737,22 @@ export default class AxeView
 						//정확하게는 ui에서 수정하면 읽어지질 않는다...(개체가 달라지나????)
 						//
 						//그래서 이벤트 리스너로 처리하도록 수정하였다.
+
+						if (OverwatchingType.Unidentified === itemOW.OverwatchingType)
+						{//감시타입이 불확실이다.
+
+							//불확실 타입인데 속성이름이 'value'이면 
+							//감시타입(OverwatchingType)을 아래 조건으로 변경한다.
+							if ("INPUT" === (nodeParent as Element).tagName)
+							{//대상이 input이다.
+								itemOW.OverwatchingType = OverwatchingType.Monitoring_AttrValue_Input;
+							}
+							else
+							{//input가 아니다.
+								itemOW.OverwatchingType = OverwatchingType.Monitoring_AttrValue;
+							}
+						}
+						
 
 						//이 옵션에서는 아래 조건 말고는 동작하지 않는다.
 						if (OverwatchingOutputType.String === itemOW.OverwatchingOutputType)
@@ -762,6 +792,13 @@ export default class AxeView
 					else if (0 < arrRegExpTemp.length)
 					{//이름이 감시자와 일치한다.
 
+						if (OverwatchingType.Unidentified === itemOW.OverwatchingType)
+						{//감시타입이 불확실이다.
+
+							//모니터링으로만 동작한다.
+							itemOW.OverwatchingType = OverwatchingType.Monitoring;
+						}
+
 						if (OverwatchingOutputType.Dom === itemOW.OverwatchingOutputType)
 						{//돔 개체
 							
@@ -787,7 +824,8 @@ export default class AxeView
 							//감시자에 추가
 							itemOW.OneDataIs = true;
 							if (OverwatchingType.Monitoring === itemOW.OverwatchingType
-								|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType) {//모니터링이다.
+								|| OverwatchingType.Monitoring_OneValue === itemOW.OverwatchingType) 
+							{//모니터링이다.
 
 								//감시할 돔 추가
 								this.OverwatchDomPushHelper
@@ -811,6 +849,13 @@ export default class AxeView
 					else if (attrItem.value === arrRegExpTemp[0])
 					{//벨류가 하나만 있고, 이것이 일치 한다.
 						bComplete = true;
+
+						if (OverwatchingType.Unidentified === itemOW.OverwatchingType)
+						{//감시타입이 불확실이다.
+
+							//모니터링으로만 동작한다.
+							itemOW.OverwatchingType = OverwatchingType.Monitoring;
+						}
 
 						//초기값 입력
 						attrItem.value = itemOW.data;
@@ -838,8 +883,14 @@ export default class AxeView
 					}
 					else
 					{//값에 부분 일치가 있다.
-
 						bComplete = true;
+
+						if (OverwatchingType.Unidentified === itemOW.OverwatchingType)
+						{//감시타입이 불확실이다.
+
+							//모니터링으로만 동작한다.
+							itemOW.OverwatchingType = OverwatchingType.Monitoring;
+						}						
 
 						if (true === itemOW.OverwatchingOneIs)
 						{//하나만 교체

@@ -96,4 +96,29 @@ export default class App
 
 }
 
+/** 감시자 리스트를 관리하는 클래스 */
+export class OverwatchList
+{
+	/** 관리할 리스트 */
+	public OwList: Overwatch[] = [];
+
+	constructor()
+	{
+	}
+
+	/**
+	 * 감시자 이름으로 찾는다.
+	 * @param sNameOw
+	 * @returns
+	 */
+	public FindName(sNameOw: string)
+		: Overwatch
+	{
+		return this.OwList.find(f => f.Name == sNameOw);
+	}
+
+}
+
+
 (window as any).app = new App();
+

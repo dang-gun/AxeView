@@ -95,8 +95,8 @@ export default class AxeViewSupport
 						new Overwatch({
 							Name: sCut,
 							FirstData: "",
-							OverwatchingOutputType: OverwatchingOutputType.Unidentified,
-							OverwatchingType: OverwatchingType.Monitoring,
+							OverwatchingOutputType: OverwatchingOutputType.String,
+							OverwatchingType: OverwatchingType.Unidentified,
 							OverwatchingOneIs: false
 						}));
 				}

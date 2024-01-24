@@ -17,6 +17,13 @@
         .bgGreen {
             background-color: green;
         }
+
+        div[attr1] {
+            background-color: yellow;
+        }
+        div[attr2] {
+            background-color: blue;
+        }
 	</style>
 </head>
 <body>
@@ -26,9 +33,8 @@
 	</div>
 
 	<div>
-		감시자를 생성할때 자동으로 타입이 지정되도록 OverwatchingOutputType.Unidentified을 사용할 수 있다.<br />
-		이 타입을 쓰면 AxeView가 자동으로 판단하여 타입을 변경한다.<br />
-		이렇게 생성된 감시자는 필요에 따라 Overwatch.OutputTypeChange_All(OverwatchingOutputType)를 통해 동적으로 타입을 바꿀 수 있다.<br />
+		감시자를 생성할때 자동으로 감시방식이 지정되도록 OverwatchingType.Unidentified을 사용할 수 있다.<br />
+		이 타입을 쓰면 AxeView가 자동으로 판단하여 감시방식을 변경한다.<br />
 		<br />
 		이 타입은 'AxeViewSupport' 라이브러리를 위해 만들어졌다.<br />
 		직접 사용하기보다는 뷰를 기준으로 감시자가 없는 대상을 생성할 때 사용하는 것이 좋다.<br />
@@ -37,32 +43,64 @@
 	<br />
 	<br />
 
-
 	<div id="divAxeViewTset1">
-		텍스트 노드(Text Node)를 불확실 타입으로 지정하면 'OverwatchingOutputType.String'로 동작한다.<br />
-		(다른 타입으로 변경하려면 'Overwatch.OutputTypeChange_All' 메소드를 사용하면 된다.)<br />
-		front {{Test1}}  back
+		1) 텍스트 노드(Text Node) <br />
 		<br />
+		테스트 : <br />
+		front ▶▶▶ {{TextNode_UnType}} ◀◀◀ back<br />
 		<br />
 		<input type="text" value="{{txtInput1}}" placeholder="String input" /><br />
 		*Html입력은 자동으로 h3으로 생성됨<br />
 		<button onclick="{{funcStringSet}}">문자열 입력</button>
-		<button onclick="{{funcHtmlSet}}">Html 입력</button>
-
-		<br />
-		<br />
-
-		<br />
-		<br />
-
-		<div id="divTemp1"
-			 class="AxeTest NewElem {{CssTest_UnType}}"
-			 axeTest="{{Attr1_UnType}}"
-			 {{Attr2_UnType}}>
-			속성에 'Unidentified'를 사용하면 다음과 같이 동작한다<br />
-			- 속성에 다른 값이 있는 경우 
-		</div>
 	</div>
+	<br />
+	<br />
+	<br />
+
+	<div id="divAxeViewTset2">
+		2) 속성(attribute) - 값이 있는 속성<br />
+		값이 있는 속성은 무조건 OverwatchingType.Monitoring으로 동작한다.<br />
+		<br />
+		테스트 : <br />
+		<div class="AxeTest NewElem {{Attr2_1_UnType}}"
+			 axeTest="{{Attr2_2_UnType}}">
+			속성 테스트용 돔입니다.<br />
+			개발자 툴을 열어 변경된 속성을 확인하세요~
+		</div>
+		<br />
+		<button onclick="{{funcAttr2Set1}}">클릭할 때마다 속성이 변경됨</button>
+	</div>
+	<br />
+	<br />
+	<br />
+
+	<div id="divAxeViewTset3">
+
+		3) 속성(attribute) - 이름만 있는 속성<br />
+		<div {{Attr3_1_UnType}}>
+			이름만 있는 테스트 돔1입니다.
+		</div>
+		<button onclick="{{funcAttr3Set1}}">클릭할 때마다 속성 이름이 변경됨</button>
+	</div>
+	<br />
+	<br />
+	<br />
+	<div id="divAxeViewTset4">
+		4) 속성(attribute) - Value 감시<br />
+
+		<input type="text" value="{{Attr4_1_UnType}}" placeholder="String input" /><br />
+	</div>
+
+
+	<br />
+	<br />
+	속성에 'Unidentified'를 'OverwatchingOutputType'은 'String'로 변경된다.<br />
+	지정된 'OverwatchingType'은 상황에 따라 변경될 수 있다.<br />
+	<br />
+	속성에 'Unidentified'를 사용하면 다음과 같이 동작한다<br />
+	- 속성이름이 'value'인 경우 : OverwatchingType.Monitoring_AttrValue<br />
+	- 속성에 값이 없는 경우 : AxeViewMoveType.Attr_Valueless<br />
+	- 위 경우를 제외하면 'OverwatchingType.Monitoring'로 동작한다.<br />
 
 </body>
 </html>
