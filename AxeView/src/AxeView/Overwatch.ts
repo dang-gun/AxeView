@@ -1,5 +1,5 @@
 ﻿import { OverwatchInterface, OverwatchTossOptions } from "./OverwatchInterface";
-import { AxeViewDomInterface, AxeViewDomType } from "./AxeViewDomInterface";
+import { AxeViewDomInterface, AxeViewMoveType } from "./AxeViewDomInterface";
 import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType"
 
 /** 감시 대상  */
@@ -179,7 +179,7 @@ export class Overwatch
 				let ViewData = this.AxeDomSet_DataEdit(this, item, DataNowThis);
 
 				
-				if (AxeViewDomType.Node === item.AxeViewDomType)
+				if (AxeViewMoveType.Node === item.AxeViewDomType)
 				{
 					if (typeof ViewData === "string")
 					{
@@ -194,7 +194,7 @@ export class Overwatch
 						bDataNowSaveIs = false;
 					}
 				}
-				else if (AxeViewDomType.Dom === item.AxeViewDomType)
+				else if (AxeViewMoveType.Dom === item.AxeViewDomType)
 				{//돔인 경우
 
 					//돔은 교체만 허용한다.
@@ -219,14 +219,14 @@ export class Overwatch
 					}
 					
 				}
-				else if (AxeViewDomType.Attr_OneValue === item.AxeViewDomType
-					|| AxeViewDomType.Attr_ValueMonitoring === item.AxeViewDomType)
+				else if (AxeViewMoveType.Attr_OneValue === item.AxeViewDomType
+					|| AxeViewMoveType.Attr_ValueMonitoring === item.AxeViewDomType)
 				{
 					//현재 데이터 저장
 					item.DataView = ViewData;
 					(item.Dom as Attr).value = item.DataView;
 				}
-				else if (AxeViewDomType.Attr_ReplaceValue === item.AxeViewDomType)
+				else if (AxeViewMoveType.Attr_ReplaceValue === item.AxeViewDomType)
 				{
 					let attrTemp: Attr = item.Dom as Attr;
 
@@ -235,7 +235,6 @@ export class Overwatch
 					//임의의 고유값을 생성하여 저장한다.
 
 					
-
 					//이전 데이터를 백업하고
 					let OldDataTemp: string = item.DataView;
 					if ("" === OldDataTemp)
@@ -270,7 +269,7 @@ export class Overwatch
 								, item.DataView);
 					}
 				}
-				else if (AxeViewDomType.Attr_Valueless === item.AxeViewDomType)
+				else if (AxeViewMoveType.Attr_Valueless === item.AxeViewDomType)
 				{
 					//값이 없는 값은 속성자체를 바꿔야 한다.
 					let elemTemp: HTMLElement = (item.Dom as HTMLElement);
@@ -279,7 +278,7 @@ export class Overwatch
 					//새 이름 추가(값없음)
 					elemTemp.setAttribute(DataNowThis, "");
 				}
-				else if (AxeViewDomType.Attr_Event === item.AxeViewDomType)
+				else if (AxeViewMoveType.Attr_Event === item.AxeViewDomType)
 				{
 					//기존에 연결된 이벤트 제거
 					(item.Dom as Node).removeEventListener(item.EventName, item.Event);
@@ -474,15 +473,15 @@ export class Overwatch
 			{
 				case OverwatchingOutputType.String:
 					{
-						if (AxeViewDomType.HTMLElement === item.AxeViewDomType
-							|| AxeViewDomType.Dom === item.AxeViewDomType)
+						if (AxeViewMoveType.HTMLElement === item.AxeViewDomType
+							|| AxeViewMoveType.Dom === item.AxeViewDomType)
 						{//원래 HTMLElement 타입이나
 							//Dom 타입이였다.
 
 							//변환 시작
 							this.OutputTypeChange_One(item, typeOverwatchingOutput);
 						}
-						else if (AxeViewDomType.Node === item.AxeViewDomType)
+						else if (AxeViewMoveType.Node === item.AxeViewDomType)
 						{
 							//같은 타입으로 변환하려고 했다.
 							console.log("AxeView Overwatch : I tried to change it to the same type.");
@@ -493,14 +492,14 @@ export class Overwatch
 						}
 
 						//타입변경 확정
-						item.AxeViewDomType = AxeViewDomType.Node;
+						item.AxeViewDomType = AxeViewMoveType.Node;
 					}
 					break;
 
 				case OverwatchingOutputType.Html:
 					{
-						if (AxeViewDomType.Node === item.AxeViewDomType
-							|| AxeViewDomType.Dom === item.AxeViewDomType)
+						if (AxeViewMoveType.Node === item.AxeViewDomType
+							|| AxeViewMoveType.Dom === item.AxeViewDomType)
 						{//원래 Node 타입이나
 							//Dom 타입이였다.
 
@@ -509,14 +508,14 @@ export class Overwatch
 						}
 
 						//타입변경 확정
-						item.AxeViewDomType = AxeViewDomType.HTMLElement;
+						item.AxeViewDomType = AxeViewMoveType.HTMLElement;
 					}
 					break;
 
 				case OverwatchingOutputType.Dom:
 					{
-						if (AxeViewDomType.Node === item.AxeViewDomType
-							|| AxeViewDomType.HTMLElement === item.AxeViewDomType)
+						if (AxeViewMoveType.Node === item.AxeViewDomType
+							|| AxeViewMoveType.HTMLElement === item.AxeViewDomType)
 						{//원래 Node 타입이나
 							//HTMLElement 타입이였다.
 
@@ -525,7 +524,7 @@ export class Overwatch
 						}
 
 						//타입변경 확정
-						item.AxeViewDomType = AxeViewDomType.Dom;
+						item.AxeViewDomType = AxeViewMoveType.Dom;
 					}
 					break;
 

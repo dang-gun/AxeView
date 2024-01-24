@@ -16,14 +16,25 @@ export default class test_01
 	/** 액스뷰 개체 */
 	private AxeView: AxeView = new AxeView();
 
-	/** AxeView 테스트용 변수 */
-	private arrTarget: Overwatch[] = [];
-	/** 감시자 리스트에서 동일한 이름의 감시자를 찾는다. */
-	private FindOw(sNameOw: string)
+	/** AxeView 테스트용 변수1 */
+	private arrTarget1: Overwatch[] = [];
+	/** 감시자1 리스트에서 동일한 이름의 감시자를 찾는다. */
+	private FindOw1(sNameOw: string)
 		: Overwatch
 	{
-		return this.arrTarget.find(f => f.Name == sNameOw);
+		return this.arrTarget1.find(f => f.Name == sNameOw);
 	}
+
+
+	/** AxeView 테스트용 변수2 */
+	private arrTarget2: Overwatch[] = [];
+	/** 감시자2 리스트에서 동일한 이름의 감시자를 찾는다. */
+	private FindOw2(sNameOw: string)
+		: Overwatch
+	{
+		return this.arrTarget1.find(f => f.Name == sNameOw);
+	}
+
 
 	constructor()
 	{
@@ -31,7 +42,8 @@ export default class test_01
 		//주석 제거
 		this.AxeView.CommentDelete = false;
 
-		this.arrTarget.push(
+		// #region 테스트1(텍스트 노드 ) 감시자 연결
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "Test1"
 				, FirstData: "첫 바인딩 문자열"
@@ -40,7 +52,7 @@ export default class test_01
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "Test2"
 				, FirstData: "<h3>첫 바인딩 문자열(html)</h3>"
@@ -50,38 +62,38 @@ export default class test_01
 			}));
 
 
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "funcStringTo"
 				, FirstData: () =>
 				{
-					this.arrTarget[0].OutputTypeChange_All(OverwatchingOutputType.String);
-					this.arrTarget[0].data = "<h3>문자열로 변환됨</h3>"
+					this.arrTarget1[0].OutputTypeChange_All(OverwatchingOutputType.String);
+					this.arrTarget1[0].data = "<h3>문자열로 변환됨</h3>"
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "funcHtmlTo"
 				, FirstData: () =>
 				{
-					this.arrTarget[0].OutputTypeChange_All(OverwatchingOutputType.Html);
-					this.arrTarget[0].data = "<h3>html로 변환됨</h3>";
+					this.arrTarget1[0].OutputTypeChange_All(OverwatchingOutputType.Html);
+					this.arrTarget1[0].data = "<h3>html로 변환됨</h3>";
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "funcDomTo"
 				, FirstData: () =>
 				{
-					this.arrTarget[0].OutputTypeChange_All(OverwatchingOutputType.Dom);
+					this.arrTarget1[0].OutputTypeChange_All(OverwatchingOutputType.Dom);
 
 					//html 개체를 만들고
 					let newMElem: HTMLElement = document.createElement("template");
@@ -89,17 +101,17 @@ export default class test_01
 					newMElem.insertAdjacentHTML(
 						"beforeend"
 						, `<h3>Dom으로 변환됨</h3>`);
-					this.arrTarget[0].data = newMElem.firstChild;
+					this.arrTarget1[0].data = newMElem.firstChild;
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
+		// #endregion
 
+		// #region 테스트1 UI 연결 감시자
 
-		// #region 테스트 UI 연결 감시자
-
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "txtInput1"
 				, FirstData: "테스트 데이터 입력1"
@@ -109,41 +121,41 @@ export default class test_01
 			}));
 
 		
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "funcStringSet"
 				, FirstData: () =>
 				{
-					let sData: string = this.FindOw("txtInput1").data;
-					this.arrTarget[0].data = `${sData}`;
+					let sData: string = this.FindOw1("txtInput1").data;
+					this.arrTarget1[0].data = `${sData}`;
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "funcHtmlSet"
 				, FirstData: () =>
 				{
-					let sData: string = this.FindOw("txtInput1").data;
-					this.arrTarget[0].data = `<h3>${sData}</h3>`;
+					let sData: string = this.FindOw1("txtInput1").data;
+					this.arrTarget1[0].data = `<h3>${sData}</h3>`;
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget.push(
+		this.arrTarget1.push(
 			new Overwatch({
 				Name: "funcDomSet"
 				, FirstData: () =>
 				{
-					let sData: string = this.FindOw("txtInput1").data;
+					let sData: string = this.FindOw1("txtInput1").data;
 					let newMElem: HTMLElement = document.createElement("template");
 					newMElem.insertAdjacentHTML("beforeend", `<h3>${sData}</h3>`);
-					this.arrTarget[0].data = newMElem.firstChild;
+					this.arrTarget1[0].data = newMElem.firstChild;
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
@@ -156,7 +168,7 @@ export default class test_01
 		//돔 재생성 및 설정된 뷰모델 연결
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset1")
-			, this.arrTarget);
+			, this.arrTarget1);
 
 
 		//this.arrTarget[0].data = "첫 바인딩 문자열2";

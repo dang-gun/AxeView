@@ -1,4 +1,4 @@
-﻿import { AxeViewDomInterface, AxeViewDomType } from "./AxeViewDomInterface";
+﻿import { AxeViewDomInterface, AxeViewMoveType } from "./AxeViewDomInterface";
 import { Overwatch } from "./Overwatch"
 import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType"
 
@@ -57,7 +57,7 @@ export class OverwatchDomPushHelper
 
 		
 		this._MyOw.Dom_AxeViewList.push({
-			AxeViewDomType: AxeViewDomType.HTMLElement
+			AxeViewDomType: AxeViewMoveType.HTMLElement
 			, Dom: domPushData
 			, DataView: ""
 			, EventName: null
@@ -78,7 +78,7 @@ export class OverwatchDomPushHelper
 		//전달된 문자열을 json으로 바꾼다.
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 		this._MyOw.Dom_AxeViewList.push({
-			AxeViewDomType: AxeViewDomType.Node
+			AxeViewDomType: AxeViewMoveType.Node
 			, Dom: domPushData
 			, DataView : ""
 			, EventName: null
@@ -111,7 +111,7 @@ export class OverwatchDomPushHelper
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
 		this._MyOw.Dom_AxeViewList.push({
-			AxeViewDomType: AxeViewDomType.Dom
+			AxeViewDomType: AxeViewMoveType.Dom
 			, Dom: domPushData
 			, DataView: ""
 			, EventName: null
@@ -134,7 +134,7 @@ export class OverwatchDomPushHelper
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
 		this._MyOw.Dom_AxeViewList.push({
-			AxeViewDomType: AxeViewDomType.Attr_Valueless
+			AxeViewDomType: AxeViewMoveType.Attr_Valueless
 			, Dom: domPushData
 			, DataView: ""
 			, EventName: null
@@ -157,7 +157,7 @@ export class OverwatchDomPushHelper
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
 		this._MyOw.Dom_AxeViewList.push({
-			AxeViewDomType: AxeViewDomType.Attr_OneValue
+			AxeViewDomType: AxeViewMoveType.Attr_OneValue
 			, Dom: domPushData
 			, DataView: ""
 			, EventName: null
@@ -181,7 +181,7 @@ export class OverwatchDomPushHelper
 		let jsonOpt: { [key: string]: string } = this.MatchToTossOpt(sMatchString);
 
 		this._MyOw.Dom_AxeViewList.push({
-			AxeViewDomType: AxeViewDomType.Attr_ReplaceValue
+			AxeViewDomType: AxeViewMoveType.Attr_ReplaceValue
 			, Dom: domPushData
 			, DataView: ""
 			, TossOption: jsonOpt
@@ -226,7 +226,7 @@ export class OverwatchDomPushHelper
 
 		//돔에 추가할 액스뷰 돔형식 생성
 		let avdTemp: AxeViewDomInterface = {
-			AxeViewDomType: AxeViewDomType.Attr_Event
+			AxeViewDomType: AxeViewMoveType.Attr_Event
 			, Dom: domPushData
 			, DataView: ""
 			, EventName: sEventName
@@ -276,7 +276,7 @@ export class OverwatchDomPushHelper
 				case OverwatchingType.Monitoring_AttrValue_Input:
 					//액스 돔으로 사용할 개체 만들기
 					avdTemp = {
-						AxeViewDomType: AxeViewDomType.Attr_ValueMonitoring
+						AxeViewDomType: AxeViewMoveType.Attr_ValueMonitoring
 						, Dom: domPushData
 						, DataView: ""
 						, EventName: "input"
@@ -292,7 +292,7 @@ export class OverwatchDomPushHelper
 				default:
 					//액스 돔으로 사용할 개체 만들기
 					avdTemp = {
-						AxeViewDomType: AxeViewDomType.Attr_ValueMonitoring
+						AxeViewDomType: AxeViewMoveType.Attr_ValueMonitoring
 						, Dom: domPushData
 						, DataView: ""
 						, EventName: "change"

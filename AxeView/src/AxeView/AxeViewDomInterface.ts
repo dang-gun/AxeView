@@ -28,7 +28,7 @@ export interface AxeViewDomInterface
 	DataView: string;
 
 	/** 액스뷰에서 동작할 방식 */
-	AxeViewDomType: AxeViewDomType;
+	AxeViewDomType: AxeViewMoveType;
 
 	/** 이벤트 이름이 필요할때 추가한다. */
 	EventName?: string | null;
@@ -52,7 +52,8 @@ export interface AxeViewDomInterface
 
 
 /** 액스뷰에서 동작할 방식 */
-export const enum AxeViewDomType
+export const enum AxeViewMoveType
+
 {
 	/** 없음. 동작하지 않음 */
 	none = 1,

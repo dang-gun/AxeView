@@ -1,6 +1,6 @@
 ﻿import { Overwatch } from "./Overwatch";
 import { OverwatchingOutputType, OverwatchingType } from "./OverwatchingType";
-import { AxeViewDomInterface, AxeViewDomType } from "./AxeViewDomInterface";
+import { AxeViewDomInterface, AxeViewMoveType } from "./AxeViewDomInterface";
 
 /** 감시자 인터페이스 */
 export interface OverwatchInterface

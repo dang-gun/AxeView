@@ -109,12 +109,14 @@ export const enum OverwatchingType
 	 * 이유는 모르겠지만 기존 돔연결이 깨지는 것 처럼 보이는 현상이 있다.
 	 * 이 이유때문에 값(value)가 재대로 읽어지질 않는다.
 	 * 그래서 'change'를 넣어 값이 변경되면 돔이 가지고 있는 값도 수정하도록 변경하였다.
+	 * 'change'이벤트 특성상 포커스가 없어져야 데이터가 갱신된다.
 	 * */
 	Monitoring_AttrValue,
 
 	/**
 	 * 속성(attribute)의 값(value)만 모니터링 하고 사용자의 입력값을 감시한다.
 	 * Monitoring_AttrValue동일하지만 연결하는 이벤트만 'input'로 변경됐다.
+	 * 'input'으로 연결되어 키보드가 입력될 때 마다 데이터가 갱신된다.
 	 */
 	Monitoring_AttrValue_Input,
 }

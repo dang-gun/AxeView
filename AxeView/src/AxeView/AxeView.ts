@@ -1,7 +1,7 @@
 ﻿import { OverwatchInterface } from "./OverwatchInterface";
 export * from "./OverwatchInterface";
 
-import { AxeViewDomInterface, AxeViewDomType } from "./AxeViewDomInterface";
+import { AxeViewDomInterface, AxeViewMoveType } from "./AxeViewDomInterface";
 export * from "./AxeViewDomInterface";
 
 import { OverwatchingType, OverwatchingOutputType } from "./OverwatchingType"
