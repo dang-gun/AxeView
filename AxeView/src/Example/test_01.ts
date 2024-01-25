@@ -1,12 +1,10 @@
-﻿
+﻿import { OverwatchList } from "../index";
 
-import AxeView
-, {
+import AxeView, {
 	Overwatch
 	, OverwatchInterface
 	, OverwatchingOutputType
 	, OverwatchingType
-	, AxeViewDomInterface
 } from "../AxeView/AxeView";
 
 
@@ -16,24 +14,16 @@ export default class test_01
 	/** 액스뷰 개체 */
 	private AxeView: AxeView = new AxeView();
 
-	/** AxeView 테스트용 변수1 */
-	private arrTarget1: Overwatch[] = [];
-	/** 감시자1 리스트에서 동일한 이름의 감시자를 찾는다. */
-	private FindOw1(sNameOw: string)
-		: Overwatch
-	{
-		return this.arrTarget1.find(f => f.Name == sNameOw);
-	}
+	/** AxeView 테스트1 용 변수 */
+	private Ow1List: OverwatchList = new OverwatchList();
+	/** AxeView 테스트1 용 - 예제와 상관없는 감시자 */
+	private Ow1_OtherList: OverwatchList = new OverwatchList();
 
 
-	/** AxeView 테스트용 변수2 */
-	private arrTarget2: Overwatch[] = [];
-	/** 감시자2 리스트에서 동일한 이름의 감시자를 찾는다. */
-	private FindOw2(sNameOw: string)
-		: Overwatch
-	{
-		return this.arrTarget1.find(f => f.Name == sNameOw);
-	}
+	/** AxeView 테스트2 용 변수 */
+	private Ow2List: OverwatchList = new OverwatchList();
+	/** AxeView 테스트2 용 - 예제와 상관없는 감시자 */
+	private Ow2_OtherList: OverwatchList = new OverwatchList();
 
 
 	constructor()
@@ -42,58 +32,58 @@ export default class test_01
 		//주석 제거
 		this.AxeView.CommentDelete = false;
 
-		// #region 테스트1(텍스트 노드 ) 감시자 연결
-		this.arrTarget1.push(
+
+
+		//☆☆☆☆☆☆☆☆☆☆☆☆☆☆
+		// 1) 노드 변경
+		//☆☆☆☆☆☆☆☆☆☆☆☆☆☆
+
+		this.Ow2List.OwList.push(
 			new Overwatch({
-				Name: "Test1"
+				Name: "Node1Change"
 				, FirstData: "첫 바인딩 문자열"
 				, OverwatchingOutputType: OverwatchingOutputType.String
 				, OverwatchingType: OverwatchingType.Monitoring
 				, OverwatchingOneIs: false
 			}));
-
-		this.arrTarget1.push(
+		
+		// #region 기능 테스트 감시자 - 1) 노드 변경
+		
+		this.Ow1_OtherList.OwList.push(
 			new Overwatch({
-				Name: "Test2"
-				, FirstData: "<h3>첫 바인딩 문자열(html)</h3>"
-				, OverwatchingOutputType: OverwatchingOutputType.Html
-				, OverwatchingType: OverwatchingType.Monitoring
-				, OverwatchingOneIs: false
-			}));
-
-
-		this.arrTarget1.push(
-			new Overwatch({
-				Name: "funcStringTo"
+				Name: "Node1Change_ToString"
 				, FirstData: () =>
 				{
-					this.arrTarget1[0].OutputTypeChange_All(OverwatchingOutputType.String);
-					this.arrTarget1[0].data = "<h3>문자열로 변환됨</h3>"
+					let owTarget: Overwatch = this.Ow1_OtherList.FindName("Node1Change_Input1");
+					owTarget.OutputTypeChange_All(OverwatchingOutputType.String);
+					owTarget.data = "<h3>문자열로 변환됨</h3>"
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget1.push(
+		this.Ow1_OtherList.OwList.push(
 			new Overwatch({
-				Name: "funcHtmlTo"
+				Name: "Node1Change_TofuncHtml"
 				, FirstData: () =>
 				{
-					this.arrTarget1[0].OutputTypeChange_All(OverwatchingOutputType.Html);
-					this.arrTarget1[0].data = "<h3>html로 변환됨</h3>";
+					let owTarget: Overwatch = this.Ow1_OtherList.FindName("Node1Change_Input1");
+					owTarget.OutputTypeChange_All(OverwatchingOutputType.Html);
+					owTarget.data = "<h3>html로 변환됨</h3>";
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget1.push(
+		this.Ow1_OtherList.OwList.push(
 			new Overwatch({
-				Name: "funcDomTo"
+				Name: "Node1Change_TofuncDom"
 				, FirstData: () =>
 				{
-					this.arrTarget1[0].OutputTypeChange_All(OverwatchingOutputType.Dom);
+					let owTarget: Overwatch = this.Ow1_OtherList.FindName("Node1Change_Input1");
+					owTarget.OutputTypeChange_All(OverwatchingOutputType.Dom);
 
 					//html 개체를 만들고
 					let newMElem: HTMLElement = document.createElement("template");
@@ -101,19 +91,20 @@ export default class test_01
 					newMElem.insertAdjacentHTML(
 						"beforeend"
 						, `<h3>Dom으로 변환됨</h3>`);
-					this.arrTarget1[0].data = newMElem.firstChild;
+					owTarget.data = newMElem.firstChild;
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
+
 		// #endregion
 
-		// #region 테스트1 UI 연결 감시자
+		// #region 기능 테스트 UI 감시자
 
-		this.arrTarget1.push(
+		this.Ow1_OtherList.OwList.push(
 			new Overwatch({
-				Name: "txtInput1"
+				Name: "Node1Change_Input1"
 				, FirstData: "테스트 데이터 입력1"
 				, OverwatchingOutputType: OverwatchingOutputType.String
 				, OverwatchingType: OverwatchingType.Monitoring_AttrValue_Input
@@ -121,41 +112,43 @@ export default class test_01
 			}));
 
 		
-		this.arrTarget1.push(
+		this.Ow1_OtherList.OwList.push(
 			new Overwatch({
-				Name: "funcStringSet"
+				Name: "Node1Change_StringSet"
 				, FirstData: () =>
 				{
-					let sData: string = this.FindOw1("txtInput1").data;
-					this.arrTarget1[0].data = `${sData}`;
+					let sData: string = this.Ow1_OtherList.FindName("Node1Change_Input1").data;
+					this.Ow1List.FindName("Node1Change").data = `${sData}`;
+						
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget1.push(
+		this.Ow1_OtherList.OwList.push(
 			new Overwatch({
-				Name: "funcHtmlSet"
+				Name: "Node1Change_HtmlSet"
 				, FirstData: () =>
 				{
-					let sData: string = this.FindOw1("txtInput1").data;
-					this.arrTarget1[0].data = `<h3>${sData}</h3>`;
+					let sData: string = this.Ow1_OtherList.FindName("Node1Change_Input1").data;
+					this.Ow1List.FindName("Node1Change").data = `<h3>${sData}</h3>`;
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
 				, OverwatchingOneIs: false
 			}));
 
-		this.arrTarget1.push(
+		this.Ow1_OtherList.OwList.push(
 			new Overwatch({
-				Name: "funcDomSet"
+				Name: "Node1Change_DomSet"
 				, FirstData: () =>
 				{
-					let sData: string = this.FindOw1("txtInput1").data;
+					let sData: string = this.Ow1_OtherList.FindName("Node1Change_Input1").data;
+					
 					let newMElem: HTMLElement = document.createElement("template");
 					newMElem.insertAdjacentHTML("beforeend", `<h3>${sData}</h3>`);
-					this.arrTarget1[0].data = newMElem.firstChild;
+					this.Ow1List.FindName("Node1Change").data = newMElem.firstChild;
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
@@ -168,7 +161,7 @@ export default class test_01
 		//돔 재생성 및 설정된 뷰모델 연결
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset1")
-			, this.arrTarget1);
+			, this.Ow1List.OwList.concat(this.Ow1_OtherList.OwList));
 
 
 		//this.arrTarget[0].data = "첫 바인딩 문자열2";

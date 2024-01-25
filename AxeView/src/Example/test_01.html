@@ -11,26 +11,38 @@
 	<script defer src="../app.js"></script>
 </head>
 <body>
-	<h2>환영!</h2>
-	<h3>OverwatchingOutputType 변경 테스트</h3>
+	<h2>출력 타입 변경</h2>
 
 	<div id="divMenu">
 	</div>
+	이미 생성된 감시자의 출력 방식(OverwatchingOutputType)을 변경할 수 있습니다.<br />
+	Overwatch.OutputTypeChange_All(OverwatchingOutputType)를 통해 동적으로 타입을 바꿀 수 있습니다.<br />
+	<br />
+	변환 가능 관계<br />
+	String &lt;-&gt; Html &lt;-&gt; Dom
+	
+	<br />
+	<br />
+	<br />
 
 	<div id="divAxeViewTset1">
+		1) 노드 변경<br />
+		String &lt;-&gt; Html &lt;-&gt; Dom 간의 변경이 가능합니다.<br />
+		<br />
 		<div>
-			string -&gt; html, html -&gt; string <br />
-			front {{Test1}}  back <br />
-			<button onclick="{{funcStringTo}}">문자열로 변경</button>
-			<button onclick="{{funcHtmlTo}}">Html로 변경</button>
-			<button onclick="{{funcDomTo}}">Dom으로 변경</button>
+			<br />
+			String &lt;-&gt; Html &lt;-&gt; Dom <br />
+			front {{Node1Change}}  back <br />
+			<button onclick="{{Node1Change_ToString}}">문자열로 변경</button>
+			<button onclick="{{Node1Change_TofuncHtml}}">Html로 변경</button>
+			<button onclick="{{Node1Change_TofuncDom}}">Dom으로 변경</button>
 			<br />
 			<br />
-			<input type="text" value="{{txtInput1}}" placeholder="String input" /><br />
+			<input type="text" value="{{Node1Change_Input1}}" placeholder="String input" /><br />
 			*Html, Dom입력은 자동으로 h3으로 생성됨<br />
-			<button onclick="{{funcStringSet}}">문자열 입력</button>
-			<button onclick="{{funcHtmlSet}}">Html 입력</button>
-			<button onclick="{{funcDomSet}}">Dom 입력</button>
+			<button onclick="{{Node1Change_StringSet}}">문자열 입력</button>
+			<button onclick="{{Node1Change_HtmlSet}}">Html 입력</button>
+			<button onclick="{{Node1Change_DomSet}}">Dom 입력</button>
 		</div>
 	</div>
 	<br />
