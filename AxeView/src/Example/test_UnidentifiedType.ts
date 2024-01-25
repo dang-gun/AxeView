@@ -34,6 +34,11 @@ export default class test_UnidentifiedType
 	/** AxeView 테스트4 용 - 예제와 상관없는 감시자 */
 	private arrOw4_Other: OverwatchList = new OverwatchList();
 
+	/** AxeView 테스트5 용 변수 */
+	private arrOw5: OverwatchList = new OverwatchList();
+	/** AxeView 테스트5 용 - 예제와 상관없는 감시자 */
+	private arrOw5_Other: OverwatchList = new OverwatchList();
+
 	constructor()
 	{
 
@@ -55,7 +60,7 @@ export default class test_UnidentifiedType
 				, OverwatchingOneIs: true
 			}));
 
-		// #region 예제와 상관없는 감시자 - 텍스트 노드 감시
+		// #region 예제와 상관없는 감시자 - 1) 텍스트 노드(Text Node)
 
 		this.arrOw1_Other.OwList.push(
 			new Overwatch({
@@ -76,7 +81,7 @@ export default class test_UnidentifiedType
 				}
 				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
 				, OverwatchingType: OverwatchingType.OutputFirst
-				, OverwatchingOneIs: false
+				, OverwatchingOneIs: true
 			}));
 
 		// #endregion
@@ -89,7 +94,7 @@ export default class test_UnidentifiedType
 
 
 		//☆☆☆☆☆☆☆☆☆☆☆☆☆☆
-		//2) 속성(attribute) - 값이 있는 속성
+		// 2) 속성(attribute) - 값이 있는 속성
 		//☆☆☆☆☆☆☆☆☆☆☆☆☆☆
 
 		this.arrOw2.OwList.push(
@@ -184,15 +189,109 @@ export default class test_UnidentifiedType
 
 
 
+
 		//☆☆☆☆☆☆☆☆☆☆☆☆☆☆
 		//4) 속성(attribute) - 이름만 있는 속성
 		//☆☆☆☆☆☆☆☆☆☆☆☆☆☆
 
+		this.arrOw4.OwList.push(
+			new Overwatch({
+				Name: "Attr4_1_UnType"
+				, FirstData: "Input 감시"
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Unidentified
+				, OverwatchingOneIs: true
+			}));
+
+		// #region 예제와 상관없는 감시자 - 4) 속성(attribute) - 이름만 있는 속성
+		this.arrOw4_Other.OwList.push(
+			new Overwatch({
+				Name: "Attr4_1_Change"
+				, FirstData: (
+					event: Event
+					, sender: ChildNode
+					, objThis: Overwatch) =>
+				{
+					this.arrOw4_Other.FindName("Attr4_1_Output").data
+						= this.arrOw4.FindName("Attr4_1_UnType").data;
+				}
+				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: true
+			}));
+
+		this.arrOw4_Other.OwList.push(
+			new Overwatch({
+				Name: "Attr4_1_Output"
+				, FirstData: ""
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: true
+			}));
+
+		// #endregion
 		
 		//돔 재생성 및 설정된 뷰모델 연결
 		this.AxeView.BindOverwatch(
 			document.getElementById("divAxeViewTset4")
 			, this.arrOw4.OwList.concat(this.arrOw4_Other.OwList));
+
+
+
+		//☆☆☆☆☆☆☆☆☆☆☆☆☆☆
+		// 5) 속성(attribute) - Event 감시
+		//☆☆☆☆☆☆☆☆☆☆☆☆☆☆
+		this.arrOw5.OwList.push(
+			new Overwatch({
+				Name: "Attr5_1_UnType"
+				, FirstData: (event) =>
+				{
+					alert("첫 바인딩 이벤트입니다.");
+				}
+				, OverwatchingOutputType: OverwatchingOutputType.String
+				, OverwatchingType: OverwatchingType.Unidentified
+				, OverwatchingOneIs: true
+			}));
+
+		// #region 5) 속성(attribute) - Event 감시
+
+		this.arrOw5_Other.OwList.push(
+			new Overwatch({
+				Name: "funcAttr5Set1"
+				, FirstData: (event) =>
+				{
+					this.arrOw5.FindName("Attr5_1_UnType").data
+						= (event) =>
+						{
+							alert("이벤트 변경1");
+						};
+				}
+				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
+				, OverwatchingType: OverwatchingType.OutputFirst
+				, OverwatchingOneIs: true
+			}));
+
+		this.arrOw5_Other.OwList.push(
+			new Overwatch({
+				Name: "funcAttr5Set2"
+				, FirstData: (event) =>
+				{
+					this.arrOw5.FindName("Attr5_1_UnType").data
+						= (event) =>
+						{
+							alert("이벤트 변경2");
+						};
+				}
+				, OverwatchingOutputType: OverwatchingOutputType.Function_NameRemoveOn
+				, OverwatchingType: OverwatchingType.OutputFirst
+				, OverwatchingOneIs: true
+			}));
+		// #endregion
+
+		//돔 재생성 및 설정된 뷰모델 연결
+		this.AxeView.BindOverwatch(
+			document.getElementById("divAxeViewTset5")
+			, this.arrOw5.OwList.concat(this.arrOw5_Other.OwList));
 
 	}
 

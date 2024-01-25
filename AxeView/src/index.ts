@@ -76,19 +76,19 @@ export default class App
 		let domMenu = document.getElementById("divMenu");
 		domMenu.innerHTML = "";
 
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'index.html">홈</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_StartUp.html">시작하다</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Dom.html">HTML 돔 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_ATag.html">A태그 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Option1.html">옵션 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Option2.html">개별 옵션 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Event.html">이벤트 연결</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'index.html">홈</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_StartUp.html">시작하다</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Dom.html">HTML 돔 처리</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_ATag.html">A태그 처리</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Option1.html">옵션 처리</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Option2.html">개별 옵션 처리</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Event.html">이벤트 연결</a> | ');
 
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_UnidentifiedType.html">불확실 타입 사용</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_OutputTypeChange.html">타입 변경</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_UnidentifiedType.html">불확실 타입 사용</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_OutputTypeChange.html">타입 변경</a> | ');
 
-		domMenu.insertAdjacentHTML('beforeend', '<br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_BasicSample.html">기본 셈플</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<br /><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_BasicSample.html">기본 셈플</a> | ');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_01.html">테스트</a><br />');
 
 		domMenu.style.marginBottom = "2rem";

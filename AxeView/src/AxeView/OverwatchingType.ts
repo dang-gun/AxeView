@@ -138,7 +138,7 @@ export const enum OverwatchingType
 	 * 
 	 * 노드를 검사하여 적절하다고 판단되는 감시방식중 하나를 선택하여 변경해준다.
 	 * (OutputFirst로는 변경되지 않음)
-	 * 속성(attribute)과 이벤트(Event)는 구분할 방법이 없으므로 속성으로만 동작한다.
+	 * 속성(attribute)이름이 'on'으로 시작하면 무조건 이벤트로 취급한다.
 	 */
 	Unidentified,
 

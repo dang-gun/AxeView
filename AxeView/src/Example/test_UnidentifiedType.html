@@ -50,7 +50,6 @@
 		front ▶▶▶ {{TextNode_UnType}} ◀◀◀ back<br />
 		<br />
 		<input type="text" value="{{txtInput1}}" placeholder="String input" /><br />
-		*Html입력은 자동으로 h3으로 생성됨<br />
 		<button onclick="{{funcStringSet}}">문자열 입력</button>
 	</div>
 	<br />
@@ -88,19 +87,33 @@
 	<div id="divAxeViewTset4">
 		4) 속성(attribute) - Value 감시<br />
 
-		<input type="text" value="{{Attr4_1_UnType}}" placeholder="String input" /><br />
+		<input type="text"
+			   value="{{Attr4_1_UnType}}"
+			   placeholder="String input"
+			   oninput="{{Attr4_1_Change}}" /><br />
+		입력값 출력 : <label>{{Attr4_1_Output}}</label>
+	</div>
+	<br />
+	<br />
+	<br />
+	<div id="divAxeViewTset5">
+		5) 속성(attribute) - Event 감시<br />
+		속성 이름이 'on'으로 시작되면 무조건 이벤트라고 판단한다.<br />
+		'OverwatchingType'은 'Monitoring'으로 교체된다.<br />
+		'OverwatchingOutputType'은 'Function_NameRemoveOn'으로 교체된다.<br />
+
+		<button onclick="{{Attr5_1_UnType}}">
+			변경된 이벤트 확인하는 버튼
+		</button>
+		<br />
+		<br />
+		<button onclick="{{funcAttr5Set1}}">이벤트 변경1</button>
+		<button onclick="{{funcAttr5Set2}}">이벤트 변경2</button>
 	</div>
 
-
 	<br />
 	<br />
-	속성에 'Unidentified'를 'OverwatchingOutputType'은 'String'로 변경된다.<br />
-	지정된 'OverwatchingType'은 상황에 따라 변경될 수 있다.<br />
 	<br />
-	속성에 'Unidentified'를 사용하면 다음과 같이 동작한다<br />
-	- 속성이름이 'value'인 경우 : OverwatchingType.Monitoring_AttrValue<br />
-	- 속성에 값이 없는 경우 : AxeViewMoveType.Attr_Valueless<br />
-	- 위 경우를 제외하면 'OverwatchingType.Monitoring'로 동작한다.<br />
-
+	<br />
 </body>
 </html>

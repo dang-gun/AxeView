@@ -535,7 +535,7 @@ export default class AxeView
 			let itemFindText: MatchStringInterface = arrStrText[nFindTextIdx];
 
 			//일치하는 문자열 찾기
-			let nFindIdx = 0;
+			let nFindIdx = -1;
 
 			//정규식으로 액스뷰 형식 찾기
 			//일치하는 문자열 찾기
@@ -627,6 +627,15 @@ export default class AxeView
 			let itemOW: Overwatch = owTarget[nOverwatchIdx];
 			//이번 루프에 사용하는 감시대상 지정
 			this.OverwatchDomPushHelper.OverwatchSet(itemOW);
+
+			if (OverwatchingType.Unidentified === itemOW.OverwatchingType
+				&& "on" === attrItem.name.substring(0, 2).toLocaleLowerCase())
+			{//불확실 타입인데
+				//앞에 2글자가 on이다.
+
+				//이 조건은 무조건 Function_NameRemoveOn으로 동작한다.
+				itemOW.OverwatchingOutputType = OverwatchingOutputType.Function_NameRemoveOn;
+			}
 
 			if (true === itemOW.OverwatchingOneIs
 				&& true === itemOW.OneDataIs)
