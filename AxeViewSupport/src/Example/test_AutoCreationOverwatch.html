@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<!--<link rel="shortcut icon" href="/favicon.ico">-->
+	<!--<base href="/home/">-->
+	<title>AxeView Test</title>
+	<script defer src="../app.js"></script>
+</head>
+<body>
+	<h2>감시자 자동 생성(Automatic creation of Overwatch)</h2>
+
+	<div id="divMenu">
+	</div>
+
+	<div>
+		지정된 돔 안에 엑스뷰(AxeView) 바인딩 형식이 있는지 찾아 자동으로 생성한다.<br />
+		(콘솔에 자세한 내용이 표시됨)<br />
+		<br />
+		미리 감시 대상(Overwatch)을 생성하지 않는 경우 엑스뷰(AxeView)에 자동으로 감시 대상을 생성할 수 있도록 엑스뷰 서포터(AxeViewSupport)를 이용할 수 있다.<br />
+		<br />
+		엑스뷰 서포터(AxeViewSupport)는 지정된 돔(DOM)에 엑스뷰(AxeView)바인딩 형식이 있는지 확인한다.<br />
+		엑스뷰(AxeView)바인딩 형식이 있다면 타입을 불확실(OverwatchingType.Unidentified)로 지정하고 엑스뷰(AxeView)에 감시대상 생성을 요청한다.<br />
+		<br />
+
+		엑스뷰 서포터(AxeViewSupport)는 사용하기 편하도록 'OverwatchObject'에 감시 대상이름과 같은 속성을 생성해 준다.<br />
+		예> this.AxeViewSpt.OverwatchObject.AttrValue_1_UnType.data<br />
+		<br />
+		자동으로 설정된 타입은 조건에 따라서 변경할 수 있다.
+		(엑스뷰(AxeView)의 test_OutputTypeChange.html 참고)
+
+	</div>
+
+	<br />
+	<br />
+
+	---- 개체 자동 생성 --------------
+	<div id="divAxeViewTset0">
+		1) 텍스트 노드(Text Node) <br />
+		front ▶▶▶ {{TextNode_UnType}} ◀◀◀ back<br />
+		<br />
+		<br />
+		2) 인풋(Input)<br />
+		<input value="{{AttrValue_1_UnType}}" />
+		<br />
+		<br />
+		5) 속성(attribute) - Event 감시<br />
+		<button onclick="{{Attr5_1_UnType}}">
+			변경된 이벤트 확인하는 버튼
+		</button>
+	</div>
+
+
+</body>
+</html>

@@ -10,6 +10,8 @@ import AxeView, {
 
 import test_01 from "./Example/test_01";
 
+import test_AutoCreationOverwatch from "./Example/test_AutoCreationOverwatch";
+
 
 export default class App
 {
@@ -33,6 +35,10 @@ export default class App
 			case "test_01.html":
 				this.PageNow = new test_01();
 				break;
+
+			case "test_AutoCreationOverwatch.html":
+				this.PageNow = new test_AutoCreationOverwatch();
+				break;
 		}
 
 		//메뉴 추가
@@ -40,15 +46,10 @@ export default class App
 		domMenu.innerHTML = "";
 
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'index.html">홈</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_StartUp.html">시작하다</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Dom.html">HTML 돔 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_ATag.html">A태그 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Option1.html">옵션 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Option2.html">개별 옵션 처리</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Event.html">이벤트 연결</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_AutoCreationOverwatch.html">감시자 자동 생성</a><br />');
+		
 
 		domMenu.insertAdjacentHTML('beforeend', '<br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_BasicSample.html">기본 셈플</a><br />');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_01.html">테스트</a><br />');
 
 		domMenu.style.marginBottom = "2rem";
