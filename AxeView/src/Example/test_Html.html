@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<!--<link rel="shortcut icon" href="/favicon.ico">-->
+	<!--<base href="/home/">-->
+	<title>AxeView Test - HTML Type</title>
+	<script defer src="../app.js"></script>
+</head>
+<body>
+	<h2>시작하기</h2>
+
+	<div id="divMenu">
+	</div>
+
+	<br />
+	<div>
+		HTML 타입(OverwatchingOutputType.Html)은 텍스트노드(TextNode)에만 지정할 수 있습니다.<br />
+		DOM 자체를 감시하고 싶다면 속성(Attribute)에 감시대상을 추가해야 합니다.(OverwatchingOutputType.Dom을 이용해야함)<br />
+		<br />
+		'FirstData'에 부모가될 HTML 문자열이 있어야 합니다.<br />
+		없다면 'div'가 생성됩니다.<br />
+		<br />
+		HTML 타입을 수정하면 부모는 수정되지 않고 내용만 수정됩니다.<br />
+		부모를 교체하고 싶다면 'Overwatch.DomReplace'함수를 통해 교체할 수 있습니다.<br />
+		<br />
+		<br />
+		이 타입은 두가지 데이터를 가지고 있을 수 있습니다.<br />
+		(내부적으로는 HTMLElement로 작동합니다.)<br />
+		<br />
+		Overwatch.data : HTML string
+
+	</div>
+	<br />
+	<br />
+	<h3>HTML 출력</h3>
+	<button id="btnHtmlTest1">Html 수정</button><br />
+	<textarea id="txtHtmlTest1"></textarea>
+
+	자식 노드만 변경<br />
+	<br />
+	<div id="divAxeViewTset1">
+		string to html ▷▷▷
+		{{HtmlTest1_1}}
+		◁◁◁
+		<br />
+		<br />
+		HTMLElement(First a)  ▷▷▷
+		{{HtmlTest1_2}}
+		◁◁◁
+		<br />
+		<br />
+		HTMLElement(First empty)  ▷▷▷
+		{{HtmlTest1_3}}
+		◁◁◁
+	</div>
+	<br />
+	<br />
+	대상 교체<br />
+	<button id="btnHtmlTest2_1">div로 변환</button> <button id="btnHtmlTest2_2">a로 변환</button> <button id="btnHtmlTest2_3">h2로 변환</button>
+	<br />
+	<textarea id="txtHtmlTest2"></textarea>
+
+	<div id="divAxeViewTset2">
+		Here is the dome. ▷▷▷
+		{{HtmlTest2_1}}
+		◁◁◁
+
+	</div>
+
+</body>
+</html>

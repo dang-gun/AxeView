@@ -155,18 +155,20 @@ export default class AxeView
 				this.NodeMatch_Normal(domParent, arrTargetOw)
 					.childNodes));
 
-		//노드리스트가 완성되고 나서 처리해야 할 내용들
-		for (let i = 0; i < arrTargetOw.length; ++i)
-		{
-			//감시자와 연결된 dom의 정보를 갱신한다.
-			arrTargetOw[i].Dom_AxeViewList_Refresh();
-		}//end for i
-
+		
 		//console.log("***** newParent *****");
 		//console.log(newParent);
 		//새로 만든 노드를 넣어준다.
 		domParent.replaceChildren(...newParent);
 
+
+		//노드리스트가 완성되고 나서 처리해야 할 내용들
+		//노드를 옮기고 나서 갱신해야 최상위 돔을 못찾는 오류를 막을 수 있다.
+		for (let i = 0; i < arrTargetOw.length; ++i)
+		{
+			//감시자와 연결된 dom의 정보를 갱신한다.
+			arrTargetOw[i].Dom_AxeViewList_Refresh();
+		}//end for i
 
 		//지정된 돔을 옵션처리 한다.
 		this.DomHelper(domParent, jsonDomHelperOption);
@@ -376,7 +378,16 @@ export default class AxeView
 				for (let nNewTextIdx = 0; nNewTextIdx < newText.length; ++nNewTextIdx)
 				{
 					let itemText: ChildNode = newText[nNewTextIdx];
-					newElemParent.appendChild(itemText);
+					if (itemText)
+					{
+						newElemParent.appendChild(itemText);
+					}
+					else
+					{
+						//'OverwatchingOutputType.Html'를 사용한 경우 'FirstData'에 부모가될 HTML string를 꼭 넣어야 합니다.
+						throw "If you use 'OverwatchingOutputType.Html', you must enter the HTML string that will be the parent in 'FirstData'.";
+					}
+					
 				}
 
 			}

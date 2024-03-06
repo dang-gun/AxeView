@@ -27,6 +27,10 @@ export class Overwatch
 		}
 
 
+		//전달 받은 옵션에서 필요한 값만 따로 저장
+		this.OverwatchingOutputType = target.OverwatchingOutputType;
+		this.OverwatchingType = target.OverwatchingType;
+		this.OverwatchingOneIs = target.OverwatchingOneIs;
 
 
 		if ("" === target.FirstData
@@ -58,9 +62,7 @@ export class Overwatch
 		}
 
 
-		this.OverwatchingOutputType = target.OverwatchingOutputType;
-		this.OverwatchingType = target.OverwatchingType;
-		this.OverwatchingOneIs = target.OverwatchingOneIs;
+		
 	}
 
 	/** 
@@ -289,6 +291,8 @@ export class Overwatch
 				}
 				else
 				{
+
+					//모두 아니면 html 타입으로 판단한다.
 					if (true === (DataNowThis instanceof Element)
 						|| true === (DataNowThis instanceof HTMLElement)
 						//|| true === (data instanceof ChildNode)
@@ -617,9 +621,91 @@ export class Overwatch
 			}
 		}
 
-		//모두 교체하기 비우기
+		//모두 교체하기
 		parentElement.replaceChildren(...arrOldChild);
 	}
 
+
+	// #region HTMLElement 전용 동작
+
+	/**
+	 * 돔 자체를 교체 한다.
+	 * 'AxeViewMoveType'이 'AxeViewMoveType.HTMLElement'인 개체만 동작한다.(나머지는 무시됨)
+	 * @param data 교체할 HTMLElement. 혹은 'HTML string'
+	 * 'HTML string'인 경우 최상위 한개만 조작가능하므로 여러 부모를 생성하는 경우 맨 처음 한개만 사용된다.
+	 * 예> "<div id='div1'></div><div id='div2'></div>" 이 경우 'div1'만 생성되어 교체됨
+	 * @returns 처리 결과
+	 * 0 : 정상 처리
+	 * 1 : 'HTMLElement'이나 'HTML string'만 사용할 수 있습니다.
+	 * 2 : 'HTML string'이 잘못되었습니다.
+	 */
+	public DomReplace(data: HTMLElement | string)
+		: number
+	{
+		let nReturn: number = 0;
+
+		//기존값 백업
+		let OldData: any = this._DataNow;
+
+		//바꿀 데이터로 사용할 인스턴스
+		let DataNowThis: HTMLElement;
+
+		if (true === (data instanceof HTMLElement))
+		{//HTMLElement이다.
+
+			//그대로 사용
+			DataNowThis = data as HTMLElement;
+		}
+		else if ("string" === typeof data )
+		{//string이다.
+
+			//HTML string인지 구분할 방법이 없으므로 그냥 진행한다.
+
+			//문자열을 html로 바꾼다.
+			let domTemp: HTMLTemplateElement = document.createElement("template");
+			domTemp.innerHTML = data as string;
+			DataNowThis = domTemp.content.firstChild as HTMLElement;
+
+			if (null === DataNowThis)
+			{
+				nReturn = 2;
+			}
+		}
+		else
+		{
+			//'HTMLElement'이나 'HTML string'만 사용할 수 있습니다.
+			//"Only 'HTMLElement' or 'HTML string' can be used."
+			nReturn = 1;
+		}
+
+		if (0 === nReturn)
+		{
+
+			if (null !== this.Dom_AxeViewListOri
+				&& 0 < this.Dom_AxeViewListOri.length)
+			{
+				//저장된 돔개수만큼 실행
+				for (let nDomIdx: number = 0; nDomIdx < this.Dom_AxeViewListOri.length; ++nDomIdx)
+				{
+					let item: AxeViewDomInterface = this.Dom_AxeViewList[nDomIdx];
+
+					if (AxeViewMoveType.HTMLElement === item.AxeViewMoveType)
+					{
+						//이전 개체(OldData)의 부모를 찾아 .replaceChild를 해야 한다.
+						item.ParentDom.replaceChild(DataNowThis, item.Dom as HTMLElement);
+
+						//마지막 사용된 dom 개체를 저장해야 한다.
+						item.Dom = DataNowThis;
+					}
+				}//end for nDomIdx
+				
+			}
+			
+		}
+
+		return nReturn;
+	}
+
+	// #endregion
 }
 

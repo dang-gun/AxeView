@@ -17,16 +17,22 @@ export default class AxeViewSupport
 {
 	/** 읽어들인 템플릿 리스트 */
 	public TemplateList: AxeViewTemplateModel[] = [];
+	/** 
+	 * 잘라둔 템플릿
+	 * 템플릿의 원본 개체이므로 복사해서 사용하는 것이 좋다.
+	 */
+	public TemplateObject: any = {};
 
 	/** 감시 대상 리스트 */
 	public OverwatchList: Overwatch[] = [];
-
 	/** 
 	 * 감시 대상 직접 접근 개체 
 	 * 
 	 * 클래스 본문에 넣고 싶었지만 그렇게되면 타입에러가 나서 일단 이렇게 구현한다.
 	 */
 	public OverwatchObject: any = {};
+
+	
 	 
 
 	public FindOverwatch(
@@ -68,18 +74,27 @@ export default class AxeViewSupport
 		//찾은 dom 템플릿 개체로 만들기
 		for (let i = 0; i < arrTemplateDom.length; ++i)
 		{
-			let itemTemp = new AxeViewTemplateModel(arrTemplateDom[i], true);
+			let itemDom: HTMLElement = arrTemplateDom[i];
+
+			let itemTemp = new AxeViewTemplateModel(itemDom, true, true);
+			itemTemp.Name = itemDom.getAttribute("axe-view-template");
+
+			//템플릿 리스트에 추가
 			this.TemplateList.push(itemTemp);
+			//바로 접근 할 수 있는 템플릿 개체 만들기
+			this.TemplateObject[itemTemp.Name] = itemTemp;
 
 		}//end for i
 
 
+
+
 		//정규식으로 검색하여 없는 이름을 감시대상 목록으로 만든다.
-		//모든 엑스뷰 연결자 검색
+		//모든 액스뷰 연결자 검색
 		let regAxeViewConnect: RegExp
 			= new RegExp(`\{\{(.*?)\}\}`, 'g');
 
-		//dom을 문자열로 바꾸고 액스뷰 연결자를 문자열 기준으로 찾는다.
+		//dom을 문자열로 바꾸고 엑스뷰 연결자를 문자열 기준으로 찾는다.
 		let arrAxeViewConnect: string[] = domParent.outerHTML.match(regAxeViewConnect);
 
 		//추가할 감시대상 개체
@@ -145,49 +160,6 @@ export default class AxeViewSupport
 
 
 		
-
-		// 사용 예
-		//const [getCount, setCount] = this.createState(0);
-
-		//console.log(getCount(0)); // 0
-		//setCount(5);
-		//console.log(getCount(0)); // 5
-
-		//const myFirstName = 'John';
-		
-		//console.log(Object.keys({ myFirstName })[0]);
-
-		//let aaa = this.Data;
-	}
-	 
-
-	public createState(initialValue)
-	{
-		let _val = initialValue; // 상태를 저장할 변수
-
-		return [
-			() => _val, // 상태를 가져오는 함수
-			(newValue) => { _val = newValue; } // 상태를 변경하는 함수
-		];
-	}
-
-	private dataTemp: String = "";
-
-	public set Data(sData: String)
-	{
-		this.dataTemp = sData;
-	}
-
-	public get Data()
-	{
-		let objThis: AxeViewSupport = this;
-
-		let temp = this.dataTemp;
-
-		console.log(Object.keys({ temp })[0]);
-		return this.dataTemp;
-	}
-	
-
+	}//end BindOverwatch
 }
 

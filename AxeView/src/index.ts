@@ -3,6 +3,7 @@
 import AxeView, { Overwatch, OverwatchInterface, OverwatchingOutputType, OverwatchingType } from "./AxeView/AxeView";
 
 import test_StartUp from "./Example/test_StartUp";
+import test_Html from "./Example/test_Html";
 import test_Dom from "./Example/test_Dom";
 import test_ATag from "./Example/test_ATag";
 import test_Option1 from "./Example/test_Option1";
@@ -37,18 +38,24 @@ export default class App
 			case "test_StartUp.html":
 				this.PageNow = new test_StartUp();
 				break;
+
+			case "test_Html.html":
+				this.PageNow = new test_Html();
+				break;
 			case "test_Dom.html":
 				this.PageNow = new test_Dom();
 				break;
 			case "test_ATag.html":
 				this.PageNow = new test_ATag();
 				break;
+
 			case "test_Option1.html":
 				this.PageNow = new test_Option1();
 				break;
 			case "test_Option2.html":
 				this.PageNow = new test_Option2();
 				break;
+
 			case "test_Event.html":
 				this.PageNow = new test_Event();
 				break;
@@ -77,7 +84,8 @@ export default class App
 		domMenu.innerHTML = "";
 
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'index.html">홈</a> | ');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_StartUp.html">시작하다</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_StartUp.html">시작하다</a> | ');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_Html.html">HTML 처리</a> | ');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Dom.html">HTML 돔 처리</a> | ');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_ATag.html">A태그 처리</a> | ');
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_Option1.html">옵션 처리</a> | ');

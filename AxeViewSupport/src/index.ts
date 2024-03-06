@@ -11,6 +11,7 @@ import AxeView, {
 import test_01 from "./Example/test_01";
 
 import test_AutoCreationOverwatch from "./Example/test_AutoCreationOverwatch";
+import test_IncludeTemplate from "./Example/test_IncludeTemplate";
 
 
 export default class App
@@ -39,6 +40,9 @@ export default class App
 			case "test_AutoCreationOverwatch.html":
 				this.PageNow = new test_AutoCreationOverwatch();
 				break;
+			case "test_IncludeTemplate.html":
+				this.PageNow = new test_IncludeTemplate();
+				break;
 		}
 
 		//메뉴 추가
@@ -46,7 +50,8 @@ export default class App
 		domMenu.innerHTML = "";
 
 		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'index.html">홈</a><br />');
-		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot +'Example/test_AutoCreationOverwatch.html">감시자 자동 생성</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_AutoCreationOverwatch.html">감시자 자동 생성</a><br />');
+		domMenu.insertAdjacentHTML('beforeend', '<a href="' + sRoot + 'Example/test_IncludeTemplate.html">포함된 템플릿</a><br />');
 		
 
 		domMenu.insertAdjacentHTML('beforeend', '<br />');

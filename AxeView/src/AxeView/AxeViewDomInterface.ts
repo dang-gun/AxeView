@@ -59,7 +59,9 @@ export const enum AxeViewMoveType
 	none = 1,
 
 	/** 
-	 * HTMLElement로 변환하여 동작함 
+	 * HTMLElement로 변환하여 동작함.
+	 * 'FirstData'에 부모가될 HTML 문자열이 있어야 초기 부모가 생성된다.(없으면 에러)
+	 * 
 	 * div를 생성하여 자식을 지우고 넣는다.
 	 *
 	 * Html문자열을 판별하여 HTMLElement로 변환하는 기능도 있다.

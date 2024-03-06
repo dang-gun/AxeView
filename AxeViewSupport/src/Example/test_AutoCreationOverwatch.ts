@@ -26,13 +26,13 @@ export default class test_AutoCreationOverwatch
 			document.getElementById("divAxeViewTset0")
 			, []);
 
-		console.log("Overwatch count : " + this.AxeViewSpt.OverwatchList.length)
+		console.log("Overwatch count : " + this.AxeViewSpt.OverwatchList.length);
 
 		console.log("-----------------------------------");
 		for (let i = 0; i < this.AxeViewSpt.OverwatchList.length; ++i)
 		{
 			let item: Overwatch = this.AxeViewSpt.OverwatchList[i];
-			console.log(`Name : ${item.Name}, OverwatchingType : ${item.OverwatchingType}, OverwatchingOutputType : ${item.OverwatchingOutputType}`)
+			console.log(`Name : ${item.Name}, OverwatchingType : ${item.OverwatchingType}, OverwatchingOutputType : ${item.OverwatchingOutputType}`);
 
 		}//end for i
 
