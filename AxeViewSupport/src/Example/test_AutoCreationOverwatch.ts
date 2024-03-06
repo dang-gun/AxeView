@@ -24,7 +24,8 @@ export default class test_AutoCreationOverwatch
 		//지정되지 않은 뷰모델 자동으로 생성
 		this.AxeViewSpt.BindOverwatch(
 			document.getElementById("divAxeViewTset0")
-			, []);
+			, []
+			, false);
 
 		console.log("Overwatch count : " + this.AxeViewSpt.OverwatchList.length);
 

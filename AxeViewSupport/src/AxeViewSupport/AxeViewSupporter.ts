@@ -55,7 +55,8 @@ export default class AxeViewSupport
 
 	public BindOverwatch(
 		domParent: HTMLElement
-		, arrOw: Overwatch[])
+		, arrOw: Overwatch[]
+		, bStringTemplate: boolean)
 		: void
 	{
 		this.OverwatchList = arrOw;
@@ -65,24 +66,64 @@ export default class AxeViewSupport
 
 
 
-		//템플릿 dom 찾기
+		//템플릿 dom 찾기 *****
 		//1단계 자식만 찾는다.
 		let arrTemplateDom: HTMLElement[]
 			= Array.from(domParent.querySelectorAll(`:scope > [${FixString.AxeViewTemplate}]`));
 
+		
 
 		//찾은 dom 템플릿 개체로 만들기
 		for (let i = 0; i < arrTemplateDom.length; ++i)
 		{
 			let itemDom: HTMLElement = arrTemplateDom[i];
 
-			let itemTemp = new AxeViewTemplateModel(itemDom, true, true);
-			itemTemp.Name = itemDom.getAttribute("axe-view-template");
+			//옵션 찾기 *****
+			//템플릿으로 사용한 부모를 지울지 여부.
+			let bParentRemove: boolean = false;
+			if ("true" === this.AttributeValueGet(itemDom, FixString.AxeViewTemplate_ParentRemove).toLowerCase())
+			{ 
+				bParentRemove = true;
+			}
+			//템플릿으로 사용한 부모에서 템플릿 관련 속성을 지울지 여부
+			let bParentArrRemove: boolean = false;
+			if ("true" === this.AttributeValueGet(itemDom, FixString.AxeViewTemplate_ParentArrRemove).toLowerCase())
+			{
+				bParentArrRemove = true;
+			}
+			//템플릿으로 사용한 부모에서 자식을 모두 지울지 여부
+			let bParentChildRemove: boolean = false;
+			if ("true" === this.AttributeValueGet(itemDom, FixString.AxeViewTemplate_ParentChildRemove).toLowerCase())
+			{
+				bParentChildRemove = true;
+			}
+
+
+			//이름 먼저 추출
+			//이름을 나중에 추출하면 속성제거 옵션때문에 빈값이 나올 수 있다.
+			let sName: string = this.AttributeValueGet(itemDom, FixString.AxeViewTemplate);
+			//템플릿 개체 생성
+			let itemTemp: AxeViewTemplateModel = new AxeViewTemplateModel(sName);
+			//템플릿 지정
+			itemTemp.TemplateSet(
+				itemDom
+				, bStringTemplate
+				, bParentRemove
+				, bParentArrRemove
+				, bParentChildRemove);
+			
 
 			//템플릿 리스트에 추가
 			this.TemplateList.push(itemTemp);
-			//바로 접근 할 수 있는 템플릿 개체 만들기
-			this.TemplateObject[itemTemp.Name] = itemTemp;
+
+			if (itemTemp.Name
+				&& "" !== itemTemp.Name)
+			{//지정된 이름이 있다.
+
+				//바로 접근 할 수 있는 템플릿 개체 만들기
+				this.TemplateObject[itemTemp.Name] = itemTemp;
+			}
+			
 
 		}//end for i
 
@@ -115,7 +156,10 @@ export default class AxeViewSupport
 						.split('@')[0];
 
 				//일치하는 요소가 하나라도 있는지 확인
-				let arrFind: Overwatch = this.OverwatchList.find(f => f.Name == sCut);
+				let arrFind: Overwatch
+					= this.OverwatchList
+						.find(f => f.Name == sCut
+								|| f.Name.toLowerCase() == sCut);
 
 				if (!arrFind)
 				{//없다.
@@ -161,5 +205,21 @@ export default class AxeViewSupport
 
 		
 	}//end BindOverwatch
+
+	private AttributeValueGet(
+		dom: HTMLElement
+		, AttrName: string)
+		: string
+	{
+		let sReturn: string = "";
+
+		let sValue: string = dom.getAttribute(AttrName);
+		if (null !== sValue)
+		{
+			sReturn = sValue;
+		}
+
+		return sReturn;
+	}
 }
 
