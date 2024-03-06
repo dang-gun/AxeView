@@ -838,8 +838,20 @@ export default class AxeView
 							let elemTemp: HTMLElement = nodeParentNew as HTMLElement;
 							//기존 이름 제거
 							elemTemp.removeAttribute(attrItem.name);
+							
+							if ("" === itemOW.data
+								|| " " === itemOW.data)
+							{//값이 없다.
+
+								//이름만 있는 속성의 경우 기존 이름이 없으면 안되므로
+								//임의의 값을 생성하여 넣어준다.
+								itemOW.data = attrItem.name.substring(2, attrItem.name.length - 2);
+							}
+
 							//새 이름 추가(값없음)
-							elemTemp.setAttribute(itemOW.data, "");
+							elemTemp.setAttribute(itemOW.data, "");	
+							
+							
 
 							//감시자에 추가
 							itemOW.OneDataIs = true;
