@@ -294,13 +294,26 @@ export class Overwatch
 
 					//모두 아니면 html 타입으로 판단한다.
 					if (true === (DataNowThis instanceof Element)
-						|| true === (DataNowThis instanceof HTMLElement)
-						//|| true === (data instanceof ChildNode)
-						|| true === (DataNowThis instanceof Node))
+						|| true === (DataNowThis instanceof HTMLElement))
 					{//들어온 데이터가 html개체 타입이다.
 						(item.Dom as HTMLElement).innerHTML = "";
 						(item.Dom as HTMLElement)
 							.insertAdjacentElement("beforeend", DataNowThis);
+					}
+					else if (//true === (data instanceof ChildNode)
+						true === (DataNowThis instanceof Node))
+					{//들어온 데이터가 Node개체 타입이다.
+
+						//기존 돔
+						let domTemp: HTMLElement = item.Dom as HTMLElement;
+						//기존 돔 비우기
+						domTemp.innerHTML = "";
+
+						while ((DataNowThis as Node).firstChild)
+						{
+							//기존 돔에 자식으로 추가
+							domTemp.appendChild((DataNowThis as Node).firstChild);
+						}
 					}
 					else
 					{//html string 이다.
