@@ -156,8 +156,8 @@ export default class test_StartUp
 			{
 				let sTnput = (document.getElementById("txtHtmlTest1") as HTMLTextAreaElement).value;
 
-				this.arrTarget2[0].data = "<div>" + sTnput + "</div>";
-				this.arrTarget2[1].data = "<a href=''>" + sTnput + "</a>";
+				this.arrTarget2[0].data = "<h3>" + sTnput + "<h3>";
+				this.arrTarget2[1].data = "<textarea>" + sTnput + "</textarea>";
 			}
 		(document.getElementById("txtHtmlTest1") as HTMLTextAreaElement).value
 			= "<div>기본 div</div>"

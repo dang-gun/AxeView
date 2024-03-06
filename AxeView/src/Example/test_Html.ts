@@ -58,7 +58,7 @@ export default class test_Html
 
 
 		//테스트 동작
-		document.getElementById("btnHtmlTest2_1").onclick
+		document.getElementById("btnHtmlTest1").onclick
 			= (event) =>
 			{
 				let sTnput = (document.getElementById("txtHtmlTest1") as HTMLTextAreaElement).value;
@@ -100,19 +100,19 @@ export default class test_Html
 			{
 				let sTnput = (document.getElementById("txtHtmlTest2") as HTMLTextAreaElement).value;
 				//this.arrTarget1[1].data = "<a href=''>" + sTnput + "</a>";
-				this.arrTarget2[0].DomReplace("<div>" + sTnput + "</div>");
+				this.arrTarget2[0].DomReplace("<div>" + sTnput + "(div)</div>");
 			};
 		document.getElementById("btnHtmlTest2_2").onclick
 			= (event) =>
 			{
 				let sTnput = (document.getElementById("txtHtmlTest2") as HTMLTextAreaElement).value;
-				this.arrTarget2[0].DomReplace("<a href=''>" + sTnput + "</a>");
+				this.arrTarget2[0].DomReplace("<a href=''>" + sTnput + "(a)</a>");
 			};
 		document.getElementById("btnHtmlTest2_3").onclick
 			= (event) =>
 			{
 				let sTnput = (document.getElementById("txtHtmlTest2") as HTMLTextAreaElement).value;
-				this.arrTarget2[0].DomReplace("<h2>" + sTnput + "</h2>");
+				this.arrTarget2[0].DomReplace("<h2>" + sTnput + "(h2)</h2>");
 			};
 		(document.getElementById("txtHtmlTest2") as HTMLTextAreaElement).value
 			= "변환 HTML";
