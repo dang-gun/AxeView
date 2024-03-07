@@ -54,11 +54,77 @@ export default class AxeViewSupport
 	}
 
 	/**
+	 * 문자열로된 템플릿을 추가한다.
+	 * @param sName
+	 * @param sTemplateString
+	 * @param bStringTemplate 문자열로 저장할 여부
+	 */
+	public TemplateAdd(
+		sName: string
+		, sTemplateString: string
+		, bStringTemplate: boolean)
+		: void;
+
+	/**
+	* DOM으로된 템플릿을 추가한다.
+	* @param sName
+	* @param domTemplate
+	* @param bStringTemplate 문자열로 저장할 여부
+	*/
+	public TemplateAdd(
+		sName: string
+		, domTemplate: HTMLElement
+		, bStringTemplate: boolean)
+		: void;
+
+	/**
+	 * 템플릿을 추가한다.
+	 * @param sName
+	 * @param objTemplate
+	 * @param bStringTemplate 문자열로 저장할 여부
+	 */
+	public TemplateAdd(
+		sName: string
+		, objTemplate: string | HTMLElement
+		, bStringTemplate: boolean)
+		: void
+	{
+
+		//템플릿 개체 생성
+		let itemTemp: AxeViewTemplateModel = new AxeViewTemplateModel(sName);
+
+		if ("string" === typeof objTemplate)
+		{//입력이 문자열이다.
+
+			//문자열로 템플릿을 설정한다.
+			itemTemp.TemplateStringSet(objTemplate as string, bStringTemplate);
+		}
+		else
+		{
+			//HTMLElement 취급한다.
+			//HTMLElement 템플릿을 설정한다.
+			itemTemp.TemplateElementSet(objTemplate as HTMLElement, bStringTemplate);
+		}
+
+
+		if (itemTemp.Name
+			&& "" !== itemTemp.Name)
+		{//지정된 이름이 있다.
+
+			//바로 접근 할 수 있는 템플릿 개체 만들기
+			this.TemplateObject[itemTemp.Name] = itemTemp;
+		}
+	}
+	
+	 
+
+
+	/**
 	 * 돔에서 액스뷰 템플릿 대상을 찾아 템플릿으로 변환한다.
 	 * @param domParent
 	 * @param bStringTemplate 문자열로 저장할 여부
 	 */
-	public BindTemplate(
+	public TemplateBind(
 		domParent: HTMLElement
 		, bStringTemplate: boolean)
 		: void
@@ -101,7 +167,7 @@ export default class AxeViewSupport
 			//템플릿 개체 생성
 			let itemTemp: AxeViewTemplateModel = new AxeViewTemplateModel(sName);
 			//템플릿 지정
-			itemTemp.TemplateSet(
+			itemTemp.TemplateDomSet(
 				itemDom
 				, bStringTemplate
 				, bParentRemove

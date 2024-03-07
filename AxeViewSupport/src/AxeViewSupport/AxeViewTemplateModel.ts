@@ -28,7 +28,11 @@ export default class AxeViewTemplateModel
 		this.NameOri = value;
 	}
 
-	/** 가지고 있는 템플릿 엘리먼트 원본*/
+	/** 
+	 * 가지고 있는 템플릿 엘리먼트 원본
+	 * Element로 저장할때는 부모엘리먼트를 Template으로 생성하여 자식으로 넣는다.
+	 * string으로 저장할때는 자식엘리먼트의 내용만 문자열로 넣는다.
+	 */
 	public TemplateElem: HTMLTemplateElement | string | null = null;
 
 	/** 
@@ -69,7 +73,7 @@ export default class AxeViewTemplateModel
 	 * axeview-template을 비롯한 템플릿 관련 속성을 제거한다.
 	 * @param bParentChildRemove 템플릿으로 부모의 자식을 제거할지 여부.
 	 */
-	public TemplateSet(
+	public TemplateDomSet(
 		domParent: Element
 		, bStringTemplate: boolean
 		, bParentRemove: boolean
@@ -125,23 +129,25 @@ export default class AxeViewTemplateModel
 
 	}
 
+	
 	/**
 	 * 문자열로 템플릿을 생성한다.
-	 * @param sParent
+	 * @param sTarget
 	 * @param bStringTemplate
 	 */
 	public TemplateStringSet(
-		sParent: string
+		sTarget: string
 		, bStringTemplate: boolean)
+		: void
 	{
 		this.StringTemplateIs_Ori = bStringTemplate;
 
-
+		
 		if (true === this.StringTemplateIs_Ori)
 		{//문자열로 저장이다.
 
 			//들어온 문자열 그대로 저장
-			this.TemplateElem = sParent;
+			this.TemplateElem = sTarget;
 		}
 		else
 		{//문자열 저장이 아니다.
@@ -149,7 +155,39 @@ export default class AxeViewTemplateModel
 			//템플릿을 저장할 엘리먼트 생성
 			this.TemplateElem = document.createElement("template");
 			//문자열을 html로 바인딩한다.
-			this.TemplateElem.innerHTML = sParent;
+			this.TemplateElem.innerHTML = sTarget;
+		}
+	}
+
+	/**
+	 * Element로 템플릿을 생성한다.
+	 * @param domTarget
+	 * @param bStringTemplate
+	 */
+	public TemplateElementSet(
+		domTarget: Element
+		, bStringTemplate: boolean)
+		: void
+	{
+		this.StringTemplateIs_Ori = bStringTemplate;
+
+		if (true === this.StringTemplateIs_Ori)
+		{//문자열로 저장이다.
+
+			//HTMLElement 취급한다.
+			//HTMLTemplateElement를 생성하여
+			let domTemp: HTMLTemplateElement = document.createElement("template");
+			//자식으로 넣고
+			domTemp.appendChild(domTarget);
+			//내용물을 string로 변환한다.
+			this.TemplateElem = domTemp.innerHTML;
+		}
+		else
+		{
+			//템플릿을 저장할 엘리먼트 생성
+			this.TemplateElem = document.createElement("template");
+			//자식으로 넣는다.
+			this.TemplateElem.appendChild(domTarget);
 		}
 	}
 
@@ -175,27 +213,7 @@ export default class AxeViewTemplateModel
 
 		return returnTemplateElem;
 	}
-
-	public TemplateClone2(): Node
-	{
-		let returnTemplateElem: Node;
-
-		if (true === this.StringTemplateIs_Ori)
-		{//문자열로 저장되어 있는 경우
-
-			let temp1: HTMLTemplateElement = document.createElement("template");
-			temp1.innerHTML = this.TemplateElem as string;
-			returnTemplateElem = temp1.content;
-		}
-		else
-		{//엘리먼트로 저장되어 있는 경우
-
-			let temp2: HTMLTemplateElement = (this.TemplateElem as HTMLTemplateElement);
-			returnTemplateElem = temp2.content.cloneNode(true);
-		}
-
-		return returnTemplateElem;
-	}
+	
 	
 }
 

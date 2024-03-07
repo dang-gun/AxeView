@@ -23,8 +23,7 @@ export default class test_01
 	{
 		this.AxeViewSpt.BindOverwatch(
 			document.getElementById("divAxeViewTset0")
-			, []
-			, false);
+			, []);
 
 		//돔에서 템플릿을 분리한다.
 		//this.AxeViewSpt.BindOverwatch(
