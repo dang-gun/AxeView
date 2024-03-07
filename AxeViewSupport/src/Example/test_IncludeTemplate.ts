@@ -43,11 +43,14 @@ export default class test_IncludeTemplate
 		}));
 
 
+		//대상 DOM
+		let divAxeViewTset1: HTMLElement = document.getElementById("divAxeViewTset1");
 		//돔에서 템플릿을 분리한다.
-		this.AxeViewSpt.BindOverwatch(
-			document.getElementById("divAxeViewTset1")
-			, listOw
-			, true);
+		this.AxeViewSpt.BindTemplate(divAxeViewTset1, true);
+		//감시 대상을 바인딩 한다.
+		this.AxeViewSpt.BindOverwatch(divAxeViewTset1, listOw);
+
+
 
 		console.log("Template count : " + this.AxeViewSpt.TemplateList.length);
 

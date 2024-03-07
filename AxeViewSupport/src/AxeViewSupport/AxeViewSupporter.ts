@@ -53,25 +53,21 @@ export default class AxeViewSupport
 	{
 	}
 
-	public BindOverwatch(
+	/**
+	 * 돔에서 액스뷰 템플릿 대상을 찾아 템플릿으로 변환한다.
+	 * @param domParent
+	 * @param bStringTemplate 문자열로 저장할 여부
+	 */
+	public BindTemplate(
 		domParent: HTMLElement
-		, arrOw: Overwatch[]
 		, bStringTemplate: boolean)
 		: void
 	{
-		this.OverwatchList = arrOw;
-
-		//가지고 있던 리스트 제거
-		this.TemplateList = [];
-
-
-
 		//템플릿 dom 찾기 *****
 		//1단계 자식만 찾는다.
 		let arrTemplateDom: HTMLElement[]
 			= Array.from(domParent.querySelectorAll(`:scope > [${FixString.AxeViewTemplate}]`));
 
-		
 
 		//찾은 dom 템플릿 개체로 만들기
 		for (let i = 0; i < arrTemplateDom.length; ++i)
@@ -82,7 +78,7 @@ export default class AxeViewSupport
 			//템플릿으로 사용한 부모를 지울지 여부.
 			let bParentRemove: boolean = false;
 			if ("true" === this.AttributeValueGet(itemDom, FixString.AxeViewTemplate_ParentRemove).toLowerCase())
-			{ 
+			{
 				bParentRemove = true;
 			}
 			//템플릿으로 사용한 부모에서 템플릿 관련 속성을 지울지 여부
@@ -111,7 +107,7 @@ export default class AxeViewSupport
 				, bParentRemove
 				, bParentArrRemove
 				, bParentChildRemove);
-			
+
 
 			//템플릿 리스트에 추가
 			this.TemplateList.push(itemTemp);
@@ -124,11 +120,23 @@ export default class AxeViewSupport
 				this.TemplateObject[itemTemp.Name] = itemTemp;
 			}
 			
-
 		}//end for i
+	}
 
+	/**
+	 * 감시대상 개체를 바인딩 한다.
+	 * 매칭 대상이 없으면 생성해 준다.
+	 * @param domParent
+	 * @param arrOw
+	 */
+	public BindOverwatch(
+		domParent: HTMLElement
+		, arrOw: Overwatch[])
+		: void
+	{
+		this.OverwatchList = arrOw;
 
-
+		
 
 		//정규식으로 검색하여 없는 이름을 감시대상 목록으로 만든다.
 		//모든 액스뷰 연결자 검색
