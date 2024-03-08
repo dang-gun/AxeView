@@ -22,6 +22,17 @@ export const enum OverwatchingOutputType
 	 * html 출력 - 노드 전용
 	 * '속성(attribute)'과 같이 html이 적용되지 않는 경우 무시(감시하지 않음) 된다.
 	 * 
+	 * FirstData로 전달된 'HTML string'으로 부모가 생성된다.(없으면 div)
+	 * FirstData에의해 생성된 DOM을 부모로 사용하여 자식만 교체 된다.(기존 자식은 제거된다.)
+	 * 생성된 부모를 교체하고 싶다면 'Overwatch.DomReplace'를 이용해야 한다.
+	 * 
+	 * 데이터를 넣을때는 'HTML string'과 'HTMLElement'둘다 처리된다.
+	 * 'HTML string'로 저장하면 새로운 'HTMLElement'가 생성되어 저장된다.
+	 * 'HTMLElement'로 저장하면 기존 전달받은 개체를 그대로 자식으로 등록한다.
+	 * 
+	 * .Data로 데이터를 받으면 마직막에 넣은 형태로 리턴된다.
+	 * ('HTML string'로 넣으면 'HTML string'로 리턴됨)
+	 * 
 	 * String, Html, Dom은 Overwatch.OutputTypeChange_All을 이용하여 출력타입을 변경할 수 있다.
 	 * */
 	Html,

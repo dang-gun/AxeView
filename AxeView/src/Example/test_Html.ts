@@ -13,6 +13,8 @@ export default class test_Html
 	private arrTarget1: Overwatch[] = [];
 	/** AxeView 테스트용 변수2 */
 	private arrTarget2: Overwatch[] = [];
+	/** AxeView 테스트용 변수3 */
+	private arrTarget3: Overwatch[] = [];
 
 
 	constructor()
@@ -21,7 +23,7 @@ export default class test_Html
 		this.AxeView.CommentDelete = true;
 		
 
-		// #region 자식 노드만 변경
+		// #region 1) 자식 노드만 변경
 
 		//자식 노드만 변경 ******************
 		this.arrTarget1.push(
@@ -77,7 +79,7 @@ export default class test_Html
 
 
 
-		// #region 대상 교체
+		// #region 2) 부모 교체
 
 		this.arrTarget2.push(
 			new Overwatch({
@@ -117,6 +119,41 @@ export default class test_Html
 		(document.getElementById("txtHtmlTest2") as HTMLTextAreaElement).value
 			= "변환 HTML";
 
+		// #endregion
+
+
+
+
+		// #region 3) FirstData를 HTMLElement로 전달하기
+
+		let domTemp3: HTMLDivElement = document.createElement("div");
+		domTemp3.innerHTML = "코드에서 작성한 돔입니다.<div>내용 입니다~</div>";
+
+
+		this.arrTarget3.push(
+			new Overwatch({
+				Name: "HtmlTest3_1"
+				, FirstData: domTemp3
+				, OverwatchingOutputType: OverwatchingOutputType.Html
+				, OverwatchingType: OverwatchingType.Monitoring
+				, OverwatchingOneIs: false
+			}));
+
+		//돔 재생성 및 설정된 뷰모델 연결
+		this.AxeView.BindOverwatch(
+			document.getElementById("divAxeViewTset3")
+			, this.arrTarget3);
+
+
+		//테스트 동작
+		document.getElementById("btnHtmlTest3").onclick
+			= (event) =>
+			{
+				let sTnput = (document.getElementById("txtHtmlTest3") as HTMLTextAreaElement).value;
+				this.arrTarget3[0].data = sTnput;
+			}
+		(document.getElementById("txtHtmlTest3") as HTMLTextAreaElement).value
+			= "<div>추가 HTML string</div>"
 		// #endregion
 	}
 }

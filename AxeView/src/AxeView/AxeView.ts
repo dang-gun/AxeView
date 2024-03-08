@@ -293,16 +293,31 @@ export default class AxeView
 				else if (null !== itemStrText.Overwatch)
 				{//매칭된 감시자가 있다.
 
-					//html 개체를 만들고
-					let newMElem: HTMLElement
-						= document.createElement("template");
-					//내용물을 html 처리를 한 후
-					newMElem.insertAdjacentHTML(
-						"beforeend"
-						, itemStrText.Overwatch.data);
+					//2024-03-08 : FirstData으로 HTMLElement이 들어와도 처리되도록 변경
+					let domNewMElem: HTMLElement;
+
+					if (true === (itemStrText.Overwatch.data instanceof HTMLElement))
+					{//데이터가 HTMLElement타입이다.
+
+						domNewMElem = itemStrText.Overwatch.data as HTMLElement;
+					}
+					else
+					{//나머지는 html string 취급한다.
+
+						//html 개체를 만들고
+						let domTemp: HTMLTemplateElement
+							= document.createElement("template");
+						//내용물을 html 처리를 한 후
+						domTemp.insertAdjacentHTML(
+							"beforeend"
+							, itemStrText.Overwatch.data);
+
+						domNewMElem = domTemp.firstChild as HTMLElement;
+					}
+
 
 					//리턴 리스트에 추가
-					newParent.push(newMElem.firstChild);
+					newParent.push(domNewMElem);
 
 					if (OverwatchingType.Monitoring === itemStrText.Overwatch.OverwatchingType
 						|| OverwatchingType.Monitoring_OneValue === itemStrText.Overwatch.OverwatchingType)
@@ -310,7 +325,7 @@ export default class AxeView
 
 						//감시자  dom리스트에 추가
 						this.OverwatchDomPushHelper.Dom_Push_HTMLElement(
-							<HTMLElement>newMElem.firstChild, itemStrText.Text);
+							domNewMElem, itemStrText.Text);
 					}
 				}
 				else
